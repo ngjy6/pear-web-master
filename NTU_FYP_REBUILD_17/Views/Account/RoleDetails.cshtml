@@ -1,0 +1,27 @@
+﻿@model NTU_FYP_REBUILD_17.Models.RoleViewModel
+
+@{
+    ViewBag.Title = "RoleDetails";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Role Details</h2>
+
+<div>
+    <h4>RoleViewModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "RoleEdit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "RoleIndex")
+</p>

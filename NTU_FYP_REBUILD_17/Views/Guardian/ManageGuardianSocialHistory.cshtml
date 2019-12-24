@@ -1,0 +1,385 @@
+﻿@using Microsoft.AspNet.Identity
+@using NTU_FYP_REBUILD_17.Models
+@model NTU_FYP_REBUILD_17.ViewModels.ManageGuardiansViewModel
+@{
+    ViewBag.Title = "Manage Patient";
+    Layout = "~/Views/Shared/_LayoutGuardian.cshtml";
+
+}
+@{
+    int i = 0;
+    int ID = 0;
+}
+@using (Html.BeginForm("ManageGuardianSocialHistory", "Guardian"))
+{
+    <span style="color:red">@ViewBag.Error</span>
+    foreach (var item in Model.patientList)
+    {
+
+        <table class="table">
+            <tr>
+                <td><b>EDIT SOCIAL HISTORY</b></td>
+            </tr>
+            <tr>
+                <td>Patient Information - @item.firstName @item.lastName @item.nric </td>      
+            <tr>
+            <tr>
+                <td>                <img src="@Model.albumPathList[i]" width="200px" /></td>
+
+            </tr>
+
+                <td>Live With	:</td>
+                <td>
+                    @Html.DropDownListFor(model => model.liveWith, new SelectList(ViewBag.LiveWith), Model.socialHistoryList[i].liveWith)
+                </td>
+            </tr>
+            <tr>
+                <td>Diet	:</td>
+                <td>
+                    @Html.DropDownListFor(model => model.diet, new SelectList(ViewBag.Diet), Model.socialHistoryList[i].diet)
+                </td>
+            </tr>
+            <tr>
+                <td>Religion	:</td>
+                <td>
+                    @Html.DropDownListFor(model => model.religion, new SelectList(ViewBag.Religion), Model.socialHistoryList[i].religion)
+                </td>
+            </tr>
+            <tr>
+                <td>Sexually Active	:</td>
+                <td>
+                    @if (Model.socialHistoryList[i].sexuallyActive == 1)
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].sexuallyActive, 1, new { @checked = "checked" })
+                        @Html.Label("Yes")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].sexuallyActive, 0, new { })
+                        @Html.Label("No")
+                    }
+                    else
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].sexuallyActive, 1, new { })
+                        @Html.Label("Yes")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].sexuallyActive, 0, new { @checked = "checked" })
+                        @Html.Label("No")
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Alcohol Use	:</td>
+                <td>
+                    @if (Model.socialHistoryList[i].alcoholUse == 0)
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].alcoholUse, 0, new { @checked = "checked" })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].alcoholUse, 1, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].alcoholUse, 2, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                    else if (Model.socialHistoryList[i].alcoholUse == 1)
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].alcoholUse, 0, new { })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].alcoholUse, 1, new { @checked = "checked" })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].alcoholUse, 2, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                    else
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].alcoholUse, 0, new { })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].alcoholUse, 1, new { })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].alcoholUse, 2, new { @checked = "checked" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Caffeine Use	:</td>
+                <td>
+                    @if (Model.socialHistoryList[i].caffeineUse == 0)
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].caffeineUse, 0, new { @checked = "checked" })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].caffeineUse, 1, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].caffeineUse, 2, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                    else if (Model.socialHistoryList[i].caffeineUse == 1)
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].caffeineUse, 0, new { })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].caffeineUse, 1, new { @checked = "checked" })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].caffeineUse, 2, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                    else
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].caffeineUse, 0, new { })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].caffeineUse, 1, new { })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].caffeineUse, 2, new { @checked = "checked" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Tobacco use	:</td>
+                <td>
+                    @if (Model.socialHistoryList[i].tobaccoUse == 0)
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].tobaccoUse, 0, new { @checked = "checked" })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].tobaccoUse, 1, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].tobaccoUse, 2, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                    else if (Model.socialHistoryList[i].tobaccoUse == 1)
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].tobaccoUse, 0, new { })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].tobaccoUse, 1, new { @checked = "checked" })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].tobaccoUse, 2, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                    else
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].tobaccoUse, 0, new { })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].tobaccoUse, 1, new { })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].tobaccoUse, 2, new { @checked = "checked" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Drug use	:</td>
+                <td>
+                    @if (Model.socialHistoryList[i].drugUse == 0)
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].drugUse, 0, new { @checked = "checked" })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].drugUse, 1, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].drugUse, 2, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                    else if (Model.socialHistoryList[i].drugUse == 1)
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].drugUse, 0, new { })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].drugUse, 1, new { @checked = "checked" })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].drugUse, 2, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                    else
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].drugUse, 0, new { })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].drugUse, 1, new { })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].drugUse, 2, new { @checked = "checked" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Exercise	:</td>
+                <td>
+                    @if (Model.socialHistoryList[i].exercise == 0)
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].exercise, 0, new { @checked = "checked" })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].exercise, 1, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].exercise, 2, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                    else if (Model.socialHistoryList[i].exercise == 1)
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].exercise, 0, new { })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].exercise, 1, new { @checked = "checked" })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].exercise, 2, new { id = "sa2-false" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                    else
+                    {
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].exercise, 0, new { })
+                        @Html.Label("sa1-true", "Never")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].exercise, 1, new { })
+                        @Html.Label("sa2-true", "Seldom")
+
+                        @Html.RadioButtonFor(model => model.socialHistoryList[i].exercise, 2, new { @checked = "checked" })
+                        @Html.Label("sa2-true", "Regular")
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Pet	:</td>
+                <td>
+                    @Html.DropDownListFor(model => model.pet, new SelectList(ViewBag.Pet), Model.socialHistoryList[i].pet)
+                </td>
+            </tr>
+            <tr>
+                <td>Occupation	:</td>
+                <td>
+                    @Html.DropDownListFor(model => model.occupation, new SelectList(ViewBag.Occupation), Model.socialHistoryList[i].occupation)
+                </td>
+            </tr>
+            <tr>
+                <td>Education	:</td>
+                <td>
+                    @Html.DropDownListFor(model => model.education, new SelectList(ViewBag.Education), Model.socialHistoryList[i].education)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @{ID = Model.socialHistoryList[i].socialHistoryID;
+                        string result = ID + "/" + i;}
+
+                    <button name="index" class="btn btn-primary" type="submit" value="@result" onclick="return confirm('Confirm your decision.')">Save</button>
+                </td>
+            </tr>
+        </table>
+        i++;
+    }
+}
+
+<button id="confirmBtn" name="index" class="btn btn-primary">Test</button>
+
+
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span class="fa fa-exclamation-triangle" style="color:red;" aria-hidden="true"></span> Disclaimer</h4>
+            </div>
+            <div class="modal-body" id="table-body">
+                <table class="col-sm-12 table table-bordered table-striped table-condensed cf">
+                    <b>Privacy Notice</b>
+                    <p>
+                        This privacy notice discloses the privacy practices for this web application. This privacy notice applies solely to information collected by this website. It will notify you of the following:
+
+                        What personally identifiable information is collected from you through the website, how it is used and with whom it may be shared.
+                        What choices are available to you regarding the use of your data.
+                        The security procedures in place to protect the misuse of your information.
+                        How you can correct any inaccuracies in the information.
+                    </p>
+
+                    <b>Information Collection, Use, and Sharing</b>
+                    <p>
+                        We are the sole owners of the information collected on this site. We only have access to/collect information that you voluntarily give us via email or other direct contact from you. We will not sell or rent this information to anyone.
+
+                        We will use your information to respond to you, regarding the reason you contacted us. We will not share your information with any third party outside of our organization, other than as necessary to fulfill your request, e.g. to ship an order.
+
+                        Unless you ask us not to, we may contact you via email in the future to tell you about specials, new products or services, or changes to this privacy policy.
+                    </p>
+                    <b>Your Access to and Control Over Information</b>
+                    <p>
+                        You may opt out of any future contacts from us at any time. You can do the following at any time by contacting us via the email address or phone number given on our website:
+
+                        See what data we have about you, if any.
+                        Change/correct any data we have about you.
+                        Have us delete any data we have about you.
+                        Express any concern you have about our use of your data.
+                    </p>
+                    <thead class="cf">
+                        <tr>
+                            <th class='col-sm-3'>Share with: </th>
+                            <th class='col-sm-3'>Admin</th>
+                            <th class='col-sm-3'>Caregiver</th>
+                            <th class='col-sm-3'>Supervisor</th>
+                            <th class='col-sm-3'>Doctor</th>
+                            <th class='col-sm-3'>Game Therapist</th>
+                        </tr>
+                    </thead>
+                    <tbody id="privacy">
+                        </tr>
+                        <tr>
+                            <th class='col-sm-3'>Social History</th>
+                            <th class='col-sm-3'><input type="checkbox" name="isAdmin" value="1"></th>
+                            <th class='col-sm-3'><input type="checkbox" name="isCaregiver" value="1"></th>
+                            <th class='col-sm-3'><input type="checkbox" name="isSupervisor" value="1"></th>
+                            <th class='col-sm-3'><input type="checkbox" name="isDoctor" value="1"></th>
+                            <th class='col-sm-3'><input type="checkbox" name="isGameTherapist" value="1"></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<link href="~/Content/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/table-datatables-responsive.min.js" type="text/javascript"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#confirmBtn").click(function () {
+            $("#myModal").modal('show');
+            //if (!jQuery.isEmptyObject(selectedPatient)) {
+
+            //}
+            //else {
+            //    alert('Please select at least one patient !');
+            //}
+        });
+    });
+</script>

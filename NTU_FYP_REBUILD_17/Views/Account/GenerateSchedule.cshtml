@@ -1,0 +1,25 @@
+﻿@using Microsoft.AspNet.Identity
+@using NTU_FYP_REBUILD_17.Models
+
+@{
+    ViewBag.Title = "GenerateSchedule";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    if (@User.Identity.GetUserTypeID() == "1")
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+    else if (@User.Identity.GetUserTypeID() == "6")
+    {
+        Layout = "~/Views/Shared/_LayoutSupervisor.cshtml";
+    }
+}
+
+<h2>GenerateSchedule</h2>
+<a href="@Url.Action("GenerateScheduleByUpdateBit1", "Schedule")" class="btn dark btn-sm btn-outline sbold uppercase">
+    <i class="fa fa-edit"></i> Generate Schedule
+</a>
+
+<a href="@Url.Action("GenerateScheduleSetAllUpdateBit1", "Schedule")" class="btn dark btn-sm btn-outline sbold uppercase">
+    <i class="fa fa-edit"></i> Set Date To This Coming Sunday  & Generate All Patient Schedule
+</a>

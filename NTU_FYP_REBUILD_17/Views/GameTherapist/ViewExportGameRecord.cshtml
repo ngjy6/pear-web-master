@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "View Export Game Record";
+    Layout = "~/Views/Shared/_LayoutGameTherapist.cshtml";
+
+}
+
+<div class="portlet light ">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="icon-globe theme-font hide"></i>
+            <span class="caption-subject font-blue-madison bold uppercase">Export Game Record</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        @using (Html.BeginForm("ExportGameRecord", "GameTherapist", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "form1" }))
+        {
+            <div align="center">
+                <h3>Export Game Record</h3>
+            </div>
+            <div class="col-md-offset-2">
+                <p style="color:@ViewBag.Color">@ViewData["Error"]</p>
+            </div>
+            <hr />
+            <div class="form-group">
+                <label class="col-md-2 control-label">Game</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("game", null, new { @class = "form-control" })
+                    <p>The exported excel sheet is protected with a password. To access the excel sheet, simply type in your first (given) name. The password is case-sensitive.</p>
+                </div>
+            </div>
+            <div class="margiv-top-10 text-center">
+                <input class="space btn grey" type="button" onclick="window.location.replace('@Url.Action("Index", "GameTherapist")')" value="Cancel" />
+                <input id="submit" type="submit" class="space btn btn-primary" value="Export" />
+            </div>
+        }
+    </div>
+</div>
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+<script src="~/Content/global/scripts/app.min.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/profile.min.js" type="text/javascript"></script>

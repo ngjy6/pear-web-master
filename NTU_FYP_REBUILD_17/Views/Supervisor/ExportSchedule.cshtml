@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNet.Identity
+@using NTU_FYP_REBUILD_17.Models
+@model NTU_FYP_REBUILD_17.ViewModels.ExportPatientScheduleViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutSupervisor.cshtml";
+}
+@using (@Html.BeginForm())
+{
+    @Html.DropDownListFor(model => model.DropDownListDate, new SelectList(ViewBag.Weeks), "Select Export Date")
+    <p><input type="submit" value="Export" /></p>
+}
+
+@Html.Raw(ViewBag.ErrorMessage)

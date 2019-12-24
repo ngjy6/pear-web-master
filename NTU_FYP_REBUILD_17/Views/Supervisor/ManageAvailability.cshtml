@@ -1,0 +1,549 @@
+﻿@model NTU_FYP_REBUILD_17.ViewModels.ManageSupervisorsViewModel
+
+@{
+    ViewBag.Title = "ManageAvailability";
+    Layout = "~/Views/Shared/_LayoutSupervisor.cshtml";
+}
+
+@{
+    int ID = 0;
+}
+
+
+
+<div class="portlet light ">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="icon-globe theme-font hide"></i>
+            <span class="caption-subject font-blue-madison bold uppercase">Activity Availability</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="tab-content">
+            <div class="tab-pane active">
+                @if (TempData["success"] != null)
+                {
+                    <div class="alert alert-success text-center" role="alert">@TempData["success"]</div>
+                }
+
+                @if (TempData["error"] != null)
+                {
+                    <div class="alert alert-danger  text-center" role="alert">@Html.Raw(TempData["error"])</div>
+                }
+                @using (Html.BeginForm("ManageAvailabilityMethod", "Supervisor", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "form1" }))
+                {
+                    @Html.HiddenFor(m => m.id, new { @Value = @Model.CentreActivities.centreActivityID, @id = "ab" });
+
+                    <table class="table">
+                        <tr><td><b><u>Activity</u></b></td></tr>
+                        <tr>
+                            <td><b>Activity Title</b></td>
+                            <td><b>Activity Description</b></td>
+                            <td><b>Min Duration</b></td>
+                            <td><b>Max Duration</b></td>
+                            <td><b>Min People Required</b></td>
+
+                        </tr>
+                        <tr>
+                            <td>@Model.CentreActivities.activityTitle</td>
+                            <td>@Model.CentreActivities.activityDesc</td>
+                            <td>@Model.CentreActivities.minDuration</td>
+                            <td>@Model.CentreActivities.maxDuration</td>
+                            <td>@Model.CentreActivities.minPeopleReq</td>
+                        </tr>
+                        <tr><td><b><u>Availability</u></b></td></tr>
+
+                        <tr>
+                            @*<td><b>ID</b></td>*@
+                            <td><b>Day Available</b></td>
+                            <td><b>Start Time</b></td>
+                            <td><b>End Time</b></td>
+                            <td><b>Approved Status</b></td>
+                            <td></td>
+                        </tr>
+                        @foreach (var item in Model.Activities)
+                        {
+                            <tr>
+                                @*<td>@item.availableID</td>*@
+                                <td>@item.day</td>
+                                <td>@item.startTime</td>
+                                <td>@item.endTime</td>
+                                @if (@item.isApproved == 1)
+                                {
+                                    <td>Approved</td>
+                                }
+                                else
+                                {
+                                    <td>Pending<</td>
+                                }
+                                <td>
+                                    @{ ID = item.availableID;
+                                        string result1 = "Delete" + "/" + ID;
+                                    }
+
+                                    <a id="@item.availableID" class="btn btn-primary space edit">Edit</a>
+                                    <button name="index" class="btn btn red space " type="submit" value="@result1" onclick="return confirm('Confirm your decision.')">Delete</button>
+
+                                    @*<a href="@Url.Action("ManageAvailabilityMethod", "Supervisor", new { name = "index", value = result1 })" class="btn btn red space" onclick="return confirm('Are you sure you want to delete?')">
+                                Delete
+                            </a>*@
+                                </td>
+                            </tr>
+                        }
+
+                        @*<tr><td><span class="caption-subject font-blue-madison bold uppercase">Create Activity Availability</span></td></tr>
+                <tr>
+                    <td>
+                        <label>Day Available </label>
+                        @Html.DropDownListFor(model => model.addedDay, new SelectList(ViewBag.ListOfDay), "Select available day", new { @class = "form-control myclass" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="control-label">Start Time</label>
+                        @Html.TextBoxFor(m => m.startTime, new { @class = "form-control", @id = "startTime", @Value = "09:00:00" })
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label class="control-label">End Time</label>
+                        @Html.TextBoxFor(m => m.endTime, new { @class = "form-control", @id = "endTime", @Value = "09:00:00" })
+                    </td>
+                </tr>*@
+                    </table>
+
+
+                    @*<div class="form-group">
+                <label class="control-label">User Type</label>
+                @Html.DropDownList("userType", null, new { @class = "form-control" })
+            </div>*@
+                    <div class="margiv-top-10 margin-bottom-10 pull-right">
+                        <a id="create" class="btn btn-primary space">Create</a>
+                        <input class="btn grey" type="button" onclick="window.location.replace('@Url.Action("ManageActivities", "Supervisor")')" value="Cancel" />
+
+
+                        @*<button name="index" class="btn btn-primary space" type="submit">Create</button>*@
+
+                        @*<input class="btn grey" type="button" onclick="window.location.replace('@Url.Action("ManageActivities", "Supervisor")')" value="Cancel" />*@
+                        @*<input type="submit" class="btn blue" value=" Save Changes" />*@
+
+                    </div>
+
+                    <br /><br />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@*Modal for Create*@
+<div id="CreateModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            @using (Html.BeginForm("ManageAvailabilityMethod", "Supervisor", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "form1" }))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                    <h4 class="modal-title" id="modal-title">Create Activity Availability</h4>
+
+                </div>
+
+                <div class="modal-body" id="table-body">
+
+                    @Html.HiddenFor(m => m.id, new { @Value = @Model.CentreActivities.centreActivityID, @id = "ab" })
+
+                    <table>
+                        <thead>
+                        </thead>
+                        <tbody class="table">
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-md-10">Day Available</label>
+                                        <div class="col-md-10">
+                                            @Html.DropDownListFor(model => model.addedDay, new SelectList(ViewBag.ListOfDay), new { @class = "form-control myclass", @id = "dayAvailCheck" })
+
+                                            <br />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-md-10 ">Start Time</label>
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.startTime, new { @class = "form-control", @id = "startTime", @Value = Model.openingHour })
+                                            <br />
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-md-10 ">End Time</label>
+                                        <div class="col-md-10">                
+                                            @{ TimeSpan ts = new TimeSpan(0, Model.CentreActivities.minDuration, 0); }
+                                            @Html.TextBoxFor(m => m.endTime, new { @class = "form-control", @id = "endTime", @Value = Model.openingHour.Add(ts) })
+                                            <br />
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="modal-footer">
+                    <div class="text-center">
+                        @{
+                            ID = Model.CentreActivities.centreActivityID;
+                            string result2 = "Create" + "/" + ID;
+                        }
+                        <button name="index" class="btn btn-primary space" type="submit" value="@result2">Add</button>
+                        @*<button type="submit" class="btn btn-primary space" id="add">Add</button>*@
+                        <button type="button" class="btn btn-default space" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+
+</div>
+
+
+@*Modal for Edit*@
+<div id="EditModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            @using (Html.BeginForm("ManageAvailabilityMethod", "Supervisor", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "form1" }))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                    <h4 class="modal-title" id="modal-title">Edit Activity Availability</h4>
+
+                </div>
+
+                <div class="modal-body" id="table-body">
+
+                    @Html.HiddenFor(m => m.id, new { @Value = @Model.CentreActivities.centreActivityID, @id = "ab" })
+                    <div id="hidden"></div>
+
+                    <table>
+                        <thead>
+                        </thead>
+                        <tbody class="table">
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-md-10">Day Available</label>
+                                        <div class="col-md-10">
+                                            @Html.DropDownListFor(model => model.addedDay, new SelectList(ViewBag.ListOfDay), new { @class = "form-control myclass", id = "day1" })
+
+                                            <br />
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-md-10 ">Start Time</label>
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.startTime, new { @class = "form-control", @id = "startTime1", @Value = "09:00:00" })
+                                            <br />
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-md-10 ">End Time</label>
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.endTime, new { @class = "form-control", @id = "endTime1", @Value = "09:00:00" })
+                                            <br />
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="modal-footer">
+                    <div class="text-center">
+                        @{
+                            ID = Model.CentreActivities.centreActivityID;
+                            string result3 = "Edit" + "/" + ID;
+                        }
+                        <button name="index" class="btn btn-primary space" type="submit" value="@result3">Save Changes</button>
+                        @*<button type="submit" class="btn btn-primary space" id="add">Add</button>*@
+                        <button type="button" class="btn btn-default space" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+<script src="~/Content/global/scripts/app.min.js" type="text/javascript"></script>
+
+
+
+<link href="~/Content/global/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+<script src="~/Content/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+
+
+<link rel="stylesheet" href="~/Content/global/css/jquery.timepicker.css" type="text/css" />
+<script src="~/Content/global/scripts/jquery.timepicker.js" type="text/javascript"></script>
+
+
+<script>
+    $(document).ready(function () {
+
+        $("#dayAvailCheck").change(function () {
+            var dayAvail = $("#dayAvailCheck").val();
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    day: dayAvail,
+                },
+                url: '@Url.Action("GetCentreHours", "Supervisor")',
+                success: function (result) {
+                    console.log(result);
+
+                    var openinghours = result.centreOpeningHours.Hours;
+
+                    if (openinghours < 10) {
+                        openinghours = '0' + openinghours;
+                    }
+
+                    var openingmin = result.centreOpeningHours.Minutes;
+
+
+                    if (openingmin < 10) {
+                        openingmin = '0' + openingmin;
+                    }
+                    var openingsec = result.centreOpeningHours.Seconds;
+                    var openingms = result.centreOpeningHours.Milliseconds;
+
+                    var openingHour = openinghours + ":" + openingmin + ":" + openingsec + openingms;
+
+
+                    var closinghours = result.centreClosingHours.Hours;
+
+                    if (closinghours < 10) {
+                        closinghours = '0' + closinghours;
+                    }
+
+                    var closingmin = result.centreClosingHours.Minutes;
+
+
+                    if (closingmin < 10) {
+                        closingmin = '0' + closingmin;
+                    }
+                    var closingsec = result.centreClosingHours.Seconds;
+                    var closingms = result.centreClosingHours.Milliseconds;
+
+                    var closingHour = closinghours + ":" + closingmin + ":" + closingsec + closingms;
+
+
+                    $("#startTime").timepicker('setTime', openingHour);
+                    $("#endTime").timepicker('setTime', openingHour);
+
+                    $('#startTime').timepicker('option', 'minTime', openingHour);
+                    $('#startTime').timepicker('option', 'maxTime', closingHour);
+
+                    $('#endTime').timepicker('option', 'minTime', openingHour);
+                    $('#endTime').timepicker('option', 'maxTime', closingHour);
+
+                }
+                });
+
+        });
+
+
+        $("#day1").change(function () {
+            var dayAvail = $("#day1").val();
+            console.log(dayAvail);
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    day: dayAvail,
+                },
+                url: '@Url.Action("GetCentreHours", "Supervisor")',
+                success: function (result) {
+                    console.log(result);
+
+                    var openinghours = result.centreOpeningHours.Hours;
+
+                    if (openinghours < 10) {
+                        openinghours = '0' + openinghours;
+                    }
+
+                    var openingmin = result.centreOpeningHours.Minutes;
+
+
+                    if (openingmin < 10) {
+                        openingmin = '0' + openingmin;
+                    }
+                    var openingsec = result.centreOpeningHours.Seconds;
+                    var openingms = result.centreOpeningHours.Milliseconds;
+
+                    var openingHour = openinghours + ":" + openingmin + ":" + openingsec + openingms;
+
+
+                    var closinghours = result.centreClosingHours.Hours;
+
+                    if (closinghours < 10) {
+                        closinghours = '0' + closinghours;
+                    }
+
+                    var closingmin = result.centreClosingHours.Minutes;
+
+
+                    if (closingmin < 10) {
+                        closingmin = '0' + closingmin;
+                    }
+                    var closingsec = result.centreClosingHours.Seconds;
+                    var closingms = result.centreClosingHours.Milliseconds;
+
+                    var closingHour = closinghours + ":" + closingmin + ":" + closingsec + closingms;
+
+                    $("#startTime1").timepicker('setTime', openingHour);
+                    $("#endTime1").timepicker('setTime', openingHour);
+
+                    $('#startTime1').timepicker('option', 'minTime', openingHour);
+                    $('#startTime1').timepicker('option', 'maxTime', closingHour);
+
+                    $('#endTime1').timepicker('option', 'minTime', openingHour);
+                    $('#endTime1').timepicker('option', 'maxTime', closingHour);
+
+                }
+                });
+
+        });
+
+
+        $('#create').click(function () {
+            $("#CreateModal").modal('show');
+
+            $('#startTime').timepicker({
+                'timeFormat': 'H:i:s',
+                'minTime': '@Model.openingHour',
+                'maxTime': '@Model.closingHour',
+                'showDuration': false,
+            });
+
+            $('#endTime').timepicker({
+                'timeFormat': 'H:i:s',
+                'minTime': '@Model.openingHour',
+                'maxTime': '@Model.closingHour',
+                'showDuration': false
+            });
+        });
+
+        $(document).delegate('.btn.btn-primary.space.edit', 'click', function () {
+            $("#EditModal").modal('show');
+
+            $('#startTime1').timepicker({
+                'timeFormat': 'H:i:s',
+                'minTime': '09:00:00',
+                'maxTime': '16:30:00',
+                'showDuration': false,
+            });
+
+            $('#endTime1').timepicker({
+                'timeFormat': 'H:i:s',
+                'minTime': '09:00:00',
+                'maxTime': '16:30:00',
+                'showDuration': false
+            });
+
+
+             $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id: $(this).attr('id'),
+                },
+                url: '@Url.Action("GetAvailabilityDetails", "Supervisor")',
+                success: function (result) {
+
+                    $("#day1").val(result.day);
+
+                    
+                    var hours = result.timeStart.Hours;
+
+                    if (hours < 10) {
+                        hours = '0' + hours;
+                    }
+
+                    var min = result.timeStart.Minutes;
+
+
+                    if (min < 10) {
+                        min = '0' + min;
+                    }
+                    var sec = result.timeStart.Seconds;
+                    var ms = result.timeStart.Milliseconds;
+                    $("#startTime1").val(hours + ":" + min + ":" + sec + ms);
+
+                    var hours1 = result.timeEnd.Hours;
+                    if (hours1 < 10) {
+                        hours1 = '0' + hours1;
+                    }
+                    var min1 = result.timeEnd.Minutes;
+
+                    if (min1 < 10) {
+                        min1 = '0' + min1;
+                    }
+                    var sec1 = result.timeEnd.Seconds;
+                    var ms1 = result.timeEnd.Milliseconds;
+                    $("#endTime1").val(hours1 + ":" + min1 + ":" + sec1 + ms1);
+
+
+                    $("#hidden").append("<input type='hidden' name='activityAvailabilityID' value='" + result.activityAvailabilityID + "'/>");
+
+                }
+            });
+
+
+        });
+
+
+    });
+</script>

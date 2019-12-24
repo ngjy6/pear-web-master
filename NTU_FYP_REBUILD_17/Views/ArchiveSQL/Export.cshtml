@@ -1,0 +1,26 @@
+﻿
+@model NTU_FYP_REBUILD_17.ViewModels.ArchiveSQLViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+<h2>Filter function</h2>
+@using (Html.BeginForm("Export",
+                        "ArchiveSQL",
+                        FormMethod.Post,
+                        new { enctype = "multipart/form-data" }))
+{
+    <table>
+        <td>
+            @Html.TextBoxFor(model => model.createdDate, new { type = "date" })
+            <text class="popup" onclick="myFunctionPOP6()">
+                <b>Help!</b>
+                <span class="popuptext" id="myPopup6">
+                    Info: Search for created date of a patient with the provided date.
+                </span>
+            </text>
+        </td>
+    </table>
+    <button>test</button>
+    @ViewBag.Time
+}

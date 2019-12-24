@@ -1,0 +1,252 @@
+﻿@using Microsoft.AspNet.Identity
+@using NTU_FYP_REBUILD_17.Models
+@model NTU_FYP_REBUILD_17.ViewModels.ManageSupervisorsViewModel
+@{
+    ViewBag.Title = "ManageAdhoc";
+    Layout = "~/Views/Shared/_LayoutSupervisor.cshtml";
+}
+
+
+<h2>Manage Adhoc</h2>
+
+<div class="portlet light ">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="icon-globe theme-font hide"></i>
+            <span class="caption-subject font-blue-madison bold uppercase">@Model.CentreActivities.activityTitle</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="tab-content">
+            <i><b>Note:</b> Only activity that is changed from the dropdown list will added to Ad-hoc. The checkbox is used to change multiple activity together.</i>
+            <br /><br />
+            @using (Html.BeginForm("ManageAdhocMethod", "Supervisor", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "form1" }))
+            {
+                @Html.HiddenFor(p => p.inputAdhoc.oldCentreActivityID, new { @Value = @Model.CentreActivities.centreActivityID, @id = "ab" });
+
+                <p><b>Start Date: </b><input name="startDate" type="text" id="startDate" data_date_format="dd/mm/yyyy"> &nbsp; &nbsp; <b>End Date: </b><input name="endDate" type="text" id="endDate" data_date_format="dd/mm/yyyy"></p>
+                <div class="tab-pane active" id="manageAdhocDiv">
+                    @*@{ Html.RenderPartial("_ManageAdhocPartial");}*@
+                </div>
+                <div class="margiv-top-10">
+                    <input class="btn grey" type="button" onclick="window.location.replace('@Url.Action("Adhoc", "Supervisor")')" value="Cancel" />
+                    <input type="submit" class="btn blue" value=" Save Changes" />
+                    <a class="btn dark btn-sm btn-outline sbold uppercase pull-right red" id="btnSelectedActivity">
+                        <i class="fa fa-exchange"></i> Change Selected Activity
+                    </a>
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Change Activities</h4>
+            </div>
+            <div class="modal-body" id="table-body">
+                <table class="col-sm-12 table table-bordered table-striped table-condensed cf">
+                    <thead class="cf">
+                        <tr>
+                            <th class="desktop4">Select a new activity: </th>
+                        </tr>
+                    </thead>
+                    <tbody id="time-schedule">
+                        <tr>
+                            <td>@Html.DropDownList("ddlDropDownList", new SelectList(Model.ListCentreActivities, "centreActivityID", "activityTitle", @Model.CentreActivities.centreActivityID), new { @class = "form-control", @required = "required", @id = "multipleSelectDropdown" })</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="changeBtn" type="button" class="btn btn-default" data-dismiss="modal">Change</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+<script src="~/Content/global/scripts/app.min.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/profile.min.js" type="text/javascript"></script>
+
+<link href="~/Content/global/plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+<script src="~/Content/global/plugins/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+
+@*Datepicker*@
+<script src="~/Content/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="~/Content/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" type="text/css" />
+
+
+<script>
+    var selectedPatient = new Array();
+
+    $(document).ready(function () {
+
+        $("#manageAdhocDiv").load('@(Url.Action("GetAffectedPatient", "Supervisor",null, Request.Url.Scheme))?id=' + @Model.CentreActivities.centreActivityID);
+        console.log("Outside: " + document.getElementById("endDate").value);
+
+        //$("#startDate").datepicker().datepicker("setDate", new Date());
+        //$("#endDate").datepicker().datepicker("setDate", new Date());
+
+        function getDaytoSunday() {
+            var date = new Date();
+
+            lastDayOfWk = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 5);
+
+            //var current = new Date;
+            //var first = current.getDate() - current.getDay();
+            //var first = first + 1
+            //var last = first + 4;       // + 6 for sunday
+
+            //var sunday = new Date(current.setDate(last)).toUTCString();
+
+            //var today = new Date();
+            //var diff = Math.floor((Date.parse(sunday) - Date.parse(today)) / 86400000);
+
+            //console.log("Today: " + today);
+            //console.log("Today: " + sunday);
+            //console.log("Result: " + diff);
+            //console.log("getDaytoSunday: " + document.getElementById("endDate").value);
+            return lastDayOfWk;
+        }
+
+     
+            //$("#startDate").datepicker({ minDate: -0, maxDate: "+0D", dateFormat: 'yy-mm-dd' }).datepicker("setDate", new Date());
+        $("#startDate").datepicker({
+            startDate: new Date(),
+            endDate: getDaytoSunday(),
+            format: 'dd/mm/yyyy',
+            todayHighlight: true,
+        });
+
+        $("#endDate").datepicker({
+            startDate: new Date(),
+            endDate: getDaytoSunday(),
+            format: 'dd/mm/yyyy',
+            todayHighlight: true,
+        });
+
+        $("#startDate").datepicker().datepicker("setDate", new Date());
+        $("#endDate").datepicker().datepicker("setDate", new Date());
+
+
+        $("#startDate").change(function () {
+
+            var dt2 = $('#endDate');
+
+
+            var minDate = $(this).datepicker('getDate');
+            dt2.datepicker().datepicker("setDate", minDate);
+
+            dt2.datepicker('option', 'startDate', minDate);
+            dt2.datepicker('option', 'endDate', getDaytoSunday());
+
+
+            //var dt2Date = dt2.datepicker('getDate');
+            ////difference in days. 86400 seconds in day, 1000 ms in second
+            //var dateDiff = (dt2Date - minDate) / (86400 * 1000);
+
+            //if (dt2Date == null || dateDiff < 0) {
+            //    dt2.datepicker('setDate', minDate);
+            //}
+
+            console.log("End Date:" + dt2.datepicker('getDate'));
+
+            //sets dt2 maxDate to the last day of 30 days window
+            //dt2.datepicker('option', 'startDate', getDaytoSunday());
+            //dt2.datepicker('option', 'endDate', minDate);
+
+            document.getElementById("startDate").value = this.value;
+
+            $("#manageAdhocDiv").load('@(Url.Action("GetAffectedPatient", "Supervisor",null, Request.Url.Scheme))?id=' + @Model.CentreActivities.centreActivityID + "&endDate=" + document.getElementById("endDate").value);
+
+
+        });
+
+          
+
+        $("#endDate").change(function () {
+            //console.log("Hellow DatePicker !");
+            //console.log("First: " + document.getElementById("endDate").value);
+            $("#manageAdhocDiv").load('@(Url.Action("GetAffectedPatient", "Supervisor",null, Request.Url.Scheme))?id=' + @Model.CentreActivities.centreActivityID + "&endDate=" + this.value);
+            //console.log("Second: " + document.getElementById("endDate").value);
+            document.getElementById("endDate").value = this.value;
+            //console.log("Third: " + document.getElementById("endDate").value);
+            console.log("This value:" + this.value);
+
+        });
+
+
+        $("#checkAll").click(function () {
+            if ($("#checkAll").prop('checked')) {
+                removeExistingSelectdPatient(this.value);
+
+                $('input:checkbox').not(this).prop('checked', this.checked);
+
+                $('input[name="chk"]:checked').each(function () {
+                    removeExistingSelectdPatient(this.value);
+
+                    selectedPatient.push(this.value);
+                });
+
+            } else {
+                $('input[name="chk"]:checked').prop('checked', false).each(function () {
+                    removeExistingSelectdPatient(this.value);
+
+                });
+            }
+        });
+
+        $('input[name="chk"]').click(function () {
+
+            if ($(this).prop('checked')) {
+                removeExistingSelectdPatient(this.value);
+
+                selectedPatient.push(this.value);
+            } else {
+                removeExistingSelectdPatient(this.value);
+            }
+        });
+
+        function removeExistingSelectdPatient(patientID) {
+            if (!jQuery.isEmptyObject(selectedPatient)) {
+                var n = jQuery.inArray(patientID, selectedPatient);
+                if (selectedPatient[n] == patientID) {
+                    selectedPatient.splice(n, 1);
+                }
+            }
+        }
+
+        $("#changeBtn").click(function () {
+            $('input[name="chk"]:checked').prop('checked', false).each(function () {
+                $('input:checkbox').not(this).prop('checked', this.checked);
+                removeExistingSelectdPatient(this.value);
+                console.log(this.value);
+                var dropdownElement = document.getElementById("drop" + this.value);
+                dropdownElement.value = document.getElementById("multipleSelectDropdown").value;
+            });
+        });
+
+        $("#btnSelectedActivity").click(function () {
+            if (!jQuery.isEmptyObject(selectedPatient)) {
+                $("#myModal").modal('show');
+            }
+            else {
+                alert('Please select at least one patient !');
+            }
+        });
+    });
+</script>

@@ -1,0 +1,103 @@
+﻿@using Microsoft.AspNet.Identity
+@using NTU_FYP_REBUILD_17.Models
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Pear</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="" name="author" />
+    <link href="~/Content/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/global/css/components-md.min.css" rel="stylesheet" id="style_components" type="text/css" />
+    <link href="~/Content/global/css/plugins-md.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/layouts/layout3/css/layout.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/layouts/layout3/css/themes/default.min.css" rel="stylesheet" type="text/css" id="style_color" />
+    <link href="~/Content/layouts/layout3/css/custom.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body class="page-container-bg-solid page-md">
+    <!-- onload="alertBox()"-->
+    <div class="modal" id="MyModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Notice</h4>
+                </div>
+                <div class="modal-body" align="center">
+                    <p>@TempData["Message"]</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default grey" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-wrapper">
+        <div class="page-wrapper-row">
+            <div class="page-wrapper-top">
+                <div class="page-header">
+                    <div class="page-header-top">
+                        <div class="container">
+                            <div class="page-logo">
+                                <a href="https://pear.fyp2017.com/">
+                                    <img src="~/Image/logo.png" alt="logo" class="logo-default">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-header-menu">
+                        <div class="container">
+                            @Html.Partial("_NavBarDefault")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page-wrapper-row full-height">
+            <div class="page-wrapper-middle">
+                <div class="page-container">
+                    <div class="page-content-wrapper">
+                        <div class="page-content">
+                            <div class="container">
+                                @RenderBody()
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="page-wrapper-row">
+            <div class="page-wrapper-bottom">
+                <div class="page-footer">
+                    <div class="container">
+                        &copy; @DateTime.Now.Year -
+                        <a target="_blank" href="#">PEAR</a> &nbsp;
+                    </div>
+                </div>
+                <div class="scroll-to-top">
+                    <i class="icon-arrow-up"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="quick-nav-overlay"></div>
+    <script>
+        $(document).ready(function () {
+            $('#clickmewow').click(function () {
+                $('#radio1003').attr('checked', 'checked');
+            });
+        })
+    </script>
+    @*@Html.Raw(TempData["Message"])*@
+</body>
+</html>

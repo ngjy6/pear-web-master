@@ -1,0 +1,188 @@
+﻿@using NTU_FYP_REBUILD_17.Models
+@using Microsoft.AspNet.Identity
+@using Newtonsoft.Json
+@model NTU_FYP_REBUILD_17.ViewModels.notificationDoctorList
+
+<!DOCTYPE html>
+<style>
+    * {
+        margin: 0px;
+        padding: 0px;
+        font-family: Helvetica, Arial, sans-serif;
+        text-size-adjust: none;
+        text-size-adjust: auto;
+    }
+
+    /* Full-width input fields */
+
+    /* Center the image and position the close button */
+    .imgcontainer#imgcontainerNoti {
+        text-align: center;
+        margin: 24px 0 12px 0;
+        position: relative;
+        text-size-adjust: none;
+    }
+
+    .avatar#avatarNoti {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+    }
+
+    /* The Modal (background) */
+    .modal#modal-wrapper2 {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+        z-index: 9999;
+    }
+
+    /* Modal Content Box */
+    .modal-content#modelcontentNoti {
+        text-align: center;
+        background-color: #fefefe;
+        margin: 4% auto 15% auto;
+        border: 1px solid #888;
+        table-layout: fixed;
+        width: 60%;
+        padding-bottom: 30px;
+    }
+
+    /* Add Zoom Animation */
+    .animate {
+        animation: zoom 0.6s;
+    }
+
+    @@keyframes zoom {
+        from {
+            transform: scale(0);
+        }
+
+        to {
+            transform: scale(1);
+        }
+    }
+
+    a.fa-globe {
+        position: relative;
+        font-size: 2.5em;
+        color: grey;
+        cursor: pointer;
+    }
+
+    span.fa-comment {
+        position: absolute;
+        font-size: 0.6em;
+        top: -4px;
+        color: red;
+        right: -4px;
+    }
+
+    span.num {
+        position: absolute;
+        font-size: 0.5em;
+        top: 1px;
+        color: #fff;
+        right: 2px;
+    }
+
+    table#myTableNoti {
+        text-align: center;
+        table-layout: fixed;
+        color: gray;
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 80%;
+    }
+
+    td#myColNoti {
+        text-align: center;
+        border: 1px;
+        color: black;
+        height: 50px;
+        font-size: 120%;
+        word-wrap: break-word;
+        border-bottom: 1px solid #000;
+        border-top: 1px solid #000;
+    }
+
+    tr:hover#myRowNoti {
+        text-align: center;
+        cursor: pointer;
+        background-color: lightgray;
+    }
+</style>
+
+
+<html>
+
+<body>
+    <a class="fa fa-globe" onclick="document.getElementById('modal-wrapper2').style.display='block'">
+        <span class="fa fa-comment" id="redshape"></span>
+        <span class="num" id="num">
+            @Model.doctorList.Count
+        </span>
+    </a>
+
+    <div id="modal-wrapper2" class="modal">
+        <form class="modal-content animate" id="modelcontentNoti">
+            <div class="modal-header">
+                <button type="button" onclick="closeModal()" class="close">&times;</button>
+            </div>
+            <div class="imgcontainer" id="imgcontainerNoti">
+                <span onclick="document.getElementById('modal-wrapper2').style.display='none'"></span>
+                <img src="~/Image/Notification.png" alt="Avatar" class="avatar" id="avatarNoti">
+                <h1 style="text-align:center">Notification Message</h1>
+            </div>
+            <br />
+            <div align="center">
+                <table>
+                    @for (var i = 0; i < Model.doctorList.Count; i++)
+                    {
+                        var patientName = Model.doctorList[i].patientName;
+                        var message = Model.doctorList[i].message;
+                        var href = Model.doctorList[i].href;
+                        var date = Model.doctorList[i].statusChangedDateTime;
+                        <tr class="Notification" id="myRowNoti" onclick='@string.Format("location.href = '{0}'", href)'>
+                            <td id=myColNoti><b><i> @string.Format("{0}", patientName) </i></b> @string.Format("{0} {1}", message, date.ToString("dd/MM/yyyy")) </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </form>
+    </div>
+
+    <a href='#' id="dnperm"></a><br /><br />
+    <br>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous">
+    </script>
+
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<script>
+	// If user clicks anywhere outside of the modal, Modal will close
+	var modal = document.getElementById('modal-wrapper2');
+	window.onclick = function (event) {
+		if (event.target == modal) {
+			modal.style.display = "none";
+		}
+	}
+
+	function closeModal() {
+		var modal = document.getElementById('modal-wrapper2');
+		modal.style.display = "none";
+	}
+</script>
+

@@ -1,0 +1,439 @@
+﻿
+@model NTU_FYP_REBUILD_17.ViewModels.ArchiveSQLViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/ArchiveSQL/__LayoutArchive.cshtml";
+}
+
+<style>
+    #myDIV {
+        background-color: aliceblue;
+    }
+
+
+
+    /* Popup container */
+    .popup {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+        /* The actual popup (appears on top) */
+        .popup .popuptext {
+            visibility: hidden;
+            width: 160px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -80px;
+        }
+
+            /* Popup arrow */
+            .popup .popuptext::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #555 transparent transparent transparent;
+            }
+
+        /* Toggle this class when clicking on the popup container (hide and show the popup) */
+        .popup .show {
+            visibility: visible;
+            -webkit-animation: fadeIn 1s;
+            animation: fadeIn 1s
+        }
+</style>
+
+
+<h2>Filter function</h2>
+@using (Html.BeginForm("Filter",
+                        "ArchiveSQL",
+                        FormMethod.Post,
+                        new { enctype = "multipart/form-data" }))
+{
+
+    <table>
+        <tbody>
+            <tr>
+                <td>
+                    Has been Approved:
+                </td>
+                <td>
+                    Yes
+                    @Html.CheckBoxFor(m => m.approvedYes)
+                    No
+                    @Html.CheckBoxFor(m => m.approvedNo)
+                    <text class="popup" onclick="myFunctionPOP4()">
+                        <b>Help!</b>
+                        <span class="popuptext" id="myPopup4">
+                            Info: Search for approved or unapproved entries.
+                        </span>
+                    </text>
+                </td>
+            </tr>
+        </tbody>
+
+        <tbody>
+            <tr>
+                <td>
+                    Has been Deleted:
+                </td>
+                <td>
+                    Yes
+                    @Html.CheckBoxFor(m => m.deletedYes)
+                    No
+                    @Html.CheckBoxFor(m => m.deletedNo)
+                    <text class="popup" onclick="myFunctionPOP5()">
+                        <b>Help!</b>
+                        <span class="popuptext" id="myPopup5">
+                            Info: Search for deleted or active entries.
+                        </span>
+                    </text>
+                </td>
+            </tr>
+        </tbody>
+
+        @*<tbody>
+                <tr>
+                    <td>
+                        Created Date:
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(m => m.compare, new SelectList(ViewBag.Compare))
+                    </td>
+                    <td>
+                        @Html.TextBoxFor(model => model.createdDate, new { type = "date" })
+                        <text class="popup" onclick="myFunctionPOP6()">
+                            <b>Help!</b>
+                            <span class="popuptext" id="myPopup6">
+                                Info: Search for created date of a patient with the provided date.
+                            </span>
+                        </text>
+                    </td>
+                </tr>
+            </tbody>*@
+    </table>
+
+    <table>
+        @for (int i = 0; i < Model.allTablename.Count; i = i + 4)
+        {
+            if (i + 3 < Model.allTablename.Count)
+            {
+                <tr>
+                    <td class="js-export-checkbox">
+                        @Html.CheckBoxFor(m => m.allTablename[i].checktablename)
+                        @Model.allTablename[i].tablename
+                        @Html.HiddenFor(x => x.allTablename[i].tablename)
+                    </td>
+                    <td class="js-export-checkbox">
+                        @Html.CheckBoxFor(m => m.allTablename[i + 1].checktablename)
+                        @Model.allTablename[i + 1].tablename
+                        @Html.HiddenFor(x => x.allTablename[i + 1].tablename)
+                    </td>
+                    <td class="js-export-checkbox">
+                        @Html.CheckBoxFor(m => m.allTablename[i + 2].checktablename)
+                        @Model.allTablename[i + 2].tablename
+                        @Html.HiddenFor(x => x.allTablename[i + 2].tablename)
+                    </td>
+                    <td class="js-export-checkbox">
+                        @Html.CheckBoxFor(m => m.allTablename[i + 3].checktablename)
+                        @Model.allTablename[i + 3].tablename
+                        @Html.HiddenFor(x => x.allTablename[i + 3].tablename)
+                    </td>
+                </tr>}
+            else if (i + 2 < Model.allTablename.Count)
+            {
+                <td class="js-export-checkbox">
+                    @Html.CheckBoxFor(m => m.allTablename[i].checktablename)
+                    @Model.allTablename[i].tablename
+                    @Html.HiddenFor(x => x.allTablename[i].tablename)
+                </td>
+                <td class="js-export-checkbox">
+                    @Html.CheckBoxFor(m => m.allTablename[i + 1].checktablename)
+                    @Model.allTablename[i + 1].tablename
+                    @Html.HiddenFor(x => x.allTablename[i + 1].tablename)
+                </td>
+                <td class="js-export-checkbox">
+                    @Html.CheckBoxFor(m => m.allTablename[i + 2].checktablename)
+                    @Model.allTablename[i + 2].tablename
+                    @Html.HiddenFor(x => x.allTablename[i + 2].tablename)
+                </td>
+            }
+            else if (i + 1 < Model.allTablename.Count)
+            {
+                <td class="js-export-checkbox">
+                    @Html.CheckBoxFor(m => m.allTablename[i].checktablename)
+                    @Model.allTablename[i].tablename
+                    @Html.HiddenFor(x => x.allTablename[i].tablename)
+                </td>
+                <td class="js-export-checkbox">
+                    @Html.CheckBoxFor(m => m.allTablename[i + 1].checktablename)
+                    @Model.allTablename[i + 1].tablename
+                    @Html.HiddenFor(x => x.allTablename[i + 1].tablename)
+                </td>
+            }
+            else
+            {
+                <td class="js-export-checkbox">
+                    @Html.CheckBoxFor(m => m.allTablename[i].checktablename)
+                    @Model.allTablename[i].tablename
+                    @Html.HiddenFor(x => x.allTablename[i].tablename)
+                </td>
+            }
+        }
+        <td>
+            <input type="checkbox" onClick="checkAll(this)" /> Check All<br />
+        </td>
+    </table>
+    <br />
+
+    if (Model.filterPageResult.Count() != 0)
+    {
+        <input type="submit" name="submitbutton1" value="Filter"/>
+        <input type="submit" name="submitbutton2" value="Export to Excel" />
+    }
+    else
+    {
+        <h1>
+            <font face="verdana" color="red">No patient was selected. Please select a patient from search page.</font>
+        </h1>
+    }
+
+
+
+
+
+
+    for (int i = 0; i < Model.filterPageResult.Count(); i++)
+    {
+        <table border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <td>
+                        <b>Patient NRIC: @Model.filterPageResult[i].nric</b>
+                        <br />
+                        <b>FirstName: @Model.filterPageResult[i].patientfirstname</b>
+                        <br />
+                        <b>LastName: @Model.filterPageResult[i].patientlastname</b>
+                        <br />
+                        <b>Database: @Model.filterPageResult[i].dbname</b>
+                        @Html.HiddenFor(m => m.listGetPatientIDandYear[i].patientID, new { id = "natureOfVisitField", Value = @Model.filterPageResult[i].patientID.ToString() })
+                        @Html.HiddenFor(m => m.listGetPatientIDandYear[i].name, new { id = "natureOfVisitField", Value = @Model.filterPageResult[i].dbname })
+                    </td>
+                </tr>
+            </thead>
+            @for (int j = 0; j < Model.filterPageResult[i].patientListviaPatientID.Count(); j++)
+            {
+                <thead>
+                    <tr>
+                        <td>
+                            <b>@Model.filterPageResult[i].patientListviaPatientIDtablename[j] table</b>
+                        </td>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                    <tr>
+                        @foreach (System.Data.DataColumn col in Model.filterPageResult[i].patientListviaPatientID[j].Columns)
+                        {
+                            <td>@col.Caption</td>
+                        }
+                    </tr>
+                </tbody>
+
+                <tbody>
+                    @foreach (System.Data.DataRow row in Model.filterPageResult[i].patientListviaPatientID[j].Rows)
+                    {
+                        <tr>
+                            @if (row.ItemArray.Count() > 0)
+                            {
+
+                                for (int x = 0; x < row.ItemArray.Count(); x++)
+                                {
+                                    <td>
+                                        @row.ItemArray[x].ToString()
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    }
+                </tbody>
+
+                if (Model.filterPageResult[i].patientListviaPatientID[j].Rows.Count == 0)
+                {
+                    <tr>
+                        <td>
+                            NO RECORD FOUND!
+                        </td>
+                    </tr>
+                }
+
+
+            }
+            @for (int j = 0; j < Model.filterPageResult[i].patientListviaAllocationID.Count(); j++)
+            {
+                <thead>
+                    <tr>
+                        <td>
+                            <b>@Model.filterPageResult[i].patientListviaAllocationIDtablename[j] table</b>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @foreach (System.Data.DataColumn col in Model.filterPageResult[i].patientListviaAllocationID[j].Columns)
+                        {
+                            <td>@col.Caption</td>
+                        }
+                    </tr>
+                </tbody>
+
+                <tbody>
+                    @foreach (System.Data.DataRow row in Model.filterPageResult[i].patientListviaAllocationID[j].Rows)
+                    {
+                        <tr>
+                            @for (int x = 0; x < row.ItemArray.Count(); x++)
+                            {
+                                <td>
+                                    @row.ItemArray[x].ToString()
+
+                                </td>
+                            }
+                        </tr>
+
+                    }
+                </tbody>
+
+                if (Model.filterPageResult[i].patientListviaAllocationID[j].Rows.Count == 0)
+                {
+                    <tr>
+                        <td>
+                            <b>NO RECORD FOUND!</b>
+                        </td>
+                    </tr>
+                }
+                <br />
+            }
+            @for (int j = 0; j < Model.filterPageResult[i].patientListviaSocialHistoryID.Count(); j++)
+            {
+                <thead>
+                    <tr>
+                        <td>
+                            <b>@Model.filterPageResult[i].patientListviaSocialHistoryIDtablename[j] table</b>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @foreach (System.Data.DataColumn col in Model.filterPageResult[i].patientListviaSocialHistoryID[j].Columns)
+                        {
+                            <td>@col.Caption</td>
+                        }
+                    </tr>
+                </tbody>
+
+                <tbody>
+                    @foreach (System.Data.DataRow row in Model.filterPageResult[i].patientListviaSocialHistoryID[j].Rows)
+                    {
+                        <tr>
+                            @for (int x = 0; x < row.ItemArray.Count(); x++)
+                            {
+                                <td>
+                                    @row.ItemArray[x].ToString()
+
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+
+                if (Model.filterPageResult[i].patientListviaSocialHistoryID[j].Rows.Count == 0)
+                {
+                    <tr>
+                        <td>
+                            <b>NO RECORD FOUND!</b>
+                        </td>
+                    </tr>
+                }
+            }
+
+        </table>
+        <br />
+    }
+}
+
+
+
+<script>
+
+    function myFunction() {
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+    function myFunctionPOP1() {
+        var popup = document.getElementById("myPopup1");
+        popup.classList.toggle("show");
+    }
+    function myFunctionPOP2() {
+        var popup = document.getElementById("myPopup2");
+        popup.classList.toggle("show");
+    }
+    function myFunctionPOP3() {
+        var popup = document.getElementById("myPopup3");
+        popup.classList.toggle("show");
+    }
+    function myFunctionPOP4() {
+        var popup = document.getElementById("myPopup4");
+        popup.classList.toggle("show");
+    }
+    function myFunctionPOP5() {
+        var popup = document.getElementById("myPopup5");
+        popup.classList.toggle("show");
+    }
+    function myFunctionPOP6() {
+        var popup = document.getElementById("myPopup6");
+        popup.classList.toggle("show");
+    }
+
+    function checkAll(ele) {
+        var checkboxes = document.getElementsByTagName('input');
+
+        if (ele.checked) {
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].type == 'checkbox') {
+                    if (checkboxes[i].name != 'approvedYes'
+                        && checkboxes[i].name != 'approvedNo' && checkboxes[i].name != 'deletedYes'
+                        && checkboxes[i].name != 'deletedNo')
+                        checkboxes[i].checked = true;
+                }
+            }
+
+        } else {
+            for (var i = 0; i < checkboxes.length; i++) {
+                console.log(i)
+                if (checkboxes[i].type == 'checkbox') {
+                    if (checkboxes[i].name != 'approvedYes'
+                        && checkboxes[i].name != 'approvedNo' && checkboxes[i].name != 'deletedYes'
+                        && checkboxes[i].name != 'deletedNo')
+                        checkboxes[i].checked = false;
+                }
+            }
+        }
+    }
+</script>

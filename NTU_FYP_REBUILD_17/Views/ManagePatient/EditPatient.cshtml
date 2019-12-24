@@ -1,0 +1,929 @@
+﻿@using Microsoft.AspNet.Identity
+@using NTU_FYP_REBUILD_17.Models
+@using ModelBinderAttribute = System.Web.Http.ModelBinding.ModelBinderAttribute
+@model NTU_FYP_REBUILD_17.ViewModels.EditPatientViewModel
+
+@{
+    ViewBag.Title = "EditPatient";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-content-inner">
+    <div class="profile">
+        <div class="tabbable-line tabbable-full-width">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#tab_1_1" data-toggle="tab"> Overview</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_1_1">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <ul class="list-unstyled profile-nav">
+                                <li>
+                                    <img src="@Model.Album.albumPath" class="img-responsive pic-bordered" alt="" width="737px" height="800px" />
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="row">
+                                <div class="col-md-7 profile-info">
+                                    <h1 class="font-green sbold uppercase">Patient - @Model.Patient.firstName @Model.Patient.lastName</h1>
+                                    <ul class="list-inline">
+                                        @if (@Model.Patient.gender == "M")
+            {
+                                            <li>
+                                                <i class="fa fa-male"></i> Male
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li>
+                                                <i class="fa fa-female"></i> Female
+                                            </li>
+                                        }
+
+                                        <li>
+                                            <i class="fa fa-credit-card"></i>@Model.Patient.nric.Remove(1, 4).Insert(1, "xxxx")
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-calendar"></i> @Model.Patient.DOB.ToString(String.Format("dd/MM/yyyy"))
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-mobile-phone"></i> @Model.Patient.handphoneNo
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-5 profile-info">
+                                    <h1 class="font-green sbold uppercase">Guardian - @Model.Patient.PatientGuardian.guardianName</h1>
+                                    <ul class="list-inline">
+                                        <li>
+                                            <i class="fa fa-envelope"></i> @Model.Patient.guardianEmail
+                                        </li>
+                                        <li>
+                                            <i class="fa fa-mobile-phone"></i> @Model.Patient.guardianContactNo
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tabbable-line tabbable-custom-profile">
+                                <ul class="nav nav-tabs">
+                                    <li class="active">
+                                        <a href="#tab_1_11" data-toggle="tab"> Information </a>
+                                    </li>
+                                    <li>
+                                        <a href="#tab_1_22" data-toggle="tab"> Game Category Recommendation </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab_1_11">
+                                    <div class="portlet-body">
+                                    @foreach (var patientAllocation in Model.PatientAllocations.Where(pa => pa.patientID == @Model.Patient.patientID))
+                                    {
+                                        if (Model.GamesTypeRecommendations.Where(g => g.patientAllocationID == patientAllocation.patientAllocationID).Where(a => a.endDate > DateTime.Today).Any())
+                                        {
+                                            <div class="portlet light ">
+                                                <div class="portlet-title">
+                                                    <div class="caption">
+                                                        <i class="fa fa-gamepad font-red"></i>
+                                                        <span class="caption-subject font-red sbold uppercase">Game Recommended</span>
+                                                    </div>
+                                                </div>
+                                                <div class="portlet-body">
+                                                    <div class="table-scrollable">
+                                                        <table class="table table-hover table-light">
+                                                            <thead>
+                                                            <tr>
+                                                                <th> Type </th>
+                                                                <th> Status </th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach (var gameRecommend in Model.GamesTypeRecommendations.Where(g => g.patientAllocationID == patientAllocation.patientAllocationID).Where(a => a.endDate > DateTime.Today))
+                                                            {
+                                                                if (@gameRecommend.categoryID == 1)
+                                                                {
+                                                                    <tr>
+                                                                        <td> <i class="fa fa-heartbeat"></i>&nbsp; Speed </td>
+                                                                        @if (@gameRecommend.isApproved == 1)
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-success"> Approved </span>
+                                                                            </td>
+                                                                        }
+                                                                        else if (@gameRecommend.isApproved == 2)
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-warning"> Suspended </span>
+                                                                            </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-info"> Pending </span>
+                                                                            </td>
+                                                                        }
+                                                                    </tr>
+                                                                }
+
+                                                                if (@gameRecommend.categoryID == 2)
+                                                                {
+                                                                    <tr>
+                                                                        <td> <i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp; Memory</td>
+                                                                        @if (@gameRecommend.isApproved == 1)
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-success"> Approved </span>
+                                                                            </td>
+                                                                        }
+                                                                        else if (@gameRecommend.isApproved == 2)
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-warning"> Suspended </span>
+                                                                            </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-info"> Pending </span>
+                                                                            </td>
+                                                                        }
+                                                                    </tr>
+                                                                }
+
+                                                                if (@gameRecommend.categoryID == 3)
+                                                                {
+                                                                    <tr>
+                                                                        <td> <i class="fa fa-exclamation-triangle"></i>&nbsp; Attention </td>
+                                                                        @if (@gameRecommend.isApproved == 1)
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-success"> Approved </span>
+                                                                            </td>
+                                                                        }
+                                                                        else if (@gameRecommend.isApproved == 2)
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-warning"> Suspended </span>
+                                                                            </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-info"> Pending </span>
+                                                                            </td>
+                                                                        }
+                                                                    </tr>
+                                                                }
+
+                                                                if (@gameRecommend.categoryID == 4)
+                                                                {
+                                                                    <tr>
+                                                                        <td> <i class="fa fa-arrows"></i>&nbsp; Flexibility </td>
+                                                                        @if (@gameRecommend.isApproved == 1)
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-success"> Approved </span>
+                                                                            </td>
+                                                                        }
+                                                                        else if (@gameRecommend.isApproved == 2)
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-warning"> Suspended </span>
+                                                                            </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-info"> Pending </span>
+                                                                            </td>
+                                                                        }
+                                                                    </tr>
+                                                                }
+
+                                                                if (@gameRecommend.categoryID == 5)
+                                                                {
+                                                                    <tr>
+                                                                        <td> <i class="fa fa-users"></i>&nbsp; Problem Solving </td>
+                                                                        @if (@gameRecommend.isApproved == 1)
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-success"> Approved </span>
+                                                                            </td>
+                                                                        }
+                                                                        else if (@gameRecommend.isApproved == 2)
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-warning"> Suspended </span>
+                                                                            </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-info"> Pending </span>
+                                                                            </td>
+                                                                        }
+                                                                    </tr>
+                                                                }
+
+                                                                if (@gameRecommend.categoryID == 6)
+                                                                {
+                                                                    <tr>
+                                                                        <td> <i class="fa fa-gamepad"></i>&nbsp; Hand-eye Coordination </td>
+                                                                        @if (@gameRecommend.isApproved == 1)
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-success"> Approved </span>
+                                                                            </td>
+                                                                        }
+                                                                        else if (@gameRecommend.isApproved == 2)
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-warning"> Suspended </span>
+                                                                            </td>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <td>
+                                                                                <span class="label label-sm label-info"> Pending </span>
+                                                                            </td>
+                                                                        }
+                                                                    </tr>
+                                                                }
+
+                                                            }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="portlet light portlet-fit ">
+                                                <div class="portlet-title">
+                                                    <div class="caption">
+                                                        <i class="fa fa-gamepad font-red"></i>
+                                                        <span class="caption-subject font-red sbold uppercase">Game Recommended</span>
+                                                    </div>
+                                                </div>
+                                                <div class="portlet-body">
+                                                    <div class="table-scrollable table-scrollable-borderless">
+                                                        <table class="table table-hover table-light">
+                                                            <thead>
+                                                            <tr class="uppercase">
+                                                                @*                                                        <th> Type </th>*@
+                                                                <th> No Game Recommended. </th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody></tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    <div class="modal fade bootstrapmodal">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+
+                                                    @using (Html.BeginForm("CreateDoctorNote", "ManagePatient", new {@class = "form-horizontal"}))
+                                                    {
+                                                        @Html.HiddenFor(p => p.patientID, new {@Value = @Model.Patient.patientID})
+                                                        @Html.HiddenFor(p => p.isApproved, new {@Value = "1"})
+                                                        @Html.HiddenFor(p => p.isDeleted, new {@Value = "0"})
+                                                        @Html.HiddenFor(p => p.userID, new {@Value = @User.Identity.GetUserTypeID()})
+                                                        <div class="form-body">
+                                                            <div class="well">
+                                                                <div class="form-group form-md-line-input has-success">
+                                                                    <label class="col-md-2 control-label" for="form_control_1">Patient Name:</label>
+                                                                    <div class="col-md-10">
+                                                                        <input type="text" class="form-control" disabled="" id="form_control_1" placeholder="@Model.Patient.firstName @Model.Patient.lastName">
+                                                                        <div class="form-control-focus"> </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group form-md-line-input has-success">
+                                                                    <label class="col-md-2 control-label" for="form_control_1">Notes</label>
+                                                                    <div class="col-md-10">
+                                                                        @Html.TextAreaFor(m => m.note, new {@class = "form-control", @row = "3", @placeholder = "Please type your notes here."})
+                                                                        <div class="form-control-focus"> </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="form-actions">
+                                                            <div class="row">
+                                                                <div class="col-md-10">
+                                                                    <button type="button" data-dismiss="modal" class="btn default">Cancel</button>
+                                                                    <button type="submit" class="btn blue">Submit</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if (Model.DoctorNotes.Any())
+                                    {
+                                        <div class="portlet light portlet-fit ">
+                                            <div class="portlet-title">
+                                                <div class="caption">
+                                                    <i class="fa fa-file-text-o font-red"></i>
+                                                    <span class="caption-subject font-red sbold uppercase">Doctor Notes</span>
+                                                </div>
+                                            </div>
+                                            <div class="portlet-body">
+                                                <a class="btn green btn-outline sbold uppercase" data-toggle="modal" data-target=".bootstrapmodal"><i class="fa fa-plus"></i> Add Note </a>
+                                                <div class="table-scrollable table-scrollable-borderless">
+                                                    <table class="table table-hover table-light">
+                                                        <thead>
+                                                        <tr class="uppercase">
+                                                            <th> Notes </th>
+                                                            <th> Status </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach (var doctorNotes in Model.DoctorNotes)
+                                                        {
+                                                            <tr>
+                                                                <td> @doctorNotes.note </td>
+                                                                @if (@doctorNotes.isApproved == 1)
+                                                                {
+                                                                    <td>
+                                                                        <span class="label label-sm label-success"> Approved </span>
+                                                                    </td>
+                                                                }
+                                                                else if (@doctorNotes.isApproved == 2)
+                                                                {
+                                                                    <td>
+                                                                        <span class="label label-sm label-warning"> Suspended </span>
+                                                                    </td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td>
+                                                                        <span class="label label-sm label-info"> Pending </span>
+                                                                    </td>
+                                                                }
+                                                            </tr>
+                                                        }
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="portlet light portlet-fit ">
+                                            <div class="portlet-title">
+                                                <div class="caption">
+                                                    <i class="fa fa-file-text-o font-red"></i>
+                                                    <span class="caption-subject font-red sbold uppercase">Doctor Notes</span>
+                                                </div>
+                                            </div>
+                                            <div class="portlet-body">
+                                                <a class="btn green btn-outline sbold uppercase" data-toggle="modal" data-target=".bootstrapmodal"><i class="fa fa-plus"></i> Add Note </a>
+                                                <div class="table-scrollable table-scrollable-borderless">
+                                                    <table class="table table-hover table-light">
+                                                        <thead>
+                                                        <tr class="uppercase">
+                                                            <th> No Doctor Notes </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    @if (Model.Allergies.Any())
+                                    {
+                                        <div class="portlet light portlet-fit ">
+                                            <div class="portlet-title">
+                                                <div class="caption">
+                                                    <i class="fa fa-file-text-o font-red"></i>
+                                                    <span class="caption-subject font-red sbold uppercase">Medical Condition</span>
+                                                </div>
+                                            </div>
+                                            <div class="portlet-body">
+                                                <div class="table-scrollable table-scrollable-borderless">
+                                                    <table class="table table-hover table-light">
+                                                        <thead>
+                                                        <tr class="uppercase">
+                                                            @*                                                        <th> Type </th>*@
+                                                            <th> Allergy </th>
+                                                            <th> Reaction </th>
+                                                            <th> Notes </th>
+                                                            <th> Status </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        @foreach (var medicalCondition in Model.Allergies.Where(a => a.patientID == @Model.Patient.patientID))
+                                                        {
+                                                            <tr>
+                                                                <td> @medicalCondition.allergy </td>
+                                                                <td> @medicalCondition.reaction </td>
+                                                                <td> @medicalCondition.notes </td>
+                                                                @if (@medicalCondition.isApproved == 1)
+                                                                {
+                                                                    <td>
+                                                                        <span class="label label-sm label-success"> Approved </span>
+                                                                    </td>
+                                                                }
+                                                                else if (@medicalCondition.isApproved == 2)
+                                                                {
+                                                                    <td>
+                                                                        <span class="label label-sm label-warning"> Suspended </span>
+                                                                    </td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td>
+                                                                        <span class="label label-sm label-info"> Pending </span>
+                                                                    </td>
+                                                                }
+                                                            </tr>
+                                                        }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="portlet light portlet-fit ">
+                                            <div class="portlet-title">
+                                                <div class="caption">
+                                                    <i class="fa fa-file-text-o font-red"></i>
+                                                    <span class="caption-subject font-red sbold uppercase">Medical Condition</span>
+                                                </div>
+                                            </div>
+                                            <div class="portlet-body">
+                                                <div class="table-scrollable table-scrollable-borderless">
+                                                    <table class="table table-hover table-light">
+                                                        <thead>
+                                                        <tr class="uppercase">
+                                                            @*                                                        <th> Type </th>*@
+                                                            <th> No Medical Condition. </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    @foreach (var patientAllocation in Model.PatientAllocations.Where(pa => pa.patientID == @Model.Patient.patientID))
+                                    {
+                                        if (Model.GamesTypeRecommendations.Where(g => g.patientAllocationID == patientAllocation.patientAllocationID).Where(a => a.endDate > DateTime.Today).Any())
+                                        {
+                                            <div class="portlet light ">
+                                                <div class="portlet-title">
+                                                    <div class="caption">
+                                                        <i class="fa fa-gamepad font-red"></i>
+                                                        <span class="caption-subject font-red sbold uppercase">Game Categories</span>
+                                                    </div>
+                                                </div>
+                                                <div class="portlet-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover table-light">
+                                                            <thead>
+                                                            <tr>
+                                                                <th> Category </th>
+                                                                <th> Comment </th>
+                                                                <th> Reason </th>
+                                                                <th> Days </th>
+                                                                <th> Duration (Minutes) </th>
+                                                                <th> Date Assigned </th>
+                                                                <th> Doctor Prescription </th>
+                                                                <th> Game Therapist Prescription </th>
+                                                                <th> Supervisor Approval </th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            @foreach (var gameRecommend in Model.GamesTypeRecommendations.Where(g => g.patientAllocationID == patientAllocation.patientAllocationID).Where(a => a.endDate > DateTime.Today))
+                                                            {
+                                                                <tr>
+                                                                    @foreach (var gameCategory in Model.Categories.Where(gc => gc.categoryID == gameRecommend.categoryID))
+                                                                    {
+                                                                        <td>
+                                                                            <a href="@Url.Action("ViewReport", "ManagePatient", new {id = patientAllocation.patientAllocationID, catid = @gameCategory.categoryID, startDate = 0, endDate = 0})" class="dark btn-sm btn-outline sbold uppercase" title="Click to View Report">
+                                                                                <i class="fa fa-share"></i>
+                                                                                @gameCategory.categoryName
+                                                                            </a>
+                                                                        </td>
+                                                                    }
+                                                                    <td>@gameRecommend.comment</td>
+                                                                    <td>@gameRecommend.reason</td>
+                                                                    <td>@gameRecommend.days</td>
+                                                                    <td>@gameRecommend.duration</td>
+                                                                    <td>@gameRecommend.createDateTime.ToString(String.Format("dd/MM/yyyy"))</td>
+                                                                    @if (@gameRecommend.isDeleted == 0)
+                                                                    {
+                                                                        <td>
+                                                                            <span class="label label-sm label-success"> &nbsp;&nbsp;&nbsp;Yes&nbsp;&nbsp;&nbsp; </span>
+                                                                        </td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td>
+                                                                            <span class="label label-sm label-info"> &nbsp;&nbsp;&nbsp;No&nbsp;&nbsp;&nbsp; </span>
+                                                                        </td>
+                                                                    }
+                                                                    @if (@gameRecommend.therapistIsDeleted == 0)
+                                                                    {
+                                                                        <td>
+                                                                            <span class="label label-sm label-success"> &nbsp;&nbsp;&nbsp;Yes&nbsp;&nbsp;&nbsp; </span>
+                                                                        </td>
+                                                                    }
+                                                                    else
+                                                                    {
+
+                                                                        <td>
+                                                                            <span class="label label-sm label-info"> &nbsp;&nbsp;&nbsp;No&nbsp;&nbsp;&nbsp; </span>
+                                                                        </td>
+                                                                    }
+                                                                    @if (@gameRecommend.isApproved == 1)
+                                                                    {
+                                                                        <td>
+                                                                            <span class="label label-sm label-success"> &nbsp;&nbsp;&nbsp;Yes&nbsp;&nbsp;&nbsp; </span>
+                                                                        </td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td>
+                                                                            <span class="label label-sm label-info"> &nbsp;&nbsp;&nbsp;No&nbsp;&nbsp;&nbsp; </span>
+                                                                        </td>
+                                                                    }
+                                                                </tr>
+
+                                                            }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="portlet light ">
+                                                <div class="portlet-title">
+                                                    <div class="caption">
+                                                        <i class="fa fa-gamepad font-red"></i>
+                                                        <span class="caption-subject font-red sbold uppercase">Game Categories</span>
+                                                    </div>
+                                                </div>
+                                                <div class="portlet-body">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover table-light">
+                                                            <thead>
+                                                            <tr>
+                                                                <th> No Game Categories. </th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody></tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab_1_22">
+                                        <div class="tab-pane active" id="tab_1_1_1">
+                                            <div class="portlet light ">
+                                                <div class="portlet-title">
+                                                    <div class="caption font-red">
+                                                        <i class="fa fa-gamepad font-red"></i>
+                                                        <span class="caption-subject bold uppercase"> Recommended Games</span>
+                                                    </div>
+                                                </div>
+                                            <div class="portlet-body form">
+                                            @{
+                                                bool speed1 = false;
+                                                bool memory1 = false;
+                                                bool attention1 = false;
+                                                bool flexibility1 = false;
+                                                bool problemSolving1 = false;
+                                                bool handEyeCoordination1 = false;
+                                            }
+                                            @foreach (var patientAllocation in Model.PatientAllocations.Where(pa => pa.patientID == @Model.Patient.patientID))
+                                            {
+                                                if (Model.GamesTypeRecommendations.Where(g => g.patientAllocationID == patientAllocation.patientAllocationID).Where(a => a.endDate > DateTime.Today).Any())
+                                                {
+                                                    foreach (var gameRecommend in Model.GamesTypeRecommendations.Where(g => g.patientAllocationID == patientAllocation.patientAllocationID).Where(a => a.endDate > DateTime.Today))
+                                                    {
+                                                        if (@gameRecommend.categoryID == 1)
+                                                        {
+                                                            speed1 = true;
+                                                        }
+                                                        else if (@gameRecommend.categoryID == 2)
+                                                        {
+                                                            memory1 = true;
+                                                        }
+                                                        else if (@gameRecommend.categoryID == 3)
+                                                        {
+                                                            attention1 = true;
+                                                        }
+                                                        else if (@gameRecommend.categoryID == 4)
+                                                        {
+                                                            flexibility1 = true;
+                                                        }
+                                                        else if (@gameRecommend.categoryID == 5)
+                                                        {
+                                                            problemSolving1 = true;
+                                                        }
+                                                        else if (@gameRecommend.categoryID == 6)
+                                                        {
+                                                            handEyeCoordination1 = true;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            
+                                                @if (speed1 && memory1 && attention1 && flexibility1 && problemSolving1 && handEyeCoordination1)
+                                                {
+                                                    <h3>All Game Category Has Been Assign For This Patient.</h3>
+                                                }
+                                                else
+                                                {
+                                                    using (Html.BeginForm("CreateRecommendedGame", "ManagePatient", new {@class = "form-horizontal"}))
+                                                     {
+                                                         foreach (var patientAllocation in Model.PatientAllocations.Where(pa => pa.patientID == @Model.Patient.patientID))
+                                                         {
+                                                             @Html.HiddenFor(m => m.patientAllocationID, new {@Value = patientAllocation.patientAllocationID})
+                                                         }
+                                                         @Html.HiddenFor(m => m.superviousID, new {@Value = "3"})
+                                                         @Html.HiddenFor(m => m.therapistIsDeleted, new {@Value = "1"})
+                                                         @Html.HiddenFor(m => m.userID, new {@Value = @User.Identity.GetUserTypeID()})
+                                                         @Html.HiddenFor(m => m.patientID, new {@Value = @Model.Patient.patientID})
+                                                         <div class="form-body">
+                                                         @if (!speed1)
+                                                         {
+                                                             <div class="well">
+                                                                 <div class="form-group form-md-line-input has-success">
+                                                                     <label class="col-md-2 control-label" for="form_control_1">Category Name</label>
+                                                                     <div class="col-md-10">
+                                                                         <input type="text" class="form-control" disabled="" id="form_control_1" placeholder="Speed">
+                                                                         @Html.HiddenFor(m => m.categoryID, new {@Value = "1"})
+                                                                         <div class="form-control-focus"> </div>
+                                                                     </div>
+                                                                 </div>
+                                                                 <div class="form-group form-md-line-input has-success">
+                                                                     <label class="col-md-2 control-label" for="form_control_1">Number Of Day</label>
+                                                                     <div class="col-md-10">
+                                                                         @Html.TextBoxFor(m => m.duration, new {@class = "form-control", @placeholder = "Enter Days", @type = "number", @Value = "1", @max = "99", @min = "1"})
+                                                                         <div class="form-control-focus"> </div>
+                                                                         <span class="help-block">Days</span>
+                                                                     </div>
+                                                                 </div>
+                                                                 <div class="form-group form-md-line-input has-success">
+                                                                     <label class="col-md-2 control-label" for="form_control_1">Duration Each Day</label>
+                                                                     <div class="col-md-10">
+                                                                         @Html.TextBoxFor(m => m.days, new {@class = "form-control", @placeholder = "Enter Duration In Mintues", @type = "number", @Value = "1", @max = "99", @min = "1"})
+                                                                         <div class="form-control-focus"> </div>
+                                                                         <span class="help-block">Mintues</span>
+                                                                     </div>
+                                                                 </div>
+                                                                 <div class="form-group form-md-line-input has-success">
+                                                                     <label class="col-md-2 control-label" for="form_control_1">Description</label>
+                                                                     <div class="col-md-10">
+                                                                         @Html.TextAreaFor(m => m.reason, new {@class = "form-control", @row = "3", @placeholder = "Please type your Speed description here."})
+                                                                         <div class="form-control-focus"> </div>
+                                                                     </div>
+                                                                 </div>
+                                                             </div> 
+                                                         }
+                                               
+                                                    @if (!memory1)
+                                                    {
+                                                        <div class="well">
+                                                            <div class="form-group form-md-line-input has-error">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Category Name</label>
+                                                                <div class="col-md-10">
+                                                                    <input type="text" class="form-control" disabled="" id="form_control_1" placeholder="Memory">
+                                                                    @Html.HiddenFor(m => m.categoryID, new {@Value = "2"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-error">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Number Of Day</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextBoxFor(m => m.duration, new {@class = "form-control", @placeholder = "Enter Days", @type = "number", @Value = "1", @max = "99", @min = "1"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                    <span class="help-block">Days</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-error">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Duration Each Day</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextBoxFor(m => m.days, new {@class = "form-control", @placeholder = "Enter Duration In Mintues", @type = "number", @Value = "1", @max = "99", @min = "1"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                    <span class="help-block">Mintues</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-error">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Description</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextAreaFor(m => m.reason, new {@class = "form-control", @row = "3", @placeholder = "Please type your Memory description here."})
+                                                                    <div class="form-control-focus"> </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                
+                                                    @if (!attention1)
+                                                    {
+                                                        <div class="well">
+                                                            <div class="form-group form-md-line-input has-success">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Category Name</label>
+                                                                <div class="col-md-10">
+                                                                    <input type="text" class="form-control" disabled="" id="form_control_1" placeholder="Attention">
+                                                                    @Html.HiddenFor(m => m.categoryID, new {@Value = "3"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-success">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Number Of Day</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextBoxFor(m => m.duration, new {@class = "form-control", @placeholder = "Enter Days", @type = "number", @Value = "1", @max = "99", @min = "1"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                    <span class="help-block">Days</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-success">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Duration Each Day</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextBoxFor(m => m.days, new {@class = "form-control", @placeholder = "Enter Duration In Mintues", @type = "number", @Value = "1", @max = "99", @min = "1"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                    <span class="help-block">Mintues</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-success">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Description</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextAreaFor(m => m.reason, new {@class = "form-control", @row = "3", @placeholder = "Please type your Attention description here."})
+                                                                    <div class="form-control-focus"> </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    @if (!flexibility1)
+                                                    {
+                                                        <div class="well">
+                                                            <div class="form-group form-md-line-input has-error">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Category Name</label>
+                                                                <div class="col-md-10">
+                                                                    <input type="text" class="form-control" disabled="" id="form_control_1" placeholder="Flexibility">
+                                                                    @Html.HiddenFor(m => m.categoryID, new {@Value = "4"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-error">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Number Of Day</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextBoxFor(m => m.duration, new {@class = "form-control", @placeholder = "Enter Days", @type = "number", @Value = "1", @max = "99", @min = "1"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                    <span class="help-block">Days</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-error">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Duration Each Day</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextBoxFor(m => m.days, new {@class = "form-control", @placeholder = "Enter Duration In Mintues", @type = "number", @Value = "1", @max = "99", @min = "1"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                    <span class="help-block">Mintues</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-error">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Description</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextAreaFor(m => m.reason, new {@class = "form-control", @row = "3", @placeholder = "Please type your Flexibility description here."})
+                                                                    <div class="form-control-focus"> </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    @if (!problemSolving1)
+                                                    {
+                                                        <div class="well">
+                                                            <div class="form-group form-md-line-input has-success">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Category Name</label>
+                                                                <div class="col-md-10">
+                                                                    <input type="text" class="form-control" disabled="" id="form_control_1" placeholder="Problem Solving">
+                                                                    @Html.HiddenFor(m => m.categoryID, new {@Value = "5"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-success">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Number Of Day</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextBoxFor(m => m.duration, new {@class = "form-control", @placeholder = "Enter Days", @type = "number", @Value = "1", @max = "99", @min = "1"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                    <span class="help-block">Days</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-success">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Duration Each Day</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextBoxFor(m => m.days, new {@class = "form-control", @placeholder = "Enter Duration In Mintues", @type = "number", @Value = "1", @max = "99", @min = "1"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                    <span class="help-block">Mintues</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-success">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Description</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextAreaFor(m => m.reason, new {@class = "form-control", @row = "3", @placeholder = "Please type your Problem Solving description here."})
+                                                                    <div class="form-control-focus"> </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>  
+                                                    }
+                                                    @if (!handEyeCoordination1)
+                                                    {
+                                                        <div class="well">
+                                                            <div class="form-group form-md-line-input has-error">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Category Name</label>
+                                                                <div class="col-md-10">
+                                                                    <input type="text" class="form-control" disabled="" id="form_control_1" placeholder="Hand-Eye Coordination">
+                                                                    @Html.HiddenFor(m => m.categoryID, new {@Value = "6"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-error">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Number Of Day</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextBoxFor(m => m.duration, new {@class = "form-control", @placeholder = "Enter Days", @type = "number", @Value = "1", @max = "99", @min = "1"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                    <span class="help-block">Days</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-error">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Duration Each Day</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextBoxFor(m => m.days, new {@class = "form-control", @placeholder = "Enter Duration In Mintues", @type = "number", @Value = "1", @max = "99", @min = "1"})
+                                                                    <div class="form-control-focus"> </div>
+                                                                    <span class="help-block">Mintues</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group form-md-line-input has-error">
+                                                                <label class="col-md-2 control-label" for="form_control_1">Description</label>
+                                                                <div class="col-md-10">
+                                                                    @Html.TextAreaFor(m => m.reason, new {@class = "form-control", @row = "3", @placeholder = "Please type your Hand-Eye Coordination description here."})
+                                                                    <div class="form-control-focus"> </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                         <div class="form-actions">
+                                                             <div class="row">
+                                                                 <div class="col-md-offset-2 col-md-10">
+                                                                     <button type="submit" class="btn blue">Submit</button>
+                                                                 </div>
+                                                             </div>
+                                                         </div>
+                                                     }
+                                                }
+                                            
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/css/components.min.css" rel="stylesheet" id="style_components" type="text/css" />
+<link href="~/Content/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/pages/css/profile-2.min.css" rel="stylesheet" type="text/css" />
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>

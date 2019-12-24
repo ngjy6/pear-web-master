@@ -1,0 +1,296 @@
+﻿@using Microsoft.AspNet.Identity
+@using NTU_FYP_REBUILD_17.Models
+@model NTU_FYP_REBUILD_17.ViewModels.ManageGuardiansViewModel
+
+@{
+    ViewBag.Title = "ManageGuardianPrivacy";
+    Layout = "~/Views/Shared/_LayoutGuardian.cshtml";
+}
+
+<style>
+    table {
+        table-layout: fixed;
+        /*border: 1px solid black;*/
+        width: 100%;
+        margin: 10px auto 10px auto;
+    }
+
+    td, tr, th {
+        /*border: 1px solid black;*/
+        padding: 5px;
+    }
+</style>
+
+<div class="row">
+    <!-- use mx-auto to center the bootstrap element; Don't use offset as it won't support for BS4 -->
+    <div>
+        </br>
+        <table>
+
+            <h3><i class="fa fa-lock" aria-hidden="true"></i> Privacy Settings </h3>
+            </br>
+            <h5><b style='color: red'>Disclaimer:</b> All data provided to the system will be shown to Care Center's Supervisor</h5>
+            </br>
+
+            <tr>
+                <td colspan="5"><i style='color: grey'></i></td>
+                <td><i style='color: grey'>Caregiver</i></td>
+                <td><i style='color: grey'>Doctor</i></td>
+                <td><i style='color: grey'>Game Therapist</i></td>
+                <td><i style='color: grey'>Supervisor</i></td>
+            </tr>
+
+            <!-- <tr> -->
+            <!-- <td colspan="2"><i style='color: grey'></i><b>Social History:</b></td> -->
+            <!-- <td colspan="3"><i style='color: grey'></i></td> -->
+            <!-- <td colspan="4"></td> -->
+            <!-- </tr> -->
+
+            <tr>
+                <td colspan="3"><b>Lifestyle:</b></td>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+
+            <tr>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td colspan="3"><i style='color: grey'>Live with</i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td colspan="3"><i style='color: grey'>Diet</i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td colspan="3"><i style='color: grey'>Alcohol Use</i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td colspan="3"><i style='color: grey'>Caffeine Use</i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td colspan="3"><i style='color: grey'>Tobacco Use</i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+
+            <tr>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td colspan="3"><i style='color: grey'>Exercise</i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td colspan="3"><i style='color: grey'>Pets</i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="3"><b>Personal:</b></td>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td colspan="3"><i style='color: grey'>Occupation</i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td colspan="3"><i style='color: grey'>Education</i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td colspan="3"><i style='color: grey'>Religion</i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td colspan="3"><i style='color: grey'>Sexually Active</i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'></i></td>
+                <td colspan="3"><i style='color: grey'>Drug Use</i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car"></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'> </i><b>Likes:</b></td>
+                <td colspan="3"><i style='color: grey'></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'> </i><b>Dislikes:</b></td>
+                <td colspan="3"><i style='color: grey'></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'> </i><b>Hobbies:</b></td>
+                <td colspan="3"><i style='color: grey'></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+            <tr>
+                <td colspan="2"><i style='color: grey'> </i><b>Holiday Experience:</b></td>
+                <td colspan="3"><i style='color: grey'></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked></i></td>
+                <td><i style='color: grey'><input type="checkbox" name="vehicle" value="Car" checked disabled></i></td>
+            </tr>
+
+        </table>
+        </br>
+
+
+        <input type="checkbox" id="privacyTick" name="privacy" value="privacyAgreement"></i>
+        I have read and agree to the <a href="#" id="privacyBtn" style="color:blue;">Privacy Policy</a></br></br>
+        <button id="savePrivacy" name="index" class="btn btn-primary">Save Changes</button>
+        </br></br>
+    </div>
+</div>
+
+<link href="~/Content/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/table-datatables-responsive.min.js" type="text/javascript"></script>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span class="fa fa-exclamation-triangle" style="color:red;" aria-hidden="true"></span> Disclaimer: Privacy Policy</h4>
+            </div>
+            <div class="modal-body" id="table-body">
+                <table class="col-sm-12 table table-bordered table-striped table-condensed cf">
+                    <b>Privacy Notice</b>
+                    <p>
+                        This privacy notice discloses the privacy practices for this web application. This privacy notice applies solely to information collected by this website. It will notify you of the following:
+
+                        What personally identifiable information is collected from you through the website, how it is used and with whom it may be shared.
+                        What choices are available to you regarding the use of your data.
+                        The security procedures in place to protect the misuse of your information.
+                        How you can correct any inaccuracies in the information.
+                    </p>
+
+                    <b>Information Collection, Use, and Sharing</b>
+                    <p>
+                        We are the sole owners of the information collected on this site. We only have access to/collect information that you voluntarily give us via email or other direct contact from you. We will not sell or rent this information to anyone.
+
+                        We will use your information to respond to you, regarding the reason you contacted us. We will not share your information with any third party outside of our organization, other than as necessary to fulfill your request, e.g. to ship an order.
+
+                        Unless you ask us not to, we may contact you via email in the future to tell you about specials, new products or services, or changes to this privacy policy.
+                    </p>
+                    <b>Your Access to and Control Over Information</b>
+                    <p>
+                        You may opt out of any future contacts from us at any time. You can do the following at any time by contacting us via the email address or phone number given on our website:
+
+                        See what data we have about you, if any.
+                        Change/correct any data we have about you.
+                        Have us delete any data we have about you.
+                        Express any concern you have about our use of your data.
+                    </p>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#privacyBtn").click(function () {
+            $("#myModal").modal('show');
+        });
+
+        $(function () {
+            var privacyCheck = $('#privacyTick');
+            var saveButton = $('#savePrivacy');
+
+            privacyCheck.on('change', function () {
+                saveButton.prop("disabled", !this.checked);
+            }).trigger('change');
+        });
+
+    });
+</script>

@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "Help";
+    Layout = "~/Views/Shared/_LayoutGameTherapist.cshtml";
+}
+<style>
+    li.n {
+        list-style-type: none;
+    }
+
+    ul.s {
+        letter-spacing: 0px;
+    }
+</style>
+
+<h3>Auto Game Generation</h3>
+<ul class="s">
+    <li class="n">Auto Game Generation allows for automatic generation of game lists every 2 weeks (14 days). i.e. If no new games are generated for patient in the last 14 days, the system will generate a list of games based on the game categories prescribed to patient.</li>
+    <li class="n">To enable:</li>
+    <ol>
+        <li>Under “Actions” section, check the checkbox option “Auto Generation”.</li>
+    </ol>
+
+    <li class="n">To disable: </li>
+    <ol>
+        <li>Under “Actions” section, un-check the checkbox option “Auto Generation”.</li>
+    </ol>
+</ul>
+
+<h3>Manual Game Generation</h3>
+<ul class="s">
+    <li class="n">To manually generate a list of games for patients. Games generated are based on the game categories prescribed by doctor.</li>
+    <li class="n">To generate: </li>
+    <ol>
+        <li>Under “Actions” section, press “Manual Generation” button.</li>
+        <li>System will generate a list of games and display a chart showcasing the number of games generated for each game category prescribed.</li>
+        <li>Press “Close” button to return to page.</li>
+    </ol>
+</ul>
+
+<h3>Manual Assigned Games</h3>
+<ul class="s">
+    <li class="n">To manually assign a game to patient based on the game categories prescribed by doctor:</li>
+    <ol>
+        <li>Select the game categories and press “Search” button.</li>
+        <li>A list of games that belongs to the selected game categories will appear.</li>
+        <li>Select a new game and the number of days the game is assigned to the patient.</li>
+        <li>Press “Add” button to insert the game.</li>
+    </ol>
+</ul>
+
+

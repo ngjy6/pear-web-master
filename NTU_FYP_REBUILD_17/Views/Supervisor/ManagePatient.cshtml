@@ -1,0 +1,1470 @@
+﻿@using Microsoft.AspNet.Identity
+@using NTU_FYP_REBUILD_17.Models
+@model NTU_FYP_REBUILD_17.ViewModels.ManageSupervisorsViewModel
+@{
+    ViewBag.Title = "ManagePatient";
+    Layout = "~/Views/Shared/_LayoutSupervisor.cshtml";
+}
+<div class="container">
+
+    <ul class="nav nav-pills">
+        <li class="active"><a data-toggle="pill" href="#home">Active</a></li>
+        <li><a data-toggle="pill" href="#menu1">Inactive</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="home" class="tab-pane fade in active">
+            <div class="portlet box blue-madison">
+                <div class="portlet-title">
+                    <div class="caption">
+                        <i class="fa fa-folder-open-o"></i>Manage Patients
+                    </div>
+                    <div class="tools"> </div>
+                </div>
+                <div class="portlet-body">
+                    @if (TempData["success"] != null)
+                    {
+                        <div class="alert alert-success text-center" role="alert">@TempData["success"]</div>
+                    }
+
+                    @if (TempData["error"] != null)
+                    {
+                        <div class="alert alert-danger  text-center" role="alert">@Html.Raw(TempData["error"])</div>
+                    }
+                    <table class="table table-striped table-bordered table-hover dt-responsive " id="sample_3" cellspacing="0" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="min-tablet">Patient Name</th>
+                                @*<th class="desktop4">Last Name</th>*@
+                                <th class="desktop4">Gender</th>
+                                <th class="desktop4">Caregiver</th>
+                                <th class="desktop4">Status</th>
+                                <th class="desktop4"></th>
+                                <th class="none"></th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model.ListOfPatient)
+                            {
+                                <tr>
+                                    <td>@item.patient.firstName @item.patient.lastName</td>
+                                    @*<td></td>*@
+                                    <td>
+                                        @if (item.patient.gender == "M")
+                                        {
+                                            <label class="control-label">Male</label>
+                                        }
+                                        else
+                                        {
+                                            <label class="control-label">Female</label>
+                                        }
+
+                                    </td>
+
+
+                                    <td>
+                                        <label class="control-label">@item.caregiver </label>
+                                    </td>
+
+                                    @if (item.patient.startDate <= DateTime.Today)
+                                    {
+                                        <td>
+                                            <label class="control-label">Joined</label>
+                                        </td>
+                                    }
+                                    else if (item.patient.startDate > DateTime.Today)
+                                    {
+                                        <td>
+                                            <label class="control-label">Yet to join</label>
+                                        </td>
+
+                                    }
+
+                                    <td>
+                                        <div class="grid-container">
+                                            <span id="@item.patient.patientID" class="btn dark btn-xs btn-outline sbold uppercase sched aguablue">
+                                                <i class="fa fa-calendar"></i> Sched
+                                            </span>
+
+
+                                            <a href="@Url.Action("ManagePreference", "Supervisor", new { id = @item.patient.patientID })" class="btn dark btn-xs btn-outline sbold uppercase blue">
+                                                <i class="fa fa-star"></i> Pref
+                                            </a>
+                                            @*<span id="@item.patient.patientID" class="btn dark btn-xs btn-outline sbold uppercase actpref blue">
+                                                    <i class="fa fa-smile-o"></i> Pref
+                                                </span>*@
+
+                                            <a href="@Url.Action("ManagePrescription", "Supervisor", new { id = @item.patient.patientID })" class="btn dark btn-xs btn-outline sbold uppercase prsc pink">
+                                                <i class="fa fa-medkit"></i> Med
+                                            </a>
+
+                                            @*</td>
+                                                <td>*@
+                                            <a href="@Url.Action("ManagePhotoAlbum", "Supervisor", new { id = @item.patient.patientID })" class="btn dark btn-xs btn-outline sbold uppercase prsc blueviolet">
+                                                <i class="fa fa-picture-o"></i> Album
+                                            </a>
+                                        
+              
+
+                                            <a href="@Url.Action("ManageAllocation", "Supervisor", new { id = @item.patient.patientID })" class="btn dark btn-xs btn-outline sbold uppercase alloc green-jungle">
+                                                <i class="fa fa-sitemap"></i> Alloc
+                                            </a>
+
+                                            @*<span id="@item.patient.patientID" class="btn dark btn-xs btn-outline sbold uppercase alloc yellow">
+                                                    <i class="fa fa-list"></i> Alloc
+                                                </span>*@
+
+                                            <a href="@Url.Action("ManageProblemLog", "Supervisor", new { id = @item.patient.patientID })" class="btn dark btn-xs btn-outline sbold uppercase problog yellow">
+                                                <i class="fa fa-list"></i>Prob
+                                            </a>
+
+                                            <a href="@Url.Action("ViewAttendanceLog", "Supervisor", new { id = @item.patient.patientID })" class="btn dark btn-xs btn-outline sbold uppercase attendance">
+                                                <i class="fa fa-check-square-o"></i>Attendance
+                                            </a>
+
+                                            <a class="btn dark btn-xs btn-outline sbold uppercase removePatient red-mint" value=@item.patient.patientID>
+                                                <i class="fa fa-times-circle"></i> Remove
+                                            </a>
+
+                                            @*href="@Url.Action("TerminatePatient", "Supervisor", new { id = @item.patient.patientID })"*@
+                                            @*<a class="btn dark btn-xs btn-outline sbold uppercase inactive black" value=@item.patient.patientID>
+                                                    <i class="fa fa-minus-circle"></i> Inactive
+                                                </a>*@
+
+                                            @*<a href="@Url.Action("DeletePatient", "Supervisor", new { id = @item.patient.patientID })" class="btn dark btn-xs btn-outline sbold uppercase grey-mint" onclick="return confirm('Are you sure you want to delete?')">
+                                                    <i class="fa fa-trash"></i> Delete
+                                                </a>*@
+                                            </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="containerDP">
+                                            <img src="@item.albumPath" width="120px" />
+                                            <div class="overlayDP">
+                                                @using (Html.BeginForm("ChangePatientDP", "Supervisor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                                {<input id="changeCover" type="file" class="hidden-input" name="file" onchange="this.form.submit()" />
+                                                    <label class="edit glyphicon glyphicon-camera" for="changeCover" title="Change cover" id="changePhoto" patientID="@item.patient.patientID"></label>
+                                                    @Html.HiddenFor(m => m.patient.patientID, new {  @id = "patientId" })
+                                                }
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <table>
+       
+                                            <tr>
+                                                <td valign="top">
+                                                    <b>
+                                                        <u>Personal Information</u>  <a href="@Url.Action("EditPatient", "Supervisor", new { id = @item.patient.patientID }) ">
+                                                            <i class="fa fa-chevron-circle-right"></i>
+                                                        </a>
+                                                    </b>
+                                                    <br />
+                                                    <b>Preferred Name: </b>@item.patient.preferredName <br />
+                                                    <b>NRIC: </b>@item.patient.nric.Remove(1, 4).Insert(1, "xxxx") <br />
+                                                    <b>Preferred Language: </b>@item.preferredLanguage <br />
+                                                    <b>Date Of Birth: </b>@(((DateTime)item.patient.DOB).ToString("dd/MM/yyyy")) <br />
+                                                    <b>Joined Date: </b>@(((DateTime)item.patient.startDate).ToString("dd/MM/yyyy")) <br />
+
+                                                    @if (item.patient.endDate != null)
+                                                    {
+                                                        <b>Departure Date: </b>@(((DateTime)item.patient.endDate).ToString("dd/MM/yyyy")) <br /><br />
+                                                    }
+                                                    else
+                                                    {
+                                                        <b>Departure Date: </b><span> - </span><br /><br />
+
+                                                    }
+
+                                                    <b><u>Contact Information</u></b><br />
+                                                    <b>Address: </b>@item.patient.address<br />
+                                                    @if (item.patient.tempAddress != null)
+                                                    {
+                                                        <b>Temporary Address: </b>@item.patient.tempAddress<br />
+                                                    }
+                                                    <b>Home No.: </b>
+                                                    @if (item.patient.homeNo != null)
+                                                    {
+                                                        @item.patient.homeNo<br />
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>-</span><br />
+                                                    }
+                                                    <b>Mobile No.: </b>
+                                                    @if (item.patient.handphoneNo != null)
+                                                    {
+                                                        @item.patient.handphoneNo<br /><br />
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>-</span><br /><br />
+                                                    }
+                                                    <b><u>Guardian Information</u></b><br />
+                                                    <b>Guardian Name: </b>@item.patientGuardian.guardianName<br />
+                                                    <b>Guardian NRIC: </b>@item.patientGuardian.guardianNRIC.Remove(1, 4).Insert(1, "xxxx") <br />
+                                                    <b>Guardian Relationship: </b>@item.guardianRelationship<br />
+                                                    <b>Guardian Contact No.: </b>@item.patientGuardian.guardianContactNo<br />
+                                                    <b>Guardian Email: </b>@item.patientGuardian.guardianEmail<br /><br />
+
+                                                    @if (item.patientGuardian.guardianName2 != null)
+                                                    {
+                                                        <b><u>Additional Guardian</u></b><br />
+                                                        <b>Guardian Name: </b>@item.patientGuardian.guardianName2<br />
+                                                        <b>Guardian NRIC: </b>@item.patientGuardian.guardianNRIC2.ToString().Remove(1, 4).Insert(1, "xxxx") <br />
+                                                        <b>Guardian Relationship: </b>@item.guardianRelationship2<br />
+                                                        <b>Guardian Contact No.: </b>@item.patientGuardian.guardianContactNo2<br />
+                                                        <b>Guardian Email: </b>@item.patientGuardian.guardianEmail<br /><br />
+                                                    }
+
+
+                                                    @if (item.patient.isRespiteCare == 1)
+                                                    {
+                                                        <label style="color:red">**Under Respite Care</label>
+                                                        @*<br />*@
+                                                    }
+
+                                                </td>
+
+                                                @*<div class="col-lg-3">*@
+                                                <td valign="top">
+                                                    <b><u>Dementia Condition</u></b>
+                                                    <a href="@Url.Action("ManageDementiaCondition", "Supervisor", new { id = @item.patient.patientID }) ">
+                                                        <i class="fa fa-chevron-circle-right"></i>
+                                                    </a>
+                                                    <br />
+                                                    @foreach (var dc in @item.ListOfDementiaCondition)
+                                                    {
+                                                        <span>@dc.dementiaNames</span><br />
+                                                    }
+                                                    <br />
+
+
+                                                    <b>
+                                                        <u>General Information</u>  <a href="@Url.Action("EditGenInfo", "Supervisor", new { id = @item.patient.patientID }) ">
+                                                            @*<i class="fa fa-pencil-square-o"></i>*@
+                                                            <i class="fa fa-chevron-circle-right"></i>
+                                                        </a>
+                                                    </b><br />
+
+                                                    @if (item.Lmobility != null)
+                                                    {
+                                                        <b>Mobility:</b> @item.Lmobility <br />
+                                                    }
+
+
+                                                    @{
+                                                        if (item.socialHistory != null)
+                                                        {
+                                                            <b>Live With:</b> @item.liveWith <br />
+                                                            <b>Religion: </b> @item.religion<br />
+                                                            <b>Education: </b> @item.education<br />
+                                                            <b>Occupation: </b> @item.occupation <br />
+                                                            <b>Pet: </b> @item.pet<br />
+                                                            <b>Diet: </b> @item.diet <br />
+
+                                                            <b>Retired: </b> if (@item.socialHistory.retired == 1)
+                                                            { <label>Yes</label> }
+                                                            else if (item.socialHistory.retired == 0)
+                                                            { <label>No </label> }
+                                                            else
+                                                            {
+                                                                <label>N/A </label>
+                                                            }; <br />
+
+                                                            <b>Exercise: </b> if (@item.socialHistory.exercise == 1)
+                                                            { <label>Yes</label> }
+                                                            else if (item.socialHistory.exercise == 0)
+                                                            { <label>No </label> }
+                                                            else
+                                                            {
+                                                                <label>N/A </label>
+                                                            }; <br />
+
+                                                            <b>Caffeine Use: </b> if (@item.socialHistory.caffeineUse == 1)
+                                                            { <label>Yes</label> }
+                                                            else if (item.socialHistory.caffeineUse == 0)
+                                                            { <label>No </label> }
+                                                            else
+                                                            {
+                                                                <label>N/A </label>
+                                                            }; <br />
+
+
+                                                            <b>Tobacco Use: </b> if (@item.socialHistory.tobaccoUse == 1)
+                                                            { <label>Yes</label> }
+                                                            else if (item.socialHistory.tobaccoUse == 0)
+                                                            { <label>No </label> }
+                                                            else
+                                                            {
+                                                                <label>N/A </label>
+                                                            }; <br />
+
+                                                            <b>Secondhand Smoker: </b>
+                                                            if (@item.socialHistory.secondhandSmoker == 1)
+                                                            { <label>Yes</label> }
+                                                            else if (item.socialHistory.secondhandSmoker == 0)
+                                                            { <label>No </label> }
+                                                            else
+                                                            {
+                                                                <label>N/A </label>
+                                                            }; <br />
+
+                                                            <b>Alcohol Use: </b> if (@item.socialHistory.alcoholUse == 1)
+                                                            { <label>Yes</label> }
+                                                            else if (item.socialHistory.alcoholUse == 0)
+                                                            { <label>No </label> }
+                                                            else
+                                                            {
+                                                                <label>N/A </label>
+                                                            }; <br />
+
+                                                            <b>Drug Use: </b> if (@item.socialHistory.drugUse == 1)
+                                                            { <label>Yes</label> }
+                                                            else if (item.socialHistory.drugUse == 0)
+                                                            { <label>No </label> }
+                                                            else
+                                                            {
+                                                                <label>N/A </label>
+                                                            }; <br />
+
+                                                            <b>Sexually Active: </b> if (@item.socialHistory.sexuallyActive == 1)
+                                                            { <label>Yes</label> }
+                                                            else if (@item.socialHistory.sexuallyActive == 0)
+                                                            { <label>No </label> }
+                                                            else
+                                                            {
+                                                                <label>N/A </label>
+                                                            }; <br />
+
+
+                                                        }
+
+                                                        else
+                                                        {
+                                                            <b>N.A.</b>
+                                                        }
+
+                                                    }
+                                                    <br />
+                                                    <b>
+                                                        <u>Allergies</u>  <a href="@Url.Action("ManageAllergy", "Supervisor", new { id = @item.patient.patientID }) ">
+                                                            @*<i class="fa fa-pencil-square-o"></i>*@
+                                                            <i class="fa fa-chevron-circle-right"></i>
+                                                        </a>
+                                                    </b><br />
+
+                                                    @if (item.patientAllergies.Count == 0)
+                                                    {
+                                                        <b>N.A.</b><br />
+                                                    }
+                                                    else
+                                                    {
+                                                        foreach (var al in item.patientAllergies)
+                                                        {
+                                                            @al.allergyName<br />
+                                                        }
+                                                    }
+                                                    <br />
+                                                    @*</div>*@
+                                                </td>
+
+                                                @*<div class="col-lg-3">*@
+                                                <td valign="top">
+                                                    <b>
+                                                        <u>Medical History</u>  <a href="@Url.Action("ManageMedicalHistory", "Supervisor", new { id = @item.patient.patientID }) ">
+                                                            @*<i class="fa fa-pencil-square-o"></i>*@
+                                                            <i class="fa fa-chevron-circle-right"></i>
+                                                        </a>
+                                                    </b><br />
+
+                                                    @if (item.medHistoryList.Count == 0)
+                                                    {
+                                                        <b>N.A.</b><br /><br />
+                                                    }
+                                                    else
+                                                    {
+
+                                                        foreach (var medh in item.medHistoryList)
+                                                        {
+                                                            @medh.medicalDetails <br />
+                                                            @*<b>Medical Details:</b> <br />@medh.medicalDetails <br />
+                            if (medh.notes != null)
+                            {
+                                <b>Medical Notes:</b><br /> @medh.notes <br />
+                            }
+                            <br />*@
+                                                            @*<b>Est. Date of Record:</b> @medh.medicalEstimatedDate.ToString("dd/MM/yyyy") <br />
+                            <br />*@
+                                                        }
+                                                        <br />
+                                                    }
+
+
+                                                    <b>
+                                                        <u> Vital</u>   <a href="@Url.Action("ManageVital", "Supervisor", new { id = @item.patient.patientID }) ">
+                                                            @*<i class="fa fa-pencil-square-o"></i>*@
+                                                            <i class="fa fa-chevron-circle-right"></i>
+                                                        </a>
+                                                    </b><br />
+                                                    @if (item.vitalBefore.Count == 0 && item.vitalAfter.Count == 0)
+                                                    {
+                                                        <b>N.A.</b><br /><br />
+                                                    }
+                                                    else
+                                                    {
+                                                        Vital viA = item.vitalAfter.LastOrDefault();
+                                                        Vital viB = item.vitalBefore.LastOrDefault();
+                                                        if (viB != null)
+                                                        {
+                                                            <b>Taken: </b><span>Before Meal</span><br />
+                                                            <b>Temperature: </b> @viB.temperature <br />
+                                                            <b>Heart Rate: </b> @viB.heartRate <br />
+                                                            <b>Blood Pressure: </b> @viB.bloodPressure <br />
+                                                            <b>Blood Sugar Level: </b> @viB.bloodSugarlevel <br />
+                                                            <b>SpO2: </b> @viB.spO2<br />
+                                                            <b>Height:</b> @viB.height <br />
+                                                            <b>Weight: </b> @viB.weight <br />
+                                                            if (viB.notes != null)
+                                                            {
+                                                                <b>Notes: </b> @viB.notes <br />
+                                                            }<br />
+
+                                                        }
+                                                        if (viA != null)
+                                                        {
+
+                                                            <b>Taken: </b><span>After Meal</span><br />
+                                                            <b>Temperature: </b> @viA.temperature <br />
+                                                            <b>Heart Rate: </b> @viA.heartRate <br />
+                                                            <b>Blood Pressure: </b> @viA.bloodPressure <br />
+                                                            <b>Blood Sugar Level: </b> @viA.bloodSugarlevel <br />
+                                                            <b>SpO2: </b> @viA.spO2<br />
+                                                            <b>Height:</b> @viA.height <br />
+                                                            <b>Weight: </b> @viA.weight <br />
+                                                            <b>Notes: </b> @viA.notes <br /><br />
+                                                        }
+                                                    }
+
+                                                    <br />
+
+                                                </td>
+                                                @*</div>*@
+
+                                                @*<div class="col-lg-3">*@
+                                                <td valign="top">
+                                                    <b>
+                                                        <u>Personal Preferences</u>  <a href="@Url.Action("ManagePersoPreference", "Supervisor", new { id = @item.patient.patientID }) ">
+                                                            @*<i class="fa fa-pencil-square-o"></i>*@
+                                                            <i class="fa fa-chevron-circle-right"></i>
+                                                        </a>
+                                                    </b><br />
+                                                    <b>Likes:</b><br />
+
+                                                    @if (item.likesList.Count == 0)
+                                                    {
+                                                        <b>N.A.</b><br />
+                                                    }
+                                                    else
+                                                    {
+                                                        foreach (var like in item.likesList)
+                                                        {
+                                                            foreach (var l in Model.likesEnum)
+                                                            {
+                                                                if (like.likeItemID == l.list_likeID)
+                                                                {
+                                                                    @l.value <br />
+                                                                }
+                                                            }
+                                                        }
+
+                                                    }
+                                                    <br />
+                                                    <b>Dislikes:</b><br />
+                                                    @if (item.dislikesList.Count == 0)
+                                                    {
+                                                        <b>N.A.</b><br />
+                                                    }
+                                                    else
+                                                    {
+                                                        foreach (var dislike in item.dislikesList)
+                                                        {
+                                                            foreach (var dl in Model.dislikesEnum)
+                                                            {
+                                                                if (dislike.dislikeItemID == dl.list_dislikeID)
+                                                                {
+                                                                    @dl.value <br />
+                                                                }
+                                                            }
+                                                        }
+
+                                                    }
+
+                                                    <br /><b>
+                                                        <u>Routines</u>  <a href="@Url.Action("ManageRoutine", "Supervisor", new { id = @item.patient.patientID }) ">
+                                                            <i class="fa fa-chevron-circle-right"></i>
+                                                        </a>
+                                                    </b><br />
+                                                    @if (item.routines.Count == 0)
+                                                    {
+                                                        <b>N.A.</b><br />}
+                                                    else
+                                                    {
+                                                        foreach (var r in item.routines)
+                                                        {
+                                                            @r.eventName<br />
+                                                            <b>Start Date:</b>@r.startDate.ToString("dd/MM/yyyy")<br />
+                                                            <b>End Date:</b>@r.endDate.ToString("dd/MM/yyyy")<br /><br />
+
+                                                        }
+                                                    }
+
+
+                                                    @*</div>
+                        </div>
+                    </div>*@
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+
+
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                    <div class="margiv-top-10">
+                        <a href="@Url.Action("AddPatient", "Supervisor")" class="btn dark btn-sm btn-outline sbold uppercase">
+                            <i class="fa fa-plus"> </i> Add Patient
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="menu1" class="tab-pane fade">
+            <div class="portlet box blue-madison">
+                <div class="portlet box blue-madison">
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-folder-open-o"></i>Manage Patients
+                        </div>
+                        <div class="tools"> </div>
+                    </div>
+                    <div class="portlet-body">
+                        <table class="table table-striped table-bordered table-hover dt-responsive" id="sample_4" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th class="min-tablet">Patient Name</th>
+                                    @*<th class="desktop4">Last Name</th>*@
+                                    <th class="desktop4">Gender</th>
+                                    <th class="desktop4">Caregiver</th>
+                                    <th class="desktop4">Joined Date</th>
+                                    <th class="desktop4">Departure Date</th>
+                                    <th class="desktop4">Inactive Date</th>
+                                    <th class="desktop4">Status</th>
+                                    <th class="desktop4">Reason</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var item in Model.ListOfinactivePatient)
+                                {
+                                    <tr>
+                                        <td>@item.patient.firstName @item.patient.lastName</td>
+                                        @*<td>@item.patient.lastName</td>*@
+                                        <td>
+                                            @if (item.patient.gender == "M")
+                                            {
+                                                <label class="control-label">Male</label>
+                                            }
+                                            else
+                                            {
+                                                <label class="control-label">Female</label>
+                                            }
+
+                                        </td>
+
+
+                                        <td>
+                                            <label class="control-label">@item.caregiver </label>
+                                        </td>
+
+                                        <td>@item.patient.startDate.ToString("dd/MM/yyyy")</td>
+                                        @if (item.patient.endDate != null)
+                                        {
+                                            <td>@item.patient.endDate.Value.ToString("dd/MM/yyyy")</td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+
+                                        }
+
+                                        @if (item.patient.inactiveDate != null)
+                                        {
+                                            <td>@item.patient.inactiveDate.Value.ToString("dd/MM/yyyy")</td>
+
+
+                                        }
+                                        else if (item.patient.inactiveDate < item.patient.endDate)
+                                        {
+                                            <td style="color:red">@item.patient.inactiveDate.Value.ToString("dd/MM/yyyy")</td>
+
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+
+                                        @if (item.patient.inactiveDate < DateTime.Today)
+                                        {
+                                            <td>Inactive</td>
+
+                                        }
+                                        else if (item.patient.endDate < DateTime.Today)
+                                        {
+                                            <td>Terminated</td>
+                                        }
+
+
+                                        @if (item.patient.inactiveReason != null)
+                                        {
+                                            <td>
+                                                @item.patient.inactiveReason
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @item.patient.terminationReason
+                                            </td>
+                                        }
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Modal for Schedule*@
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                <h4 class="modal-title" id="modal-title"></h4>
+
+            </div>
+            <div class="modal-body" id="table-body">
+                <table class="col-sm-12 table table-bordered table-striped table-condensed cf">
+                    <thead class="cf">
+                        <tr>
+                            <th class='col-sm-3'>Time Slot</th>
+                            <th class='col-sm-3'>Yesterday</th>
+                            <th class='col-sm-3'>Today</th>
+                            <th class='col-sm-3'>Tomorrow</th>
+                        </tr>
+                    </thead>
+                    <tbody id="time-schedule"></tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@*Modal for Prescription*@
+@*<div id="PrescrbModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">*@
+<!-- Modal content-->
+@*<div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                    <h4 class="modal-title" id="PrescrbTitle"></h4>
+
+                </div>
+                <div class="modal-body" id="table-body">
+                    <div id="prsc-info"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary space" id="managePscpBtn">Edit</button>
+
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>*@
+
+@*Modal for Problem Log*@
+@*<div id="ProblemLogModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">*@
+<!-- Modal content-->
+@*<div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                    <h4 class="modal-title" id="probLogTitle"></h4>
+
+                </div>
+                <div class="modal-body" id="table-body">
+                    <div id="prob-Log"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary space" id="manageProbLogBtn">Edit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>*@
+
+
+@*Modal for Allocation*@
+@*<div id="AllocationModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">*@
+<!-- Modal content-->
+@*<div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                    <h4 class="modal-title" id="allocTitle"></h4>
+
+                </div>
+                <div class="modal-body" id="table-body">
+                    <div id="allocation"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary space" id="allocationBtn">Edit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>*@
+
+@*Modal for Activity Preference*@
+@*<div id="ActPrefModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">*@
+<!-- Modal content-->
+@*<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+        <h4 class="modal-title" id="actPrefTitle"></h4>
+
+    </div>
+    <div class="modal-body" id="table-body">
+        <div class="container">
+            <div class="row">
+                <div id="isLikeHead"></div>
+                <div id="isLike"></div>
+
+                <div id="isDislikeHead"></div>
+                <div id="isDislike"></div>
+
+                <div id="ExcludedHead"></div>
+                <div id="Excluded"></div>
+
+            </div>
+        </div>
+
+
+    </div>
+    <div class="modal-footer">*@
+@*<a href="@Url.Action("ManagePreference", "Supervisor", new { id = @item.patient.patientID })" class="btn dark btn-xs btn-outline sbold uppercase blue">
+        <i class="fa fa-smile-o"></i> Preferences
+    </a>*@
+@*<button type="button" class="btn btn-primary space" id="managePrefBtn">Edit</button>
+                    <button type="button" class="btn grey" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>*@
+
+<div id="RemovePatientModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            @using (Html.BeginForm("RemovePatient", "Supervisor", FormMethod.Post, new { @role = "form", @id = "form1" }))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" id="removeModal-title"></h4>
+                </div>
+                <div class="modal-body" id="table-body">
+                    <input type="hidden" id="hiddenPatientID" name="hiddenPatientID">
+
+                    <table>
+                        <thead>
+                        </thead>
+                        <tbody class="table">
+                            <tr>
+                                <td>
+
+                                    <div class="form-group">
+                                        <h4 class="col-md-10 control-label">Reason for removal:</h4>
+                                        <div class="col-md-10">
+
+                                            @Html.DropDownListFor(x => x.removalType, new List<SelectListItem>{
+                                                          new SelectListItem() {Text = "Inactivity", Value="1"},
+                                                          new SelectListItem() {Text = "Termination", Value="2"},
+                                                        }, new { @class = "form-control", id = "removalTypeCheck" })
+
+                                            <br />
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="inactivityDate">
+                                        <h4 class="col-md-10 control-label">Inactive Date</h4>
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.inactiveDate, new { @class = "form-control date-picker", @data_date_format = "dd/mm/yyyy", @id = "inactiveDate", @Value = "" })
+                                            <span style="display: none; color:red;" id="startDateError"></span>
+                                            <br />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="inactiveReason">
+                                        <h4 class="col-md-10 control-label">Reason for Inactivity</h4>
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.removalReason, new { @class = "form-control", id = "reasonVal" })
+                                            <br />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="terminateReason" style="display:none">
+                                        <h4 class="col-md-10 control-label">Reason for Termination</h4>
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.removalReason, new { @class = "form-control", id = "reasonVal" })
+                                            <br />
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                </div>
+                <div class="modal-footer">
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary space" id="subForm">Ok</button>
+                        <button type="button" class="btn btn-default space" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+
+<link href="~/Content/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
+<link href="~/Content/global/plugins/bootstrap/css/custom.css" rel="stylesheet" type="text/css">
+
+<script src="~/Content/pages/scripts/table-datatables-responsive.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/datatables/date-uk.js" type="text/javascript"></script>
+
+<link href="~/Content/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+<script src="~/Content/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+
+<style>
+    .grid-container {
+        display: grid;
+        grid-template-columns: auto auto auto auto auto auto auto auto;
+        grid-gap: 2px;
+        /*padding: 2px;*/
+    }
+
+        /*.grid-container > div {
+            text-align: center;
+            padding: 10px 0;
+            font-size: 30px;
+        }*/
+
+</style>
+<script>
+
+    $(document).ready(function () {
+        $('#sample_3').DataTable().destroy();
+
+        $('#sample_3').DataTable({
+            columnDefs: [
+                {"orderable": false, "targets": 4 },
+                { targets: [4, 5], width: '0%' },
+            ],
+            "order": [[3, "asc"], [0, "asc"]]
+        });
+
+
+        $("#inactiveDate").datepicker({
+            defaultDate: null,
+
+        });
+
+        $(document).delegate('#changePhoto', 'click', function () {
+            var patientID = $(this).attr('patientID');
+            $("#patientId").val(patientID);
+        });
+
+        @*$(document).delegate('#changeCover', 'change', function () {
+            var patientID = $(this).attr('patientID');
+            console.log(patientID);
+
+            //var file = $('#changeCover').prop('files');
+            //var files = $("#changeCover").get(0).files;
+
+            var data = new FormData();
+            var files = $("#changeCover").get(0).files;
+            console.log(files[0]);
+            data.append("file", files[0]);
+            data.append("patientID", patientID);
+            //console.log(data);
+
+
+            //data.append("File", file[0]);
+            //formdata.append("Name", "profileImage");
+
+            //var formdata = new FormData($('#formDP').get(0));
+            //console.log(data)
+
+            //var file = $(this).attr('value');
+            //console.log(formdata);
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data:{
+                   form: data,
+                },
+                processData: false,
+                contentType: false,
+                url: '@Url.Action("changePatientDP", "Supervisor")',
+                success: function (result) {
+                    console.log(result);
+                }
+            });
+        });*@
+
+
+
+
+        $(document).delegate('.removePatient', 'click', function () {
+            $("#RemovePatientModal").modal("show");
+
+            patientID = $(this).attr('value');
+            $("#hiddenPatientID").val(patientID);
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    patientId: patientID,
+                },
+                url: '@Url.Action("GetPatientName", "Supervisor")',
+                success: function (result) {
+                    console.log(result);
+                    $("#removeModal-title").text("Are you sure you want to remove " + result +"?");
+                    //$("#removeModal-title").css({ 'font-weight': 'bold' });
+                }
+            });
+
+            $("#removalTypeCheck").change(function () {
+                var val = document.getElementById('removalTypeCheck').value;
+                var inactive = document.getElementById('inactiveReason');
+                var inactiveD = document.getElementById('inactivityDate');
+                var terminate = document.getElementById('terminateReason');
+
+                if (val == 1) {
+                    inactive.style.display = 'block';
+                    inactiveD.style.display = 'block';
+                    terminate.style.display = 'none';
+                }
+                else if (val == 2) {
+                    inactive.style.display = 'none';
+                    inactiveD.style.display = 'none';
+                    terminate.style.display = 'block';
+                }
+            });
+
+
+        });
+
+        $("#inactiveDate").change(function () {
+            dateCheck();
+        });
+
+
+        $("#subForm").click(function () {
+            dateCheck();
+        });
+
+        function dateCheck() {
+
+            var inactiveDateVal = $("#inactiveDate").val();
+
+            var datetime = new Date();
+            var dd = datetime.getDate();
+            var mm = datetime.getMonth() + 1; //January is 0!
+
+            var yyyy = datetime.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+            var d = dd + '/' + mm + '/' + yyyy;
+
+
+            var arrStartDate = inactiveDateVal.split("/");
+            var inactiveDate = new Date(arrStartDate[2], arrStartDate[1], arrStartDate[0]);
+
+            var arrCrDate = d.split("/");
+            var tdate = new Date(arrCrDate[2], arrCrDate[1], arrCrDate[0]);
+
+            if (inactiveDate < tdate) {
+                document.getElementById("startDateError").innerHTML = "Inactive date cannot be before today.";
+                document.getElementById("startDateError").style.display = "block";
+                return false;
+
+            } else {
+                document.getElementById("startDateError").innerHTML = "";
+                document.getElementById("startDateError").style.display = "none";
+            }
+
+        }
+
+
+
+        //Activity Preference
+        @*$(document).delegate('.btn.dark.btn-xs.btn-outline.sbold.uppercase.actpref', 'click', function () {
+            var patientId = $(this).attr("id");
+
+
+            $('#managePrefBtn').click(function () {
+                 document.location = '/Supervisor/ManagePreference/'+patientId;
+            });
+
+            $("#ActPrefModal").modal('show');
+            $.ajax({
+               type: 'POST',
+                dataType: 'json',
+                data: {
+                   patientId: $(this).attr('id'),
+                },
+                url: '@Url.Action("GetActivityPreference", "Supervisor")',
+                success: function (result) {
+
+
+                    $("#isLike").empty();
+                    $("#isDislike").empty();
+
+                    $("#isLikeHead").empty();
+                    $("#isDislikeHead").empty();
+
+                       var likeFlag = 0;
+                       var dislikeFlag = 0;
+
+                       for (var i = 0; i < result.length; i++) {
+                           if (result[i].isLike == 1) {
+                               $("#isLike").append(result[i].CentreActivity.activityTitle+" ");
+                               if (result[i].doctorRecommendation == 1) {
+                                   $("#isLike").append("<font color='green'><small><i>(Doctor Recommended)</i></small></font><br/>")
+                               } else {
+                                   $("#isLike").append("<br/>");
+                               }
+                               likeFlag = 1;
+
+                           } else if (result[i].isDislike == 1) {
+                               $("#isDislike").append(result[i].CentreActivity.activityTitle + " ");
+                               if (result[i].doctorRecommendation == 1) {
+                                   $("#isDislike").append("<font color='green'><small><i>(Doctor Recommended)</i></small></font><br/>")
+                               } else {
+                                   $("#isDislike").append("<br/>");
+                               }
+                               dislikeFlag = 1;
+                           }
+
+                        }
+
+                       if (likeFlag == 1) {
+                        $("#isLikeHead").append("<b>Like:</b><br />");
+                       }
+                       if (dislikeFlag == 1) {
+                        $("#isDislikeHead").append("<br/><b>Dislike:</b><br />");
+                       }
+
+                   }
+
+               });
+            var excludedFlag = 0;
+           $.ajax({
+               type: 'POST',
+                dataType: 'json',
+                data: {
+                   patientId: $(this).attr('id'),
+                },
+                url: '@Url.Action("GetActivityExclusion", "Supervisor")',
+               success: function (result) {
+                   $("#Excluded").empty();
+                   $("#ExcludedHead").empty();
+
+                       for (var i = 0; i < result.length; i++) {
+                           $("#Excluded").append(result[i].CentreActivity.activityTitle + " ");
+
+                           $("#Excluded").append("<font color='red'><small><i>(Notes: " + result[i].notes + ")</i></small></font><br/>");
+
+                           excludedFlag = 1;
+                       }
+
+                       if (excludedFlag == 1) {
+                       $("#ExcludedHead").append("<br/><b>Excluded</b><br />");
+                       }
+
+                   }
+
+            });*@
+
+             @*$.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    patientId: $(this).attr('id'),
+                },
+                url: '@Url.Action("GetPatientName", "Supervisor")',
+                success: function (result) {
+                    console.log(result);
+                    $("#actPrefTitle").text("Activity Preference For " + result);
+                    $("#actPrefTitle").css({ 'font-weight': 'bold' });
+                }
+            });*@
+
+        //});
+
+
+        //Problem Log
+        @*$(document).delegate('.btn.dark.btn-xs.btn-outline.sbold.uppercase.problog', 'click', function () {
+            var pId = $(this).attr('id');
+
+            $("#ProblemLogModal").modal('show');
+
+            $('#manageProbLogBtn').click(function () {
+                document.location = '/Supervisor/ManageProblemLog/' + pId;
+            });
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    patientId: $(this).attr('id'),
+                },
+                url: '@Url.Action("GetPatientProblemLog", "Supervisor")',
+                success: function (result) {
+                    $("#prob-Log").empty();
+                    if (result[0] != null) {
+
+                        for (var i = 0; i < result.length; i++) {
+                            var datetime = new Date(parseInt(result[i].createdDateTime.substr(6)));
+
+                            var month = datetime.getMonth() + 1;
+                            var day = datetime.getDate();
+                            var year = datetime.getFullYear();
+                            var date = day + "/" + month + "/" + year;
+
+                            $("#prob-Log").append("<b>Category:</b>" + result[i].List_ProblemLog.value+ "<br />");
+                            $("#prob-Log").append("<b>Date Time:</b>" + date + "<br />");
+                            $("#prob-Log").append("<b>Notes:</b>" + result[i].notes + "<br /><br />");
+
+                        }
+
+                    } else {
+
+                        $("#prob-Log").append("<b>N.A.</b><br />");
+
+                    }
+                }
+
+            });
+              $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    patientId: $(this).attr('id'),
+                },
+                url: '@Url.Action("GetPatientName", "Supervisor")',
+                success: function (result) {
+                    console.log(result);
+                    $("#probLogTitle").text("Problem Log For " + result);
+                    $("#probLogTitle").css({ 'font-weight': 'bold' });
+                }
+            });
+
+        });*@
+
+
+        //Allocation
+         @*$(document).delegate('.btn.dark.btn-xs.btn-outline.sbold.uppercase.alloc', 'click', function () {
+            var pId = $(this).attr('id');
+
+            $("#AllocationModal").modal('show');
+
+            $('#allocationBtn').click(function () {
+                document.location = '/Supervisor/ManageAllocation/' + pId;
+            });
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    patientId: $(this).attr('id'),
+                },
+                url: '@Url.Action("GetPatientAllocation", "Supervisor")',
+                success: function (result) {
+                    $("#allocation").empty();
+                    if (result != null) {
+
+                        //for (var i = 0; i < result.length; i++) {
+                            //var datetime = new Date(parseInt(result[i].createdDateTime.substr(6)));
+
+                            //var month = datetime.getMonth() + 1;
+                            //var day = datetime.getDate();
+                            //var year = datetime.getFullYear();
+                            //var date = day + "/" + month + "/" + year;
+
+                        $("#allocation").append("<u><b>Assigned Staff</b></u><br />");
+
+                            $("#allocation").append("<b>Assigned Doctor: </b>" + result.assignedDoctor.userFullname + "<br />");
+                            $("#allocation").append("<b>Assigned Caregiver: </b>" + result.assignedCaregiver.userFullname + "<br />");
+
+                        $("#allocation").append("<br />");
+
+
+                        $("#allocation").append("<u><b>Temporary Allocated Staff</b></u><br />");
+
+                        if (result.tempDoctorInfo != null) {
+                            $("#allocation").append("<b>Assigned Doctor: </b>" + result.tempDoctorInfo.userFullname + "<br />");
+                        } else {
+                            $("#allocation").append("<b>Assigned Doctor: nil</b><br />");
+
+                        }
+                        if (result.tempCaregiverInfo != null) {
+                            $("#allocation").append("<b>Assigned Caregiver: </b>" + result.tempCaregiverInfo.userFullname + "<br />");
+                        } else {
+                            $("#allocation").append("<b>Assigned Caregiver: nil</b><br />");
+
+                        }
+                        //$("#prob-Log").append("<b>Date Time:</b>" + date + "<br />");
+                            //$("#prob-Log").append("<b>Notes:</b>" + result[i].notes + "<br /><br />");
+
+                        //}
+
+                    } else {
+
+                        $("#allocation").append("<b>N.A.</b><br />");
+
+                    }
+                }
+
+            });
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    patientId: $(this).attr('id'),
+                },
+                url: '@Url.Action("GetPatientName", "Supervisor")',
+                success: function (result) {
+                    console.log(result);
+                    $("#allocTitle").text("Allocation For " + result);
+                    $("#allocTitle").css({ 'font-weight': 'bold' });
+                }
+            });
+
+        });*@
+
+        //Prescription
+        @*$(document).delegate('.btn.dark.btn-xs.btn-outline.sbold.uppercase.prsc', 'click', function () {
+            var patientId = $(this).attr("id");
+
+            $("#PrescrbModal").modal('show');
+
+
+            $('#managePscpBtn').click(function () {
+                document.location = '/Supervisor/ManagePrescription/' + patientId;
+            });
+
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    patientId: $(this).attr('id'),
+                },
+                url: '@Url.Action("GetPatientPrescription", "Supervisor")',
+                success: function (result) {
+                    //console.log(result[0].PrescriptionName)
+
+                    $("#prsc-info").empty();
+                    if (result != null) {
+                        for (var i = 0; i < result.length; i++) {
+
+
+                            if (result[i].medLog != null) {
+                                $("#prsc-info").append("<b>Drug Name:</b>" + result[i].PrescriptionName +
+                                    " <span class='fa fa-check text-success'></span><br />");
+                                //console.log(result[i].medLog);
+                                $("#prsc-info").append("Administered by:" + result[i].userFullname + "<br />");
+                                $("#prsc-info").append("<br />")
+                            } else {
+                                $("#prsc-info").append("<b>Drug Name:</b>" + result[i].PrescriptionName +
+                                    " <span class='fa fa-lg fa-times text-danger'></span><br />");
+                                $("#prsc-info").append("<br />")
+
+                            }
+                            //$("#prsc-info").append("<b>Dosage:</b>" + result[i].prescription.dosage + "<br />");
+
+                        }
+                    } else {
+                        $("#prsc-info").append("<b>N.A.</b>");
+                    }
+                }
+            });
+
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    patientId: $(this).attr('id'),
+                },
+                url: '@Url.Action("GetPatientName", "Supervisor")',
+                success: function (result) {
+                    console.log(result);
+                    $("#PrescrbTitle").text(result + "'s" + "Medication Log");
+                    $("#PrescrbTitle").css({ 'font-weight': 'bold' });
+                }
+            });
+
+
+        });*@
+
+
+
+        //Schedule
+        $(document).delegate('.btn.dark.btn-xs.btn-outline.sbold.uppercase.sched', 'click', function () {
+            console.log($(this).attr('id'));
+            var patientId = $('.btn.dark.btn-xs.btn-outline.sbold.uppercase').attr('id');
+
+
+             $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    patientId: $(this).attr('id'),
+                },
+                url: '@Url.Action("GetPatientSchedule", "Supervisor")',
+                success: function (result) {
+
+                     $("#modal-title").text("Schedule For "+ result[0][0].patientname);
+                    $("#modal-title").css({ 'font-weight': 'bold' });
+
+                    var myNode = document.getElementById("time-schedule");
+                    while (myNode.firstChild) {
+                        myNode.removeChild(myNode.firstChild);
+                    }
+
+                    // Timeslot display in table format
+                    var time = new Date();
+                    time.setHours(9);
+                    time.setMinutes(0);
+                    time.setSeconds(0);
+
+                    // Variable that check for case where not all day will have schedule
+                    var diffDate = 0;
+
+                    if (result.length > 0) {
+                        var scheduleStart = new Date(parseInt(result[0][0].dateStart.substr(6)));
+
+                        //console.log("Schedule: " + scheduleStart);
+
+                        var yesterday = new Date();
+                        //yesterday.setHours(yesterday.getHours() + 8)
+                        yesterday.setDate(yesterday.getDate() - 1);
+                        yesterday.setHours(0);
+                        yesterday.setMinutes(0);
+                        yesterday.setSeconds(0);
+                        //console.log( "Yesterday: " + yesterday);
+
+                        diffDate = Math.round( (scheduleStart.getTime() - yesterday.getTime()) / (1000 * 60 * 60 * 24) );
+                        //console.log("diff: " + diffDate);
+                        //console.log("Result len:" + result[0].length )
+
+                        for (var i = 0; i < result[0].length; i++) {
+
+
+                            $("#time-schedule").append("<tr>");
+
+                            console.log(result[0][0]);
+                            if (result[0].length > 1) {
+                                $("#time-schedule").append("<td id='timeslot" + i + "'>" + time.toString().split(' ')[4] + "</td>")
+                            }
+                            console.log("Result len: " + result.length)
+
+                            for (var j = (0 - diffDate); j <= (result.length - 2); j++) {
+                                if (j >= 0) {
+                                    if (result[j][i].centreActivityTitle) {
+                                        $("#time-schedule").append("<td id='yesterday'>" + result[j][i].centreActivityTitle + "</td>")
+                                    }
+                                    else {
+                                        $("#time-schedule").append("<td id='yesterday'>" + result[j][i].routineName + "</td>")
+                                    }
+                                }
+                                else {
+                                    $("#time-schedule").append("<td id='yesterday'></td>")
+                                }
+                            }
+
+                            $("#time-schedule").append("</tr>");
+
+                            // Manual Coding
+                            time.setMinutes(time.getMinutes() + 30);
+                        }
+                    }
+
+                    $("#myModal").modal('show');
+                }
+
+             });
+        });
+    });
+
+</script>

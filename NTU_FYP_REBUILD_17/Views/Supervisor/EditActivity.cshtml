@@ -1,0 +1,414 @@
+﻿@model NTU_FYP_REBUILD_17.ViewModels.ManageSupervisorsViewModel
+
+@{
+    ViewBag.Title = "EditActivity";
+    Layout = "~/Views/Shared/_LayoutSupervisor.cshtml";
+}
+
+<div class="portlet light ">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="icon-globe theme-font hide"></i>
+            <span class="caption-subject font-blue-madison bold uppercase">Edit Activity</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="tab-content">
+            <div class="tab-pane active">
+                @if (TempData["success"] != null)
+                {
+                    <div class="alert alert-success text-center" role="alert">@TempData["success"]</div>
+                }
+
+                @if (TempData["error"] != null)
+                {
+                    <div class="alert alert-danger text-center" role="alert">@Html.Raw(@TempData["error"])</div>
+                }
+                @using (Html.BeginForm("EditActivityMethod", "Supervisor", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "form1" }))
+                {
+                    @Html.HiddenFor(p => p.id, new { @Value = @Model.CentreActivities.centreActivityID, @id = "ab" });
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Activity Title</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.title, new { @class = "form-control", @Value = @Model.CentreActivities.activityTitle })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Short Title</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.shortTitle, new { @class = "form-control", required = "required", id = "shortTitle", @Value = @Model.CentreActivities.shortTitle })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Activity Description</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.description, new { @class = "form-control", @Value = @Model.CentreActivities.activityDesc })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Start Date</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.startDate, "dd/mm/yyyy", new { @class = "form-control date-picker", @data_date_format = "dd/mm/yyyy", required = "required", id = "datetimepicker1", @Value = @Model.CentreActivities.activityStartDate.ToString("dd/MM/yyyy")})
+                            <p style="display: none; color:red;" id="startDateError"></p>
+                            <p style="display: none; color:red;" id="startDateError1"></p>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">End Date (if any)</label>
+                        <div class="col-md-10">
+                            @if (@Model.CentreActivities.activityEndDate != null)
+                            {
+                                @Html.TextBoxFor(m => m.endDate, "dd/mm/yyyy", new { @class = "form-control date-picker", @data_date_format = "dd/mm/yyyy", id = "datetimepicker2", @Value = DateTime.Parse(@Model.CentreActivities.activityEndDate.ToString()).ToString("dd/MM/yyyy") })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(m => m.endDate, "dd/mm/yyyy", new { @class = "form-control date-picker", @data_date_format = "dd/mm/yyyy", id = "datetimepicker2", @Value = "" })
+
+                            }
+                            <p style="display: none; color:red;" id="endDateError"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Minimum Duration</label>
+
+                        <div class="col-md-10">
+                            @*@Html.TextBoxFor(m => m.minDuration, new { @class = "form-control", @Value = @Model.CentreActivities.minDuration, @type="number", @step=60, @min=60, @max = 480 })*@
+                            @*@Html.DropDownListFor(model => model.minDuration, new SelectList(ViewBag.timingDuration), (@Model.CentreActivities.minDuration).ToString(), new { @class = "form-control" })*@
+                            @Html.DropDownListFor(model => model.minDuration, new SelectList(ViewBag.timingDuration, "Value", "Text", @Model.CentreActivities.minDuration.ToString()), new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Maximum Duration</label>
+                        <div class="col-md-10">
+                            @*@Html.TextBoxFor(m => m.maxDuration, new { @class = "form-control", @Value = @Model.CentreActivities.maxDuration, @type = "number", @step = 60, @min = 60, @max = 480 })*@
+                            @*@Html.DropDownListFor(model => model.maxDuration, new SelectList(ViewBag.timingDuration), (@Model.CentreActivities.maxDuration).ToString(), new { @class = "form-control" })*@
+                            @Html.DropDownListFor(model => model.maxDuration, new SelectList(ViewBag.timingDuration, "Value", "Text", @Model.CentreActivities.maxDuration.ToString()), new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Minimum Required People</label>
+                        <div class="col-md-10">
+                            @*@Html.TextBoxFor(m => m.minPeopleReq, new { @class = "form-control", @Value = @Model.CentreActivities.minPeopleReq, @type = "number", @min = 1})*@
+                            @*@Html.DropDownListFor(model => model.minPeopleReq, new SelectList(ViewBag.minReq), (@Model.CentreActivities.minPeopleReq).ToString(), new { @class = "form-control" } )*@
+                            @Html.DropDownListFor(model => model.minPeopleReq, new SelectList(ViewBag.minReq, "Value", "Text", @Model.CentreActivities.minPeopleReq.ToString()), new { @class = "form-control" })
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">
+                            Compulsory
+                            <a class="fa fa-info-circle" data-toggle="comInfo" title="Activity is compulsory for all patient."></a>
+
+                        </label>
+                        <table>
+                            <tr class="row">
+
+                                @if (Model.CentreActivities.isCompulsory == 1)
+                                {
+                                    @Html.RadioButtonFor(m => m.isCompulsory, 1, new { @id = "option1", @class = "rspace" })@Html.Label("Yes")
+
+                                    @Html.RadioButtonFor(m => m.isCompulsory, 0, new { @id = "option2", @class = "rspace" })@Html.Label("No")
+
+                                }
+                                else
+                                {
+                                    @Html.RadioButtonFor(m => m.isCompulsory, 1, new { @id = "option3", @class = "rspace" })@Html.Label("Yes")
+                                    @Html.RadioButtonFor(m => m.isCompulsory, 0, new { @id = "option4", @class = "rspace" })@Html.Label("No")
+                                }
+
+
+                                <td class="col-lg-10"></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">
+                            Fixed
+                            <a class="fa fa-info-circle" data-toggle="fixedInfo" title="Activity is scheduled at a fixed time slot."></a>
+
+                        </label>
+                        <table>
+                            <tr class="row">
+                                @if (Model.CentreActivities.isFixed == 1)
+                                {
+                                    @Html.RadioButtonFor(m => m.isFixed, 1, new { @id = "option5", @class = "rspace" })@Html.Label("Yes")
+                                    @Html.RadioButtonFor(m => m.isFixed, 0, new { @id = "option6", @class = "rspace" })@Html.Label("No")
+
+                                }
+                                else
+                                {
+                                    @Html.RadioButtonFor(m => m.isFixed, 1, new { @id = "option7", @class = "rspace" })@Html.Label("Yes")
+
+                                    @Html.RadioButtonFor(m => m.isFixed, 0, new { @id = "option8", @class = "rspace" })@Html.Label("No")
+
+                                }
+
+                                <td class="col-lg-10"></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">
+                            Group
+                            <a class="fa fa-info-circle" data-toggle="groupInfo" title="Activity needs to be held within a group."></a>
+
+                        </label>
+                        <table>
+                            <tr class="row">
+                                @if (Model.CentreActivities.isGroup == 1)
+                                {
+                                    @Html.RadioButtonFor(m => m.isGroup, 1, new { @id = "option9", @class = "rspace" })@Html.Label("Yes")
+
+                                    @Html.RadioButtonFor(m => m.isGroup, 0, new { @id = "option10", @class = "rspace" })@Html.Label("No")
+
+                                }
+                                else
+                                {
+                                    @Html.RadioButtonFor(m => m.isGroup, 1, new { @id = "option11", @class = "rspace" })@Html.Label("Yes")
+
+                                    @Html.RadioButtonFor(m => m.isGroup, 0, new { @id = "option12", @class = "rspace" })@Html.Label("No")
+
+                                }
+
+                                <td class="col-lg-10"></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    @*<table class="table">
+                            <tr>
+                                <td><b>ID</b></td>
+                                <td><b>Day<b></td>
+                                <td><b>Approved Status</b></td>
+                            </tr>
+                            @foreach (var item in Model.Activities)
+                            {
+                                <tr>
+                                    <td>@item.availableID</td>
+                                    <td>@item.day</td>
+                                    @if (@item.isApproved == 1)
+                                    {
+                                        <td>Approved</td>
+                                    }
+                                    else
+                                    {
+                                        <td>Pending<</td>
+                                    }
+                                </tr>
+                            }
+                        </table>*@<table class="table">
+                        <tr>
+                            <td><b></b></td>
+                            <td><b><b></td>
+                            <td><b></b></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+
+
+                    @*<div class="form-group">
+                            <label class="control-label">User Type</label>
+                            @Html.DropDownList("userType", null, new { @class = "form-control" })
+                        </div>*@<div class="form-group">
+                        <label class="control-label"></label>
+                    </div>
+
+                    @*<div class="margiv-top-10 pull-right">
+                            <input class="btn grey" type="button" onclick="window.location.replace('@Url.Action("ManageActivities", "Supervisor")')" value="Cancel" />
+                            <input type="submit" class="btn blue" value=" Save Changes" />
+                        </div>*@
+
+                    @*<div class="margiv-top-10 pull-right">
+                            <input class="btn grey" type="button" onclick="window.location.replace('@Url.Action(" ManageActivities", "Supervisor" )')" value="Cancel" />
+                            <input type="submit" class="btn blue" value=" Save Changes" />
+                        </div>*@
+
+                    @Html.Partial("_LayoutFormEditButtons");
+                    <br /><br />
+
+
+
+
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+
+<script src="~/Content/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+<script src="~/Content/global/scripts/app.min.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/profile.min.js" type="text/javascript"></script>
+
+
+<script src="~/Content/global/plugins/moment.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/clockface/js/clockface.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
+
+
+
+<link rel="stylesheet" href="~/Content/global/css/jquery.timepicker.css" type="text/css" />
+<script src="~/Content/global/scripts/jquery.timepicker.js" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="comInfo"]').tooltip();
+        $('[data-toggle="fixedInfo"]').tooltip();
+        $('[data-toggle="groupInfo"]').tooltip();
+
+
+        $('#datetimepicker1').datepicker({
+            defaultDate: null,
+        });
+
+        $('#datetimepicker2').datepicker({
+            defaultDate: null,
+        });
+
+
+        $("#datetimepicker1").change(function () {
+            console.log("test1");
+            dateCheck();
+        });
+
+        $("#datetimepicker2").change(function () {
+            console.log("test2");
+
+            dateCheck();
+        });
+
+
+
+        $("#title").change(function () {
+            var title = $("#title").val();
+            if ($("#shortTitle").val() == "") {
+            $("#shortTitle").val(title.substring(0, 4));
+            }
+        });
+
+        $("#option9").change(function () {
+            var val = document.getElementById('option9').value;
+
+            if (val == 1) {
+                $("#minReqPeople").val(2);
+            }
+        });
+            $("#option10").change(function () {
+                var val = document.getElementById('option10').value;
+
+                if (val == 0) {
+                    $("#minReqPeople").val(1);
+
+                }
+        });
+
+
+         var url = '@Url.Action("_LayoutFormEditButtons", "Submit")';
+        $('#submit').click(function () {
+            dateCheck();
+
+            var option9Val = $('#option9').is(":checked");
+            var minReqPeopleVal = $("#minReqPeople").val();
+
+            if (option9Val == true && minReqPeopleVal < 2) {
+                document.getElementById("minReqPeopleError").innerHTML = "Group activity requires a minimum number of 2 people!";
+                document.getElementById("minReqPeopleError").style.display = "block";
+                return false;
+
+            }
+            document.getElementById("minReqPeopleError").innerHTML = "";
+            document.getElementById("minReqPeopleError").style.display = "none";
+
+        });
+
+
+
+
+    });
+
+
+
+
+    function dateCheck() {
+
+        var datetimepicker1Val = $("#datetimepicker1").val();
+        var datetimepicker2Val = $("#datetimepicker2").val();
+
+        var datetime = new Date();
+        var dd = datetime.getDate();
+        var mm = datetime.getMonth() + 1; //January is 0!
+
+
+        var yyyy = datetime.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var d = dd + '/' + mm + '/' + yyyy;
+
+
+        var arrStartDate = datetimepicker1Val.split("/");
+        var stdate = new Date(arrStartDate[2], arrStartDate[1], arrStartDate[0]);
+        var arrEndDate = datetimepicker2Val.split("/");
+        var enddate = new Date(arrEndDate[2], arrEndDate[1], arrEndDate[0]);
+
+        var arrCrDate = d.split("/");
+        var tdate = new Date(arrCrDate[2], arrCrDate[1], arrCrDate[0]);
+
+        var errorFlag = 0;
+
+        if (stdate > enddate && enddate != "") {
+            document.getElementById("startDateError1").innerHTML = "Start date cannot be after end date.";
+            document.getElementById("startDateError1").style.display = "block";
+            errorFlag = 1;
+
+        } else {
+            document.getElementById("startDateError1").innerHTML = "";
+            document.getElementById("startDateError1").style.display = "none";
+        }
+
+
+        if (enddate < tdate && stdate != "") {
+            document.getElementById("endDateError").innerHTML = "End date cannot be before today.";
+            document.getElementById("endDateError").style.display = "block";
+            errorFlag = 1;
+
+        } else {
+            document.getElementById("endDateError").innerHTML = "";
+            document.getElementById("endDateError").style.display = "none";
+        }
+
+        if (errorFlag == 1) {
+            return false;
+        }
+
+    }
+        </script>

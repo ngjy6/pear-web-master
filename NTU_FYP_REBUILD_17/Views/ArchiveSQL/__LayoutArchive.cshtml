@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Pear</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="" name="author" />
+    <link href="~/Content/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/global/css/components-md.min.css" rel="stylesheet" id="style_components" type="text/css" />
+    <link href="~/Content/global/css/plugins-md.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/layouts/layout3/css/layout.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/layouts/layout3/css/themes/default.min.css" rel="stylesheet" type="text/css" id="style_color" />
+    <link href="~/Content/layouts/layout3/css/custom.min.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="favicon.ico" />
+</head>
+<body class="page-container-bg-solid page-md">
+    <div class="page-wrapper">
+        <div class="page-wrapper-row">
+            <div class="page-wrapper-top">
+                <div class="page-header">
+                    <div class="page-header-top">
+                        <div class="container">
+                            <div class="page-logo">
+                                <a href="~/Account">
+                                    <img src="~/Image/logo.png" alt="logo" class="logo-default">
+                                </a>
+                            </div>
+                            <a href="javascript:;" class="menu-toggler"></a>
+                            <div class="top-menu">
+                                <ul class="nav navbar-nav pull-right">
+                                    <li class="droddown dropdown-separator">
+                                        <span class="separator"></span>
+                                    </li>
+                                    @using Microsoft.AspNet.Identity
+                                    @using NTU_FYP_REBUILD_17.Models
+                                    @*@if (Request.IsAuthenticated)
+                                    {*@
+                                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                                        {
+                                            @*@Html.AntiForgeryToken()*@
+
+                                            @*<li class="dropdown dropdown-user dropdown-dark">
+                                                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                    <i class="fa fa-list"></i>
+                                                    <span class="username username-hide-mobile">@User.Identity.GetUserFirstName()</span>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-default">
+                                                    <li>
+                                                        <a href="javascript:document.getElementById('logoutForm').submit()">
+                                                            <i class="icon-key"></i> Log Out
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </li>*@
+                                        }
+                                    @*}*@
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page-header-menu">
+                        <div class="container">
+                            @Html.Partial("_NavBarArchive")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+            <div class="page-wrapper-middle">
+                <div class="page-container">
+
+
+                            
+                                @RenderBody()
+                            
+
+                </div>
+            </div>
+
+
+
+        <div class="page-wrapper-row">
+            <div class="page-wrapper-bottom">
+                <div class="page-footer">
+                    <div class="container">
+                        &copy; @DateTime.Now.Year -
+                        <a target="_blank" href="#">PEAR</a> &nbsp;
+                    </div>
+                </div>
+                <div class="scroll-to-top">
+                    <i class="icon-arrow-up"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        $(document).ready(function () {
+            $('#clickmewow').click(function () {
+                $('#radio1003').attr('checked', 'checked');
+            });
+        })
+    </script>
+</body>
+</html>

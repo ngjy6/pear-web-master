@@ -1,0 +1,156 @@
+﻿@model NTU_FYP_REBUILD_17.ViewModels.UserResetPasswordViewModel
+
+@{
+    ViewBag.Title = "Reset";
+    Layout = "~/Views/Shared/_LayoutDefault.cshtml";
+}
+
+<style type="text/css">
+    .glyphicon-remove {
+        color: red;
+    }
+
+    .glyphicon-ok {
+        color: green;
+    }
+</style>
+
+<div class="portlet light ">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="icon-globe theme-font hide"></i>
+            <span class="caption-subject font-blue-madison bold uppercase">Reset Password</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        @if (Model.id != null)
+        {
+            using (Html.BeginForm("Reset", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "form1" }))
+            {
+                @Html.HiddenFor(p => p.id, new { @Value = @Model.id, @id = "ab" })
+                @Html.HiddenFor(p => p.code, new { @Value = @Model.code, @id = "ab2" })
+
+                <div align="center">
+                    <h3>Reset Password</h3>
+                </div>
+                <div class="col-md-offset-2">
+                    <p style="color:red">@ViewData["Error1"]</p>
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+                </div>
+                <hr />
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control nocopy nopaste", @id = "NewPassword", required = "required" })
+                        <div id="passwordCriteria">
+                            <div id="Length" class="glyphicon glyphicon-remove">Must be at least 7 charcters</div><br />
+                            <div id="UpperCase" class="glyphicon glyphicon-remove">Must have at least 1 upper case character</div><br />
+                            <div id="LowerCase" class="glyphicon glyphicon-remove">Must have at least 1 lower case character</div><br />
+                            <div id="Numbers" class="glyphicon glyphicon-remove">Must have at least 1 numeric character</div><br />
+                            <div id="Symbols" class="glyphicon glyphicon-remove">Must have at least 1 special character</div><br />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control nocopy nopaste", required = "required" })
+                    </div>
+                </div>
+                <div class="margiv-top-10 text-center">
+                    <input class="space btn grey" type="button" onclick="window.location.replace('@Url.Action("Index", "Home")')" value="Login" />
+                    <input id="submit1" type="submit" class="space btn btn-primary" value="Reset Password" />
+                </div>
+            }
+        }
+        else
+        {
+            <div align="center">
+                <h3>Reset Password</h3>
+            </div>
+            <div class="col-md-offset-2">
+                <p style="color:blue">@ViewData["Error1"]</p>
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+            </div>
+            <hr />
+            <div class="margiv-top-10 text-center">
+                <input class="space btn btn-primary" type="button" onclick="window.location.replace('@Url.Action("Index", "Home")')" value="Login" />
+            </div>
+        }
+    </div>
+</div>
+
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+<script src="~/Content/global/scripts/app.min.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/profile.min.js" type="text/javascript"></script>
+
+<script>
+    /*Actual validation function*/
+    function ValidatePassword() {
+        /*Array of rules and the information target*/
+        var rules = [{
+            Pattern: "[A-Z]",
+            Target: "UpperCase"
+        },
+          {
+              Pattern: "[a-z]",
+              Target: "LowerCase"
+          },
+          {
+              Pattern: "[0-9]",
+              Target: "Numbers"
+          },
+          {
+              Pattern: "[!@@#$%^&*]",
+              Target: "Symbols"
+          }
+        ];
+
+        //Just grab the password once
+        var password = $(this).val();
+
+        /*Length Check, add and remove class could be chained*/
+        /*I've left them seperate here so you can see what is going on */
+        /*Note the Ternary operators ? : to select the classes*/
+        $("#Length").removeClass(password.length > 6 ? "glyphicon-remove" : "glyphicon-ok");
+        $("#Length").addClass(password.length > 6 ? "glyphicon-ok" : "glyphicon-remove");
+
+        /*Iterate our remaining rules. The logic is the same as for Length*/
+        for (var i = 0; i < rules.length; i++) {
+
+            $("#" + rules[i].Target).removeClass(new RegExp(rules[i].Pattern).test(password) ? "glyphicon-remove" : "glyphicon-ok");
+            $("#" + rules[i].Target).addClass(new RegExp(rules[i].Pattern).test(password) ? "glyphicon-ok" : "glyphicon-remove");
+        }
+    }
+
+    /*Bind our event to key up for the field. It doesn't matter if it's delete or not*/
+    $(document).ready(function () {
+        $("#NewPassword").on('keyup', ValidatePassword)
+    });
+
+    $('#submit1').click(function () {
+        if (document.getElementById('Length').classList.contains("glyphicon-remove"))
+            return false;
+
+        if (document.getElementById('UpperCase').classList.contains("glyphicon-remove"))
+            return false;
+
+        if (document.getElementById('LowerCase').classList.contains("glyphicon-remove"))
+            return false;
+
+        if (document.getElementById('Numbers').classList.contains("glyphicon-remove"))
+            return false;
+
+        if (document.getElementById('Symbols').classList.contains("glyphicon-remove"))
+            return false;
+
+        return true;
+    });
+</script>

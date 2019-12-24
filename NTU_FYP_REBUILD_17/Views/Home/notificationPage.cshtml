@@ -1,0 +1,728 @@
+﻿@model NTU_FYP_REBUILD_17.Models.displayNotification
+@using Microsoft.AspNet.Identity
+
+
+
+<style>
+    li {
+        float: left;
+        display: inline;
+    }
+
+    .button {
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+
+    /* The Modal (background) */
+    .modal#modal-wrapper3 {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    /* Modal Content Box */
+    .modal-content#modelcontentNoti2 {
+        text-align: center;
+        background-color: #fefefe;
+        margin: 4% auto 15% auto;
+        border: 1px solid #888;
+        table-layout: fixed;
+        width: 60%;
+        padding-bottom: 30px;
+    }
+    /* Black */
+
+    .min-tablet {
+        width: 10%;
+    }
+
+    tr.highlight td {
+        background-color: skyblue;
+    }
+
+  
+</style>
+
+
+@ViewBag.Error
+
+@{
+    if (@User.IsInRole("Supervisor"))
+    {
+        Layout = "~/Views/Shared/_LayoutSupervisor.cshtml";
+    }
+
+}
+
+<div class="container">
+    <div>
+        <ul class="nav nav-pills" id="notiUL">
+            <li>
+                <a data-toggle="pill" href="#PendingMessage">Pending</a>
+            </li>
+            <li>
+                <a data-toggle="pill" href="#ApprovedMessage">Approved</a>
+            </li>
+            <li>
+                <a data-toggle="pill" href="#RejectedMessage">Rejected</a>
+            </li>
+            <li>
+                <a data-toggle="pill" href="#AllMessage">All Message</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tab-content">
+        @{ int i = 0;
+        }
+        <div id="AllMessage" class="tab-pane fade">
+            
+                    
+                    <div class="tools"> </div>
+                
+                
+                    <table class="table table-striped table-bordered table-hover table-compact dt-responsive" width="100%" id="sample_3" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th class="min-tablet">No.</th>
+                                <th class="min-tablet">MessageID</th>
+                                <th class="min-tablet">Sender</th>
+                                <th class="min-tablet">Message</th>
+                                <th class="min-tablet">Received</th>
+                                <th class="min-tablet">Patient</th>
+                                <th class="min-tablet">Description</th>
+
+                                <th class="all">Old Records</th>
+                                <th class="all">Changes</th>
+                                <th class="min-tablet">Status</th>
+                                <th class="min-tablet">Confirm</th>
+                                <th class="min-tablet">RejectReason</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody id="allbody">
+                            @if (Model != null)
+                            {
+                                i = 0;
+                                foreach (var item in Model.allNoti.userallNotificationObj)
+                                {
+                                    i++;
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@item.logNotificationID</td>
+                                        <td>@item.userInitName</td>
+                                        <td>@item.notificationMessage</td>
+                                        <td>@item.createDateTime</td>
+
+                                        <td>@Model.allNoti.PatientDetails[i - 1]</td>
+                                        <td>@Model.allNoti.userallLogObj[i - 1].logDesc</td>
+
+
+
+                                        @if (@Model.allNoti.userallLogObj[i - 1].logNewValue != null)
+                                        {
+
+                                            <td>@Model.allNoti.userallLogObj[i - 1].logOldValue</td>
+
+                                            <td>@Model.allNoti.userallLogObj[i - 1].logNewValue</td>
+
+                                        }
+                                        else
+                                        {
+
+                                            <td>@Model.allNoti.userallLogObj[i - 1].oldLogData</td>
+
+                                            <td>@Model.allNoti.userallLogObj[i - 1].logData</td>
+
+                                        }
+
+                                        <td>
+                                            @if (item.confirmationStatus.Equals("Pending"))
+                                            {
+                                                <font color="red">@item.confirmationStatus</font>
+                                            }
+                                            else
+                                            {
+                                                @item.confirmationStatus
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (item.confirmationStatus.Equals("Pending"))
+                                            {
+                                                <input type="button" name="button" class="button1" value="Approved" onclick="redirectApprove('/Home/notificationPage_POST?message=Approved&uid=@item.userIDReceived&nlogID=@item.logNotificationID')" />
+                                                <input type="button" name="button" class="button1" value="Rejected" onclick="redirectReject('/Home/notificationPage_POST?message=Rejected&uid=@item.userIDReceived&nlogID=@item.logNotificationID')" />
+                                            }
+                                            else
+                                            {
+                                                <label>Not Applicable</label>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @if (item.confirmationStatus.Equals("Rejected"))
+                                            {
+                                                <label> @Model.allNoti.userallLogObj[i - 1].rejectReason </label>
+
+                                            }
+                                            else
+                                            {
+                                                <label>Not Applicable</label>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+
+                    </table>
+            </div>
+                
+           
+
+        <div id="PendingMessage" class="tab-pane fade in active">
+            
+                    <div class="tools"> </div>
+                
+                
+                    <table class="table table-striped table-bordered table-hover table-compact dt-responsive" width="100%" id="sample_4" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th class="min-tablet">No.</th>
+                                <th class="min-tablet">MessageID</th>
+                                <th class="min-tablet">Sender</th>
+                                <th class="min-tablet">Message</th>
+                                <th class="min-tablet">Received</th>
+                                <th class="min-tablet">Patient</th>
+                                <th class="min-tablet">Description</th>
+                                <th class="all">Old Records</th>
+                                <th class="all">Changes</th>
+                                <th class="min-tablet">Status</th>
+                                <th class="min-tablet">Confirm</th>
+                                
+                            </tr>
+                        </thead>
+
+
+                        <tbody id="pendingbody">
+                            @if (Model != null)
+                            {
+                                i = 0;
+                                foreach (var item in Model.pendingNoti.userPendingNotificationObj)
+                                {
+                                    i++;
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@item.logNotificationID</td>
+                                        <td>@item.userInitName</td>
+                                        <td>@item.notificationMessage</td>
+                                        <td>@item.createDateTime</td>
+
+                                        <td>@Model.allNoti.PatientDetails[i - 1]</td>
+                                        <td>@Model.allNoti.userallLogObj[i - 1].logDesc</td>
+
+
+                                        @if (@Model.allNoti.userallLogObj[i - 1].logNewValue != null)
+                                        {
+                                            <td>@Model.allNoti.userallLogObj[i - 1].logOldValue</td>
+                                            <td>@Model.allNoti.userallLogObj[i - 1].logNewValue</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@Model.allNoti.userallLogObj[i - 1].oldLogData</td>
+                                            <td>@Model.allNoti.userallLogObj[i - 1].logData</td>
+                                        }
+
+                                        <td><font color="red">@item.confirmationStatus</font></td>
+                                        <td>
+                                            @if (item.confirmationStatus.Equals("Pending"))
+                                            {
+                                                <input type="button" name="button" class="button1" value="Approved" onclick="redirectApprove('/Home/notificationPage_POST?message=Approved&uid=@item.userIDReceived&nlogID=@item.logNotificationID')" />
+                                                <input type="button" name="button" class="button1" value="Rejected" onclick="redirectReject('/Home/notificationPage_POST?message=Rejected&uid=@item.userIDReceived&nlogID=@item.logNotificationID')" />
+                                            }
+                                            else
+                                            {
+                                                <label>Not Applicable</label>
+                                            }
+                                        </td>
+                                        
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+
+                    </table>
+            </div>
+
+        <div id="ApprovedMessage" class="tab-pane fade">
+           
+                    
+                    <div class="tools"> </div>
+                
+                    <table class="table table-striped table-bordered table-hover dt-responsive" width="100%" id="sample_5" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th class="min-tablet">No.</th>
+                                <th class="min-tablet">MessageID</th>
+                                <th class="min-tablet">Sender</th>
+                                <th class="min-tablet">Message</th>
+                                <th class="min-tablet">Received</th>
+                                <th class="min-tablet">Patient</th>
+                                <th class="min-tablet">Description</th>
+                                <th class="all">Old Records</th>
+                                <th class="all">Changes</th>
+                                <th class="min-tablet">Status</th>
+
+                            </tr>
+                        </thead>
+
+
+                        <tbody id="approvedbody">
+                            @if (Model != null)
+                            {
+                                i = 0;
+                                foreach (var item in Model.approvedNoti.userApprovedNotificationObj)
+                                {
+                                    i++;
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@item.logNotificationID</td>
+                                        <td>@item.userInitName</td>
+                                        <td>@item.notificationMessage</td>
+                                        <td>@item.createDateTime</td>
+
+                                        <td>@Model.allNoti.PatientDetails[i - 1]</td>
+                                        <td>@Model.allNoti.userallLogObj[i - 1].logDesc</td>
+
+                                        @if (@Model.allNoti.userallLogObj[i - 1].logNewValue != null)
+                                        {
+                                            <td>@Model.allNoti.userallLogObj[i - 1].logOldValue</td>
+                                            <td>@Model.allNoti.userallLogObj[i - 1].logNewValue</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@Model.allNoti.userallLogObj[i - 1].oldLogData</td>
+                                            <td>@Model.allNoti.userallLogObj[i - 1].logData</td>
+                                        }
+
+                                        <td>@item.confirmationStatus</td>
+
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+
+
+                    </table>
+      
+        </div>
+
+        <div id="RejectedMessage" class="tab-pane fade">
+            
+                    <div class="tools"> </div>
+                
+                    <table class="table table-striped table-bordered table-hover dt-responsive" width="100%" id="sample_6" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th class="min-tablet">No.</th>
+                                <th class="min-tablet">MessageID</th>
+                                <th class="min-tablet">Sender</th>
+                                <th class="min-tablet">Message</th>
+                                <th class="min-tablet">Received</th>
+                                <th class="min-tablet">Patient</th>
+                                <th class="min-tablet">Description</th>
+                                <th class="all">Old Records</th>
+                                <th class="all">Changes</th>
+                                <th class="min-tablet">Status</th>
+                                <th class="min-tablet">Confirm</th>
+
+                            </tr>
+                        </thead>
+
+
+
+                        <tbody id="rejectedbody">
+                            @if (Model != null)
+                            {
+                                i = 0;
+
+                                foreach (var item in Model.rejectedNoti.userRejectedNotificationObj)
+                                {
+                                    i++;
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@item.logNotificationID</td>
+                                        <td>@item.userInitName</td>
+                                        <td>@item.notificationMessage</td>
+                                        <td>@item.createDateTime</td>
+
+                                        <td>@Model.allNoti.PatientDetails[i - 1]</td>
+                                        <td>@Model.allNoti.userallLogObj[i - 1].logDesc</td>
+
+
+                                        @if (@Model.allNoti.userallLogObj[i - 1].logNewValue != null)
+                                        {
+                                            <td>@Model.allNoti.userallLogObj[i - 1].logOldValue</td>
+                                            <td>@Model.allNoti.userallLogObj[i - 1].logNewValue</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@Model.allNoti.userallLogObj[i - 1].oldLogData</td>
+                                            <td>@Model.allNoti.userallLogObj[i - 1].logData</td>
+                                        }
+
+
+                                        <td>@item.confirmationStatus</td>
+                                        <td>
+                                            @if (item.confirmationStatus.Equals("Pending"))
+                                            {
+                                                <input type="button" name="button" class="button1" value="Approve" onclick="myFunction();" />
+                                                <input type="button" name="button" class="button1" value="Reject" onclick="myFunction();" />
+                                            }
+                                            else
+                                            {
+                                                <label>Not Applicable</label>
+                                            }
+                                        </td>
+
+
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+
+                    </table>
+                
+        </div>
+    </div>
+
+</div>
+@*<div id="modal-wrapper3" class="modal">
+        <form class="modal-content animate" id="modelcontentNoti2">
+            <div class="imgcontainer" id="imgcontainerNoti">
+                <span onclick="document.getElementById('modal-wrapper3').style.display='none'"></span>
+                <img src="~/Image/Notification.png" alt="Avatar" class="avatar" id="avatarNoti">
+                <h1 style="text-align:center">Notification Message</h1>
+            </div>
+            <div align="center">
+                <table id="myTableDisplay"></table>
+            </div>
+            <div>
+            </div>
+        </form>
+    </div>*@
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+
+    function redirectReject(url)
+    {
+        var status = confirm('Are you sure you want to reject your post?')
+        if (status == true) {
+            if (url.includes("Rejected") == true) {
+                var reason = prompt("Please state your reason");
+                if (reason.length < 4) {
+                    alert("Input Length must be greather than 3.");
+                }
+                else if (reason.length >= 4)
+                {
+                    var newURL = url + "&reason=" + reason;
+                    window.location.href = newURL;
+                }
+            }
+        }
+        return false;
+    }
+
+    function redirectApprove(url) {
+        if (confirm('Are you sure you want to approve your post?')) {
+            var reason = "NA";
+            var newURL = url + "&reason=" + reason;
+            window.location.href = newURL;
+        }
+        return false;
+        }
+
+
+        @*var msg = @Html.Raw(Json.Encode(Model.message));
+        if (msg === "Pending") {
+            $('.nav-pills a[href="#PendingMessage"]').tab('show');
+            console.log("Pending!!!");
+        } else {
+            $('.nav-pills a[href="#AllMessage"]').tab('show');
+            console.log("ALL MESSAGE!!!");
+        }*@
+
+        @*var msg = @Html.Raw(Json.Encode(Model.message));
+        if (msg === "Pending") {
+            $("#allbody").hide();
+            $("#pendingbody").show();
+            $("#approvedbody").hide();
+            $("#rejectedbody").hide();
+
+            document.getElementById("buttonAll").style.background = "#008CBA";
+            document.getElementById("buttonPending").style.background = "#484848";
+            document.getElementById("buttonApproved").style.background = "#008CBA";
+            document.getElementById("buttonRejected").style.background = "#008CBA";
+        }
+        else {
+            $("#allbody").show();
+            $("#pendingbody").hide();
+            $("#approvedbody").hide();
+            $("#rejectedbody").hide();
+
+            document.getElementById("buttonAll").style.background = "#484848";
+            document.getElementById("buttonPending").style.background = "#008CBA";
+            document.getElementById("buttonApproved").style.background = "#008CBA";
+            document.getElementById("buttonRejected").style.background = "#008CBA";
+        }*@
+
+    //$(document).ready(function () {
+    //    $(".nav-pills a").click(function () {
+    //        $(this).tab('show');
+    //    });
+    //});
+
+    //$('#notiUL a').click(function (e) {
+    //    e.preventDefault();
+
+    //    var url = $(this).attr("data-url");
+    //    var href = this.hash;
+    //    var pane = $(this);
+
+    //    // ajax load from data-url
+    //    $(href).load(url, function (result) {
+    //        pane.tab('show');
+    //    });
+    //    console.log("here1");
+    //});
+
+    //// load first tab content
+    //$('#PendingMessage').load($('.active a').attr("data-url"), function (result) {
+    //    $('.active a').tab('show');
+    //    console.log("here2");
+    //});
+    @*$(document).ready(function () {
+        var table = $('#sample_3').DataTable({
+
+            fixedHeader:{
+                header: true,
+                footer: true
+            }
+
+        });
+
+        table.column(1).visible(false);
+
+
+
+        //var table = $('#sample_4').DataTable({
+        //    fixedHeader: {
+        //        header: true,
+        //        footer: true
+        //    }
+        //});
+        //table.column(1).visible(false);
+
+
+        //var table = $('#sample_5').DataTable({
+        //    fixedHeader: {
+        //        header: true,
+        //        footer: true
+        //    }
+        //});
+        //table.column(1).visible(false);
+
+
+        //var table = $('#sample_6').DataTable({
+        //    fixedHeader: {
+        //        header: true,
+        //        footer: true
+        //    }
+        //});
+    });*@
+
+    $(document).ready(function () {
+
+        jQuery.fn.dataTable.Api.register('page.jumpToData()', function (data, column) {
+            var pos = this.column(column, { order: 'current' }).data().indexOf(data);
+
+            if (pos >= 0) {
+                var page = Math.floor(pos / this.page.info().length);
+                this.page(page).draw(false);
+            }
+
+            return this;
+        });
+
+        const msg = "@ViewBag.confirmation";
+        const messageID = "@ViewBag.messageID";
+
+        var table3 = $('#sample_3').DataTable();
+        new $.fn.dataTable.FixedHeader(table3, {alwaysCloneTop: true});
+
+        var table4 = $('#sample_4').DataTable();
+        new $.fn.dataTable.FixedHeader(table4, {alwaysCloneTop: true});
+
+        var table5 = $('#sample_5').DataTable();
+        new $.fn.dataTable.FixedHeader(table5, {alwaysCloneTop: true});
+
+        var table6 = $('#sample_6').DataTable();
+        new $.fn.dataTable.FixedHeader(table6, {alwaysCloneTop: true});
+
+          $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
+         $($.fn.dataTable.tables()).DataTable().fixedHeader.adjust();
+   });
+
+
+        if (msg === "Pending") {
+            $('.nav-pills a[href="#PendingMessage"]').tab('show');
+            console.log("Pending!!!");
+            console.log(messageID);
+           
+            table4.page.jumpToData(messageID, 1);
+
+            $("#sample_4 tr").each(function () {
+                const col_val = $(this).find("td:eq(1)").text();
+                console.log(col_val);
+                if (col_val == "@ViewBag.messageID") {
+
+                    $(this).addClass('highlight');  //the selected class colors the row green//
+
+                    console.log("highlight");
+                    console.log($(this).offset());
+                    console.log($(this).offset().top);
+                    $('html, body').animate({
+                        scrollTop: $(this).offset().top
+                    }, 2000);
+                    return false;
+                }
+            });
+        }
+        else {
+            $('.nav-pills a[href="#AllMessage"]').tab('show');
+            console.log("ALL MESSAGE!!!");
+            
+            table3.page.jumpToData(messageID, 1);
+
+            $("#sample_3 tr").each(function () {
+                const col_val = $(this).find("td:eq(1)").text();
+                console.log(col_val);
+                if (col_val == "@ViewBag.messageID") {
+
+                    $(this).addClass('highlight');  //the selected class colors the row green//
+
+                    console.log("highlight");
+                    console.log($(this).show().offset());
+                    console.log($(this).show().offset().top);
+                    $('html, body').animate({
+                        scrollTop: $(this).show().offset().top
+                    }, 2000);
+                    return false;
+                }
+
+            });
+        }
+             
+
+        //$("#buttonAll").click(function () {
+        //    $("#allbody").show();
+        //    $("#pendingbody").hide();
+        //    $("#approvedbody").hide();
+        //    $("#rejectedbody").hide();
+        //    document.getElementById("buttonAll").style.background = "#484848";
+        //    document.getElementById("buttonPending").style.background = "#008CBA";
+        //    document.getElementById("buttonApproved").style.background = "#008CBA";
+        //    document.getElementById("buttonRejected").style.background = "#008CBA";
+        //});
+        //$("#buttonPending").click(function () {
+        //    $("#pendingbody").show();
+        //    $("#allbody").hide();
+        //    $("#approvedbody").hide();
+        //    $("#rejectedbody").hide();
+        //    document.getElementById("buttonAll").style.background = "#008CBA";
+        //    document.getElementById("buttonPending").style.background = "#484848";
+        //    document.getElementById("buttonApproved").style.background = "#008CBA";
+        //    document.getElementById("buttonRejected").style.background = "#008CBA";
+        //});
+        //$("#buttonApproved").click(function () {
+        //    $("#approvedbody").show();
+        //    $("#allbody").hide();
+        //    $("#pendingbody").hide();
+        //    $("#rejectedbody").hide();
+        //    document.getElementById("buttonAll").style.background = "#008CBA";
+        //    document.getElementById("buttonPending").style.background = "#008CBA";
+        //    document.getElementById("buttonApproved").style.background = "#484848";
+        //    document.getElementById("buttonRejected").style.background = "#008CBA";
+        //});
+        //$("#buttonRejected").click(function () {
+        //    $("#rejectedbody").show();
+        //    $("#allbody").hide();
+        //    $("#approvedbody").hide();
+        //    $("#pendingbody").hide();
+        //    document.getElementById("buttonAll").style.background = "#008CBA";
+        //    document.getElementById("buttonPending").style.background = "#008CBA";
+        //    document.getElementById("buttonApproved").style.background = "#008CBA";
+        //    document.getElementById("buttonRejected").style.background = "#484848";
+        //});
+
+    });
+
+ 
+
+
+
+
+
+
+    function myFunction(id) {
+        var html = '';
+        document.getElementById('modal-wrapper3').style.display = 'block';
+        html = "<tr><td>ssssssssss</td></tr>";
+        $('#myTableDisplay').html(html);
+    }
+
+    // If user clicks anywhere outside of the modal, Modal will close
+    var modal = document.getElementById('modal-wrapper3');
+    var modal2 = document.getElementById('modal-wrapper2');
+    window.onclick = function (event) {
+        if (event.target == modal2 || event.target == modal) {
+            modal.style.display = "none";
+            modal2.style.display = "none";
+        }
+    }
+</script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>  <!--Problem-->
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/scripts/datatable.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/table-datatables-responsive.min.js" type="text/javascript"></script> <!--Problem-->
+<script src="~/Content/global/plugins/datatables/datatables.min.js" type="text/javascript"></script> <!--Problem-->
+<link href="~/Content/global/plugins/datatables/datatables.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+<script src="~/Content/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>

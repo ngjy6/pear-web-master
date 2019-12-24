@@ -1,0 +1,67 @@
+﻿.space {
+    margin: 5px
+}
+
+.rspace {
+   
+    width: 3%;
+}
+
+.wickedpicker {
+    z-index: 99999;
+}
+
+.required:after {
+    content: "*";
+    color: red;
+}
+
+/*.radioSpace {
+    margin-left: 5px
+}*/
+
+* {
+    box-sizing: border-box
+}
+
+
+/*Profile Image*/
+/* Container needed to position the overlay. Adjust the width as needed */
+.containerDP {
+    position: relative;
+    width: 100%;
+    max-width: 120px;
+}
+
+/* Make the image to responsive */
+.imageDP {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* The overlay effect - lays on top of the container and over the image */
+.overlayDP {
+    position: absolute;
+    bottom: 0;
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.5); /* Black see-through */
+    color: #f1f1f1;
+    width: 100%;
+    transition: .5s ease;
+    opacity: 0;
+    color: white;
+    font-size: 10px;
+    padding: 10px;
+    text-align: center;
+}
+
+/* When you mouse over the container, fade in the overlay title */
+.containerDP:hover .overlayDP {
+    opacity: 1;
+}
+
+.hidden-input {
+    left: -999px;
+    position: absolute;
+}

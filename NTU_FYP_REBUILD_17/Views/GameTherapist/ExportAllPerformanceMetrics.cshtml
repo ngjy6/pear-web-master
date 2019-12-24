@@ -1,0 +1,112 @@
+﻿@using Microsoft.AspNet.Identity
+@using NTU_FYP_REBUILD_17.Models
+@model NTU_FYP_REBUILD_17.ViewModels.ExportAllPerformanceMetricsViewModel
+@{
+    /**/
+
+    ViewBag.Title = "ExportAllPerformanceMetrics";
+    Layout = "~/Views/Shared/_LayoutGameTherapist.cshtml";
+
+    int GameID = 0;
+    if (ViewBag.GameID != null)
+    {
+        GameID = (int)ViewBag.GameID;
+    }
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="/resources/demos/style.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker();
+    });
+    $(function () {
+        $("#datepicker2").datepicker();
+    });
+</script>
+
+<h2>Export Game Data</h2>
+@using (Html.BeginForm("ExportAllPerformanceMetrics", "GameTherapist"))
+{
+    <table class="table">
+        <tr>
+            <td>Games: </td>
+            <td>
+                @Html.DropDownListFor(M => M.selectedGame, new SelectList(Model.Games, "gameID", "gameName"))
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="submit" class="btn btn-primary">Search</button><br />
+                <span style="color:red;">@(Model.PerformanceMatricOrderList?.Count == 0 ? "No game attribute found." : "")</span>
+            </td>
+        </tr>
+    </table>
+}
+
+@using (Html.BeginForm("ExportToCSV", "GameTherapist"))
+{
+    if (Model.PerformanceMatricOrderList?.Count > 0)
+    {
+        <table class="table">
+
+            <tr>
+                <td>Games Attribute: </td>
+                <td>
+                    <input type="checkbox" id="chkAll" /> All<br />
+                    @foreach (var item in Model.PerformanceMatricOrderList.ToList())
+                    {
+                        <input type="checkbox" class="inner" id="@item.MetricOrder" /> @item.PerformanceMetricName<br />
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td>Start Date : </td>
+                <td><p>Date: <input type="text" id="datepicker" name="startDate"></p></td>
+            </tr>
+            <tr>
+                <td>End Date : </td>
+                <td><p>Date: <input type="text" id="datepicker2" name="endDate"></p></td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Hidden("GameAttributes")
+                    @Html.Hidden("GameID", GameID)
+                    @*@Html.ActionLink("ExportCSV", "ExportToCSV", "GameTherapist", new { @class = "btn btn-primary", id = "btnExport" })*@
+                    <input type="submit" id="btnExport" class="btn btn-primary" value="ExportCSV" /><span style="color:red">@ViewBag.Error</span>
+                </td>
+            </tr>
+
+        </table>
+    }
+}
+<script>
+    $(document).ready(function () {
+        $('#chkAll').change(function () {
+            if ($(this).is(':checked')) {
+                $('.inner').prop('checked', true);
+            }
+            else {
+                $('.inner').prop('checked', false);
+            }
+        });
+
+        $('.inner').change(function () {
+            if ($('.inner').length == $('.inner:checked').length) {
+                $('#chkAll').prop('checked', true);
+            }
+            else {
+                $('#chkAll').prop('checked', false);
+            }
+        });
+
+        $("#btnExport").click(function () {
+            var selectedAttributes = [];
+            $('.inner:checked').each(function () {
+                selectedAttributes.push($(this).attr('id'));
+            });
+            $("#GameAttributes").val(selectedAttributes.join(','));            
+        });
+    });
+</script>

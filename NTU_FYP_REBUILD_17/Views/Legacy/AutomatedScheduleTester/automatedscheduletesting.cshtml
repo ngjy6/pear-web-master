@@ -1,0 +1,223 @@
+﻿@using Microsoft.AspNet.Identity
+@using NTU_FYP_REBUILD_17.Models
+@model NTU_FYP_REBUILD_17.ViewModels.AutomatedScheduleTestingViewModel
+
+@{
+    ViewBag.Title = "Index";
+    if (@User.Identity.GetUserTypeID() == "1")
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+    else if (@User.Identity.GetUserTypeID() == "6")
+    {
+        Layout = "~/Views/Shared/_LayoutSupervisor.cshtml";
+    }
+
+    if (ViewBag.Modal == "true")
+    {
+        <script type="text/javascript">
+            $(window).on('load', function () {
+                $('#MyModal').modal('show');
+            });
+        </script>
+    }
+}
+
+<style>
+    #barContainer {
+        width: 100%;
+        height: 30px;
+        background-color: black;
+    }
+
+    #progressBar {
+        width: 0%;
+        height: 30px;
+        background-color: #4CAF50;
+        text-align: center; /* To center it horizontally (if you want) */
+        line-height: 30px; /* To center it vertically */
+        color: white;
+    }
+</style>
+
+<div class="portlet light ">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="icon-globe theme-font hide"></i>
+            <span class="caption-subject font-blue-madison bold uppercase">Schedule</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        @using (Html.BeginForm("automatedscheduletester", "AutomatedScheduleTester", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "form1" }))
+        {
+            <div align="center">
+                <h3>Schedule Testing</h3>
+            </div>
+            <div class="col-md-offset-2">
+                <p style="color:red">@ViewData["Error"]</p>
+            </div>
+            <hr />
+            <div class="form-group">
+                <label class="col-md-2 control-label">Schedule Date</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("Weeks", null, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="margiv-top-10 text-center">
+                <input class="space btn grey" type="button" onclick="window.location.replace('@Url.Action("Index", "Home")')" value="Cancel" />
+                <input id="submit" type="submit" class="space btn btn-primary" value="Test" onclick="move()" />
+            </div>
+        }
+        <br />
+        <hr />
+        <div id="myProgress">
+            <b>Progress bar:</b>
+            <div id="barContainer">
+                <div id="progressBar" style="width:@ViewBag.progress;">@ViewBag.progressNo</div>
+            </div>
+            <text id="progressText" style="text-align:center; display:none">Testing schedule, please wait...</text>
+        </div>
+        <br />
+        <hr />
+        <div class="col-md-offset-1">
+            <font size="4">
+                @Html.Raw(ViewBag.dateRange)
+            </font>
+        </div>
+        <div class="col-md-offset-1">
+            @Html.Raw(ViewBag.patientString)
+            @Html.Raw(ViewBag.patientHaveSchedule)
+            @Html.Raw(ViewBag.patientHaveTimeSlot)
+            @Html.Raw(ViewBag.patientExclusionActivities)
+            @Html.Raw(ViewBag.patientDislikeActivity)
+            @Html.Raw(ViewBag.doctorDidNotRecommend)
+            @Html.Raw(ViewBag.patientRoutine)
+            @Html.Raw(ViewBag.individualCompulsoryActivity)
+            @Html.Raw(ViewBag.checkAdhoc)
+            @Html.Raw(ViewBag.activityTimeSlot)
+
+            @Html.Raw(ViewBag.minPeopleReq)
+            @Html.Raw(ViewBag.checkAndroidGame)
+            @Html.Raw(ViewBag.checkAndroidDevices)
+            @Html.Raw(ViewBag.checkNoDuplicateActivity)
+            @Html.Raw(ViewBag.checkGroupActivityCount)
+            @Html.Raw(ViewBag.checkGroupActivityStartSameTime)
+            @Html.Raw(ViewBag.checkNoSchedule)
+            @Html.Raw(ViewBag.activityNotApproved)
+            @Html.Raw(ViewBag.activityDeleted)
+            @Html.Raw(ViewBag.patientWithUpdateBit)
+
+            @Html.Raw(ViewBag.checkPrescription)
+            @Html.Raw(ViewBag.checkAttendance)
+            @Html.Raw(ViewBag.checkTaskScheduling)
+            @Html.Raw(ViewBag.routineString)
+            @Html.Raw(ViewBag.mostCommonActivitiesGroup)
+            @Html.Raw(ViewBag.mostCommonActivities)
+            @Html.Raw(ViewBag.leastCommonActivitiesGroup)
+            @Html.Raw(ViewBag.leastCommonActivities)
+            @Html.Raw(ViewBag.totalPatientScheduled)
+            @Html.Raw(ViewBag.totalGamesPlayed)
+
+            @Html.Raw(ViewBag.mostCommonGamesAssigned)
+            @Html.Raw(ViewBag.leastCommonGamesAssigned)
+            @Html.Raw(ViewBag.popularAndroid)
+            @Html.Raw(ViewBag.patientMostGamePlayed)
+            @Html.Raw(ViewBag.patientLeastGamePlayed)
+
+
+
+
+            @*
+                @Html.Raw(ViewBag.ErrorMessage)
+                <br />
+                @Html.Raw(ViewBag.dateRange)
+                <br />
+                @Html.Raw(ViewBag.lbl_dislike)
+                <br />
+                @Html.Raw(ViewBag.lbl_doc)
+                <br />
+                @Html.Raw(ViewBag.lbl_routine)
+                <br />
+                @Html.Raw(ViewBag.lbl_group)
+                <br />
+                <br />
+                @Html.Raw(ViewBag.lbl_minPplReq)
+                <br />
+                <br />
+                @Html.Raw(ViewBag.lbl_androidGame)
+                <br />
+                <br />
+                @Html.Raw(ViewBag.lbl_individual)
+                <br />
+                <br />
+                @Html.Raw(ViewBag.lbl_compulsory)
+                <br />
+                @Html.Raw(ViewBag.lbl_delete)
+                <br />
+                <br />
+                @Html.Raw(ViewBag.lbl_notApproved)
+                <br />
+                <br />
+                @Html.Raw(ViewBag.lbl_Prescription)
+                <br />
+                <br />
+                @Html.Raw(ViewBag.lbl_groupActivityStartEnd)
+                <br />
+                <br />
+                @Html.Raw(ViewBag.lbl_top3leastutilised)
+                <br />
+                <br />
+                @Html.Raw(ViewBag.lbl_activeroutine)
+                <br />
+                <br />
+                @Html.Raw(ViewBag.lbl_topgroup)
+                <br />
+                <br />
+                @Html.Raw(ViewBag.lbl_botgroup)
+                <br />
+                @Html.Raw(ViewBag.lbl_popularandroid)
+                <br />
+                @Html.Raw(ViewBag.lbl_totalandroid)
+                <br />
+                @Html.Raw(ViewBag.lbl_indivact)
+                <br />
+                @Html.Raw(ViewBag.lbl_compulact)
+                <br />
+                @Html.Raw(ViewBag.lbl_prescript)
+                <br />
+                <br />
+                @Html.Raw(ViewBag.lbl_prescript2)*@
+        </div>
+    </div>
+</div>
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+<script src="~/Content/global/scripts/app.min.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/profile.min.js" type="text/javascript"></script>
+
+<script>
+    function move() {
+        var elem = document.getElementById("progressBar");
+        var elem2 = document.getElementById("progressText");
+        elem2.style.display = "block";
+        var width = 0;
+        var id = setInterval(frame, 0);
+        function frame() {
+            if (width >= 99) {
+                clearInterval(id);
+            } else {
+                width++;
+                elem.style.width = width + '%';
+                elem.innerHTML = width * 1 + '%';
+                clearInterval(id);
+                id = setInterval(frame, 10 * width);
+            }
+        }
+    }
+</script>

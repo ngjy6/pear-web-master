@@ -1,0 +1,481 @@
+﻿@using NTU_FYP_REBUILD_17.Models
+@using Microsoft.AspNet.Identity
+@using Newtonsoft.Json
+@model NTU_FYP_REBUILD_17.ViewModels.notificationFB
+<!DOCTYPE html>
+<style>
+    * {
+        margin: 0px;
+        padding: 0px;
+        font-family: Helvetica, Arial, sans-serif;
+        text-size-adjust: none;
+        text-size-adjust: auto;
+    }
+
+    /* Full-width input fields */
+
+    /* Center the image and position the close button */
+    .imgcontainer#imgcontainerNoti {
+        text-align: center;
+        margin: 24px 0 12px 0;
+        position: relative;
+        text-size-adjust: none;
+    }
+
+    .avatar#avatarNoti {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+    }
+
+    /* The Modal (background) */
+    .modal#modal-wrapper2 {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    /* Modal Content Box */
+    .modal-content#modelcontentNoti {
+        text-align: center;
+        background-color: #fefefe;
+        margin: 4% auto 15% auto;
+        border: 1px solid #888;
+        table-layout: fixed;
+        width: 60%;
+        padding-bottom: 30px;
+    }
+
+    /* The Close Button (x) */
+    /*.close {
+        position: absolute;
+        right: 25px;
+        top: 0;
+        color: #000;
+        font-size: 35px;
+        font-weight: bold;
+    }*/
+
+        /*.close:hover, .close:focus {
+            color: red;
+            cursor: pointer;
+        }*/
+
+    /* Add Zoom Animation */
+    .animate {
+        animation: zoom 0.6s
+    }
+
+    @@keyframes zoom {
+        from {
+            transform: scale(0)
+        }
+
+        to {
+            transform: scale(1)
+        }
+    }
+
+     a.fa-globe {
+        position: relative;
+        font-size: 2.5em;
+        color: grey;
+        cursor: pointer;
+    }
+
+     span.fa-comment {
+        position: absolute;
+        font-size: 0.6em;
+        top: -4px;
+        color: red;
+        right: -4px;
+    }
+
+     span.num {
+        position: absolute;
+        font-size: 0.5em;
+        top: 1px;
+        color: #fff;
+        right: 2px;
+    }
+
+    table#myTableNoti {
+        text-align: center;
+        table-layout: fixed;
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 80%;
+    }
+
+    td#myColNoti {
+        text-align: center;
+        border: 1px;
+        color: black;
+        height: 100px;
+        font-size: 120%;
+        word-wrap: break-word;
+    }
+
+    tr:hover#myRowNoti {
+        text-align: center;
+        cursor: pointer;
+        background-color: yellow;
+    }
+</style>
+
+
+<html>
+
+<body>
+    <a class="fa fa-globe" onclick="document.getElementById('modal-wrapper2').style.display='block'">
+        <span class="fa fa-comment" id="redshape"></span>
+        <span class="num" id="num"></span>
+    </a>
+
+    <div id="modal-wrapper2" class="modal">
+        <form class="modal-content animate" id="modelcontentNoti">
+            <div class="modal-header">
+                <button type="button" onclick = "closeModal()" class="close">&times;</button>
+            </div>
+            <div class="imgcontainer" id="imgcontainerNoti">
+                <span onclick="document.getElementById('modal-wrapper2').style.display='none'"></span>
+                <img src="~/Image/Notification.png" alt="Avatar" class="avatar" id="avatarNoti">
+                <h1 style="text-align:center">Notification Message</h1>
+            </div>
+
+            <div align="center">
+                <div style="margin-bottom: 10px;">
+
+                    @{
+                        var selectList = new SelectList(
+                            new List<SelectListItem>
+                            {
+                                new SelectListItem {Text = "All", Value = "All"},
+                                new SelectListItem {Text = "Today", Value = "1"},
+                                new SelectListItem {Text = "1 Day Ago", Value = "2"},
+                                new SelectListItem {Text = "3 Days Ago", Value = "3"},
+                                new SelectListItem {Text = "1 Week Ago", Value = "7"},
+                                new SelectListItem {Text = "2 Weeks Ago", Value = "14"},
+                                new SelectListItem {Text = "1 Month Ago", Value = "31"},
+                            }, "Value", "Text");
+                    }
+
+                    <b>Filter By Users:</b> @Html.DropDownList("All", new SelectList(Model.allUserNotificationInfo, "fullName", "fullName", "All"), new { @id = "selectField" })&nbsp;	&nbsp;	
+                    <b>Filter By Days:</b> @Html.DropDownList("All", selectList, new { @id = "selectDateField" })
+                </div>
+                <table id="myTableNoti" align="center"></table>
+            </div>
+            <div>
+                <a href="@Url.Action("NotificationPage", "Home", new { message="0", uid=User.Identity.GetUserId()})">View all messages</a>
+            </div>
+        </form>
+    </div>
+
+    <a href='#' id="dnperm"></a><br /><br />
+
+    @*<ul id="livedisplay"></ul>
+        <ul id="YourBodyId"></ul>*@
+    <br>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.6.10/firebase.js"></script>
+
+    <script>
+        var dnperm = document.getElementById('dnperm');
+        var userID = @Html.Raw(Json.Encode(User.Identity.GetUserId()));
+
+        var rows;
+
+        $(document).ready(function () {
+
+            $("#selectField" ).on("change", function () {
+
+                //var selected = this.value;
+
+                //if (selected != "All") {
+                //    rows.filter("[position='" + selected + "']").show();
+                //    rows.not("[position='" + selected + "']").hide();
+
+                //} else {
+                //    rows.show();
+                //}
+
+                var $filteredRows = rows;
+
+                var selected = $('#selectDateField').val();
+                if (selected != "All") {
+
+                    $filteredRows = $('table#myTableNoti tr').filter(function () {
+                        return parseInt($(this).attr('dateDiff'), 10) <= parseInt(selected, 10);
+                    });
+                }
+
+                // filter by the first input:
+                selected = $('#selectField').val();
+                console.log(" Slog: " + selected);
+                if (selected != "All") {
+                    $filteredRows = $filteredRows.filter("[position='" + selected + "']");
+                }
+
+                
+                // hide all rows, and then make the filtered rows visible:
+                rows.hide();
+                $filteredRows.show();
+
+                
+            });       
+
+            $("#selectDateField").on("change", function () {
+
+                var $filteredRows = rows;
+
+                var selected = $('#selectDateField').val();
+                if (selected != "All") {
+
+                    //console.log("Selected: " + selected);
+
+                    $filteredRows = $('table#myTableNoti tr').filter(function () {
+                        return parseInt($(this).attr('dateDiff'), 10) <= parseInt(selected, 10);
+                    });
+                }
+
+                // filter by the first input:
+                selected = $('#selectField').val();
+                console.log(" Slog: " + selected);
+                if (selected != "All") {
+                    $filteredRows = $filteredRows.filter("[position='" + selected + "']");
+                }
+
+                
+                // hide all rows, and then make the filtered rows visible:
+                rows.hide();
+                $filteredRows.show();
+
+                
+
+            });  
+            
+        });
+
+        function ConvertDateFromDiv(divTimeStr) {
+            //eg:-divTimeStr=18/03/2013 12:53:00
+            var tmstr = divTimeStr.toString().split(' '); //'21-01-2013 PM 3:20:24'
+            var dt = tmstr[0].split('/');
+            var str = dt[2] + "/" + dt[0] + "/" + dt[1] + " " + tmstr[1]; //+ " " + tmstr[1]//'2013/01/20 3:20:24 pm'
+            //console.log("Date:" + dt[2] + " / " + dt[1] + " / " + dt[0] + " " + tmstr[1]);
+            var time = new Date(str);
+            if (time == "Invalid Date") {
+                time = new Date(divTimeStr);
+            }
+            return time;
+        }
+
+
+        dnperm.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (!window.Notification) {
+                alert('Not supported');
+            } else {
+                Notification.requestPermission().then(function (p) {
+                    if (p == 'denied') {
+                        alert('Please enable the Notification permission in your browser.');
+                    } else if (p == 'granted') {
+                        alert('Notification permission has already been approved.');
+                    }
+                });
+            }
+        });
+
+
+        function writeUserData(name, message, read_value) {
+            database.push().set({
+                Senttousername: name,
+                usernameMine: "Supervisor1",
+                message: message,
+                read: read_value,
+            });
+        }
+
+        function NotificationObj(recipient, message, createdate) {
+            this.recipient = recipient;
+            this.message = message;
+            this.createdate = createdate;
+        }
+
+        function renderTable(obj) {
+            var html = '';
+            var id = "";
+            var url = "";
+            var onclick = "";
+            var keys = Object.keys(obj);
+
+            //console.log(Object.keys(obj));
+
+
+            for (var i = keys.length - 1; i >= 0; i--) {
+
+                //console.log(obj[keys[i]]);
+
+                if (obj[keys[i]].recipient === userID) {
+
+                    var regex1 = RegExp('[a-zA-Z]$');
+                    var logID = obj[keys[i]].logID;
+
+                    if (regex1.test(logID)) {
+                        //var lastChar = logID[logID.length - 1];
+                        str = logID.substring(0, logID.length - 1);
+                        console.log(str);
+                    }
+                    else {
+                        logID = obj[keys[i]].logID;
+                    }
+
+                    id = obj[keys[i]].message;
+                    url = "location.href = '/Home/NotificationPage?message=" + logID + "&uid=" + obj[keys[i]].recipient + "'";
+                    onclick = 'onclick = ' + '"' + url + '"';
+                    if (obj[keys[i]].read_status === "false" && obj[keys[i]].confirmation_status !== "Approved" && obj[keys[i]].confirmation_status !== "Rejected") {
+                        onclick = onclick + 'bgcolor="#DCDCDC"';
+                    }
+
+                    var today = new Date();
+                    var timeDiff = Math.abs(today - ConvertDateFromDiv(obj[keys[i]].createDateTime));
+                    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+
+
+                    console.log("<tr class=\"Notification\"  dateDiff='" + diffDays + "' position='" + obj[keys[i]].senderDetails + "' id=myRowNoti  " + onclick + "><td id=myColNoti><b><i>" + obj[keys[i]].senderDetails + "</i></b> says: " + obj[keys[i]].notification_message + "</i></b></td><td id=myColNoti class=\"date\">Date: " + obj[keys[i]].createDateTime + "</td></tr>");
+                    html += "<tr class=\"Notification\"  dateDiff='" + diffDays + "' position='" + obj[keys[i]].senderDetails + "' id=myRowNoti  " + onclick + "><td id=myColNoti><b><i>" + obj[keys[i]].senderDetails + "</i></b> says: " + obj[keys[i]].notification_message + "</i></b></td><td id=myColNoti class=\"date\">Date: " + obj[keys[i]].createDateTime + "</td></tr>";
+                }
+            }
+            $('#myTableNoti').html(html);
+
+            //rows = $("table#myTableNoti tr:not(:first-child)");
+            rows = $("table#myTableNoti tr");
+
+            $('tr.Notification').sort(function (a, b) {
+                //parseInt($(this).attr('dateDiff'), 10)
+                var dateA = jQuery(a).find('td.date').text().toString().split(' ');
+                //console.log("DateA: " + dateA[1] );
+                dateA = dateA[1].replace(/(..)\/(..)\/(....)/, '$1-$2-$3');
+                var dateB = jQuery(b).find('td.date').text().toString().split(' ');
+                //console.log("dateB: " + dateB[1]);
+                dateB = dateB[1].replace(/(..)\/(..)\/(....)/, '$1-$2-$3');
+
+                //console.log( "Dated A: " + dateA );
+
+
+                return new Date(dateB).getTime() - new Date(dateA).getTime();;
+
+            }).appendTo('#myTableNoti');
+        }
+
+        function renderNo(obj) {
+            var html = '';
+            var keys = Object.keys(obj);
+            var count = 0;
+            for (var i = 0; i < keys.length; i++) {
+                if (obj[keys[i]].recipient === userID && obj[keys[i]].read_status === "false") {
+                    if (obj[keys[i]].confirmation_status !== "Approved" &&  obj[keys[i]].confirmation_status !== "Rejected") {
+                        count++;
+                    }
+                }
+            }
+            if (count == 0) {
+                document.getElementById("redshape").style.display = 'none';
+                document.getElementById("num").style.display = 'none';
+            }
+            else {
+                document.getElementById("redshape").style.display = '';
+                document.getElementById("num").style.display = '';
+            }
+            html = count;
+            $('#num').html(html);
+        }
+
+        $('#btnGetMessage').click(function () {
+            var read = $('input[name="read_rb"]:checked').val();
+            writeUserData($('#username').val(), $('#message').val(), read);
+            $('#username').val('Supervisor1');
+            $('#message').val('');
+        });
+
+        $('#btndelMessage').click(function () {
+            firebase.database().ref().child("users").remove();
+        });
+
+        // Initialize Firebase
+        // TODO: Replace with your project's customized code snippet
+        var config = {
+            apiKey: "AIzaSyBHQZLm4e5gF6Gj9vBEpaXSvNi380ac4DA",
+            authDomain: "pear-fa95f.firebaseapp.com",
+            databaseURL: "https://pear-fa95f.firebaseio.com",
+            projectId: "pear-fa95f",
+            storageBucket: "pear-fa95f.appspot.com",
+            messagingSenderId: "926155986609"
+        };
+        firebase.initializeApp(config);
+
+        var database = firebase.database().ref().child("userNotification");
+
+        database.on('value', function (snapshot) {
+            renderNo(snapshot.val());
+        });
+
+        database.on('value', function (snapshot)
+        {
+            renderTable(snapshot.val());
+        });
+
+        var notified = 0;
+
+        database.on('child_added', function (data) {
+            if (Notification.permission !== 'default') {
+                
+                var notify;
+                if (data.val().recipient === userID && data.val().confirmation_status === "Pending" && notified == 0 && data.val().read_status === "false") {
+                    notify = new Notification('There are messages waiting for your approval. ', {
+                        //'body': data.val().notification_message,
+                        'icon': "~/Views/zh/pikachu-pokemon.png",
+                        'tag': data.getKey()
+                    });
+                    notify.onclick = function () {
+                        document.location.href = 'https://mvc.fyp2017.com/Home/NotificationPage?message=' + data.val().logID + '&uid=' + userID, true;
+                    }
+                    //notified = 1;
+                }
+            }
+            else {
+                //alert('Please allow the notification first');
+            }
+        });
+    </script>
+
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<script>
+    // If user clicks anywhere outside of the modal, Modal will close
+    var modal = document.getElementById('modal-wrapper2');
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    function closeModal() {
+        var modal = document.getElementById('modal-wrapper2');
+        modal.style.display = "none";
+    }
+    
+
+</script>
+

@@ -1,0 +1,678 @@
+﻿@model NTU_FYP_REBUILD_17.ViewModels.ManageSupervisorsViewModel
+
+@{
+    ViewBag.Title = "EditPatient";
+    Layout = "~/Views/Shared/_LayoutSupervisor.cshtml";
+}
+
+
+<link href="~/Content/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/clockface/css/clockface.css" rel="stylesheet" type="text/css" />
+
+<div class="portlet light ">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="icon-globe theme-font hide"></i>
+            <span class="caption-subject font-blue-madison bold">Edit Patient's Details</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="tab-content">
+            <div class="tab-pane active">
+                @if (TempData["success"] != null)
+                {
+                    <div class="alert alert-success text-center" role="alert">@TempData["success"]</div>
+                }
+
+                @if (TempData["error"] != null)
+                {
+                    <div class="alert alert-danger  text-center" role="alert">@Html.Raw(TempData["error"])</div>
+                }
+
+                @using (Html.BeginForm("EditPatientMethod", "Supervisor", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "form1" }))
+                {
+
+                    @Html.HiddenFor(m => m.patient.patientID, new { @Value = @Model.patient.patientID, @id = "ab" });
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><b>Personal Information</b></div>
+
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    <i class="required"></i>
+                                    First Name
+                                    <a class="fa fa-info-circle" data-toggle="firstName" title="Given Name"></a>
+
+                                </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patient.firstName, new { @class = "form-control", @Value = @Model.patient.firstName, required = "required" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    <i class="required"></i>
+                                    Last Name
+                                    <a class="fa fa-info-circle" data-toggle="lastName" title="Surname Name"></a>
+
+                                </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patient.lastName, new { @class = "form-control", @Value = @Model.patient.lastName, required = "required" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    <i class="required"></i>
+                                    Preferred Name
+                                </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patient.preferredName, new { @class = "form-control", @Value = @Model.patient.preferredName, required = "required" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    <i class="required"></i>
+                                    NRIC
+                                </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patient.nric, new { @class = "form-control", @Value = @Model.patient.nric, @id = "NRIC", xtype = "NRIC", required = "required" })
+                                    <p style="display: none; color:red;" id="nricError"></p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    <i class="required"></i>
+                                    Address
+                                </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patient.address, new { @class = "form-control", @Value = @Model.patient.address, required = "required" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    Temporary Address
+                                    <a class="fa fa-info-circle" data-toggle="tempAddress" title="If residential address differ from address in NRIC"></a>
+
+                                </label>
+                                <div class="col-md-10">
+                                    @if (Model.patient.tempAddress != null)
+                                    {
+                                        @Html.TextBoxFor(m => m.patient.tempAddress, new { @class = "form-control", @Value = @Model.patient.tempAddress })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(m => m.patient.tempAddress, new { @class = "form-control" })
+
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    Home Number
+                                </label>
+                                <div class="col-md-10">
+                                    @if (Model.patient.homeNo != null)
+                                    {
+                                    @Html.TextBoxFor(m => m.patient.homeNo, new { @class = "form-control", @Value = @Model.patient.homeNo })
+                                    }
+                                    else {
+                                        @Html.TextBoxFor(m=>m.patient.homeNo, new { @class="form-control"})
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                     Handphone Number
+                                </label>
+                                <div class="col-md-10">
+                                    @if (Model.patient.handphoneNo != null)
+                                    {
+                                        @Html.TextBoxFor(m => m.patient.handphoneNo, new { @class = "form-control", @Value = @Model.patient.handphoneNo })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(m => m.patient.handphoneNo, new { @class = "form-control"})
+
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    Gender
+                                </label>
+                                <table>
+                                    <tr class="row">
+                                        @Html.RadioButtonFor(m => m.patient.gender, "M", new { @id = "option1", @class = "rspace" })@Html.Label("Male")
+                                        @Html.RadioButtonFor(m => m.patient.gender, "F", new { @id = "option2", @class = "rspace" })@Html.Label("Female")
+
+                                        <td class="col-lg-10"></td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    <i class="required"></i>
+                                    DOB
+                                </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patient.DOB, "dd/mm/yyyy", new { @class = "form-control date-picker", @data_date_format = "dd/mm/yyyy", @Value = (((DateTime)Model.patient.DOB).ToString("dd/MM/yyyy")), required = "required" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    <i class="required"></i>
+                                    Date of Joining
+                                </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patient.startDate, "dd/mm/yyyy", new { @class = "form-control date-picker", @data_date_format = "dd/mm/yyyy", id = "datetimepicker1", @Value = ((DateTime)Model.patient.startDate).ToString("dd/MM/yyyy"), required = "required", dateJoin = "dateJoin" })
+                                    <span style="display: none; color:red;" id="startDateError"></span>
+                                    <span style="display: none; color:red;" id="startDateError1"></span>
+
+                                </div>
+                            </div>
+
+                            @Html.HiddenFor(m => m.patient.createDateTime, new { @Value = @Model.patient.createDateTime, @id = "createDateTime" });
+
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Date of Leaving (if any)</label>
+                                <div class="col-md-10">
+                                    @if (Model.patient.endDate != null)
+                                    {
+                                        @Html.TextBoxFor(m => m.patient.endDate, "dd/mm/yyyy", new { @class = "form-control date-picker", @data_date_format = "dd/mm/yyyy", id = "datetimepicker2", @Value = ((DateTime)Model.patient.endDate).ToString("dd/MM/yyyy"), dateJoin = "dateJoin" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(m => m.patient.endDate, "dd/mm/yyyy", new { @class = "form-control date-picker", @data_date_format = "dd/mm/yyyy", id = "datetimepicker2", dateJoin = "dateJoin" })
+
+                                    }<span style="display: none; color:red;" id="endDateError"></span>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><b>Language Preference</b></div>
+                        <div class="panel-body">
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Preferred Language</label>
+                                <div class="col-md-10">
+                                    @if (Model.otherLanguage.isChecked == 1)
+                                    {
+                                        @Html.DropDownListFor(m => m.inputLanguageID, new SelectList(@Model.ListOfLanguages, "list_languageID", "value", @Model.preferredLanguage.list_languageID), new { @class = "form-control", @id = "langCheck" })
+                                        @*@Html.DropDownListFor(m => m.patient.preferredLanguageID, new SelectList(Model.ListOfLanguages, "list_languageID", "value", Model.preferredLanguage.list_languageID), new { @class = "form-control" })*@
+                                    }
+                                    else
+                                    {
+
+                                        @Html.DropDownListFor(m => m.inputLanguageID, new SelectList(@Model.ListOfLanguages, "list_languageID", "value", -1), new { @class = "form-control", @id = "langCheck" })
+
+                                    }
+
+                                </div>
+                            </div>
+                            @if (Model.otherLanguage.isChecked == 1)
+                            {
+                                <div class="form-group" id="preferredLanguageOther" style='display:none;'>
+                                    <label class="col-md-2 control-label">Other Language</label>
+                                    <div class="col-md-10">
+
+                                        @Html.TextBoxFor(m => m.inputLanguage, new { @class = "form-control" })
+
+
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group" id="preferredLanguageOther">
+                                    <label class="col-md-2 control-label">Other Language</label>
+                                    <div class="col-md-10">
+
+                                        @Html.TextBoxFor(m => m.inputLanguage, new { @class = "form-control", @Value = Model.otherLanguage.value })
+
+
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><b>Guardian Information</b></div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    <i class="required"></i>
+                                    Guardian Name
+                                </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patientGuardian.guardianName, new { @class = "form-control", @Value = @Model.patientGuardian.guardianName, required = "required" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    <i class="required"></i>
+                                    Guardian NRIC
+                                </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patientGuardian.guardianNRIC, new { @class = "form-control", @Value = Model.patientGuardian.guardianNRIC, required = "required", xtype = "NRICg", @id = "NRIC" })
+                                    <p style="display: none; color:red;" id="nricErrorG"></p>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    <i class="required"></i>
+                                    Guardian Relationship
+                                </label>
+                                <div class="col-md-10">
+                                    @if (Model.otherRS.isChecked == 1)
+                                    {
+                                        @Html.DropDownListFor(m => m.inputRSID, new SelectList(Model.relationshipList, "list_relationshipID", "value", Model.patientGuardian.guardianRelationshipID), new { @class = "form-control", id = "rsCheck" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.inputRSID, new SelectList(Model.relationshipList, "list_relationshipID", "value", -1), new { @class = "form-control", id = "rsCheck" })
+
+                                    }
+
+                                </div>
+                            </div>
+                            @if (Model.otherRS.isChecked == 1)
+                            {
+                                <div class="form-group" id="otherRelation" style='display:none;'>
+                                    <label class="col-md-2 control-label">Other Relationship</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputRS, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+
+                                <div class="form-group" id="otherRelation">
+                                    <label class="col-md-2 control-label">Other Relationship</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputRS, new { @class = "form-control", @Value = Model.otherRS.value })
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    <i class="required"></i>
+                                    Guardian Contact
+                                </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patientGuardian.guardianContactNo, new { @class = "form-control", @Value = @Model.patientGuardian.guardianContactNo, required = "required" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">
+                                    <i class="required"></i>
+                                    Guardian Email
+                                </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patientGuardian.guardianEmail, new { @class = "form-control", @Value = @Model.patientGuardian.guardianEmail, required = "required" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label"><b><u>Additional Guardian </u></b></label>
+                                <div class="col-md-10">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Guardian Name </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patientGuardian.guardianName2, new { @class = "form-control", @Value = @Model.patientGuardian.guardianName2 })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Guardian NRIC </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patientGuardian.guardianNRIC2, new { @class = "form-control", @Value = @Model.patientGuardian.guardianNRIC2, xtype = "NRICg2", @id = "NRIC" })
+                                    <p style="display: none; color:red;" id="nricErrorG2"></p>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Guardian Relationship</label>
+                                <div class="col-md-10">
+                                    @if (Model.patientGuardian.guardianName2 != null)
+                                    {
+                                        if (Model.otherRS2.isChecked == 1)
+                                        {
+
+                                            @Html.DropDownListFor(m => m.input2RSID, new SelectList(Model.relationshipList, "list_relationshipID", "value", Model.patientGuardian.guardian2RelationshipID), new { @class = "form-control", id = "rs2Check" })
+
+                                        }
+                                        else
+                                        {
+
+                                            @Html.DropDownListFor(m => m.input2RSID, new SelectList(Model.relationshipList, "list_relationshipID", "value", -1), new { @class = "form-control", required = "required", id = "rs2Check" })
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.input2RSID, new SelectList(Model.relationshipList, "list_relationshipID", "value"), new { @class = "form-control", required = "required", id = "rs2Check" })
+
+                                    }
+                                </div>
+                            </div>
+
+                            @if (Model.patientGuardian.guardianName2 != null)
+                            {
+                                if (Model.otherRS2.isChecked == 1)
+                                {
+                                    <div class="form-group" id="other2Relation" style='display:none;'>
+                                        <label class="col-md-2 control-label">Other Relationship</label>
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.input2RS, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-group" id="other2Relation">
+                                        <label class="col-md-2 control-label">Other Relationship</label>
+                                        <div class="col-md-10">
+                                            @Html.TextBoxFor(m => m.input2RS, new { @class = "form-control", @Value = Model.otherRS2.value })
+                                        </div>
+                                    </div>
+
+                                }
+                            }
+                            else
+                            {
+                                <div class="form-group" id="other2Relation" style='display:none;'>
+                                    <label class="col-md-2 control-label">Other Relationship</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.input2RS, new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+
+                            }
+
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Guardian Contact </label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patientGuardian.guardianContactNo2, new { @class = "form-control", @Value = @Model.patientGuardian.guardianContactNo2 })
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Guardian Email</label>
+                                <div class="col-md-10">
+                                    @Html.TextBoxFor(m => m.patientGuardian.guardianEmail2, new { @class = "form-control", @Value = @Model.patientGuardian.guardianEmail2 })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    @*<div class="panel panel-default">
+                        <div class="panel-heading"><b>Dementia Condition</b></div>
+                        <div class="panel-body">*@
+                            @*<div class="form-group">
+                                <label class="col-md-2 control-label">Dementia Type</label>*@
+
+                                @*<div class="col-md-8">
+                                    @if (Model.ListOfAssignedDementia != null)
+                                    {*@
+                                        @*@Html.ListBoxFor(m => m.listOfDementiaID, new MultiSelectList(Model.dementiaList, "dementiaID", "dementiaType", ), new { @class = "form-control", multiple = "multiple", @id = "dementiaCheck" })*@
+
+                                        @*@Html.DropDownListFor(m => m.dementiaTypes.dementiaID, new SelectList(Model.dementiaList, "dementiaID", "dementiaType", Model.dementiaCondition.dementiaID), new { @class = "form-control", id = "dementiaCheck" })*@
+                                    @*}
+                                    else
+                                    {*@
+                                        @*@Html.ListBoxFor(m => m.listOfDementiaID, new MultiSelectList(Model.dementiaList, "dementiaID", "dementiaType"), new { @class = "form-control", multiple = "multiple", @id = "dementiaCheck" })*@
+
+                                        @*@Html.DropDownListFor(m => m.dementiaTypes.dementiaID, new SelectList(Model.dementiaList, "dementiaID", "dementiaType"), new { @class = "form-control", id = "dementiaCheck" })*@
+
+                                    @*}*@
+                                @*</div>*@
+                            @*</div>*@
+
+                            @*<div class="form-group" id="otherDementia" style='display:none;'>
+                                    <label class="col-md-2 control-label">Others</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.otherDementia, new { @class = "form-control" })
+                                    </div>
+                                </div>*@
+
+
+                <div class="panel panel-default">
+                        <div class="panel-heading"><b>Respite Care Service</b></div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Under Respite Care</label>
+                                <div class="col-md-10">
+                                    @Html.RadioButtonFor(m => m.patient.isRespiteCare, 1, new { @id = "option1", @class = "rspace" })@Html.Label("Yes")
+                                    @Html.RadioButtonFor(m => m.patient.isRespiteCare, 0, new { @id = "option2", @class = "rspace" })@Html.Label("No")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @Html.Partial("_LayoutFormEditButtons");
+
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+
+<script src="~/Content/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+<script src="~/Content/global/scripts/app.min.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/profile.min.js" type="text/javascript"></script>
+
+
+<script src="~/Content/global/plugins/moment.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/clockface/js/clockface.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
+
+@*Input Checks*@
+<script src="~/Content/global/scripts/inputChecks.js" type="text/javascript"></script>
+
+@*Selectize*@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        languageCheck();
+        relationshipCheck();
+        $("#dementiaCheck").selectize();
+
+        $('[data-toggle="firstName"]').tooltip();
+        $('[data-toggle="lastName"]').tooltip();
+        $('[data-toggle="tempAddres"]').tooltip();
+
+            });
+
+    var url = '@Url.Action("_LayoutFormEditButtons", "Submit")';
+    //$('#submit').click(function () {
+
+
+    $("#datetimepicker1").change(function () {
+        checkDate();
+    });
+
+    $("#datetimepicker2").change(function () {
+        checkDate();
+    });
+
+    function checkDate() {
+        var datetimepicker1Val = $("#datetimepicker1").val();
+        var datetimepicker2Val = $("#datetimepicker2").val();
+        var createdDate = $("#createDateTime").val();
+
+        var datetime = new Date(createdDate);
+        var dd = datetime.getDate();
+        var mm = datetime.getMonth() + 1; //January is 0!
+
+        var yyyy = datetime.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var d = dd + '/' + mm + '/' + yyyy;
+
+        var arrStartDate = datetimepicker1Val.split("/");
+        var stdate = new Date(arrStartDate[2], arrStartDate[1], arrStartDate[0]);
+        var arrEndDate = datetimepicker2Val.split("/");
+        var enddate = new Date(arrEndDate[2], arrEndDate[1], arrEndDate[0]);
+
+        var arrCrDate = d.split("/");
+        var crdate = new Date(arrCrDate[2], arrCrDate[1], arrCrDate[0]);
+
+
+        var datetime = new Date();
+        var dd = datetime.getDate();
+        var mm = datetime.getMonth() + 1; //January is 0!
+
+        var yyyy = datetime.getFullYear();
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+        var d = dd + '/' + mm + '/' + yyyy;
+        var arrDate = d.split("/");
+        var tdate = new Date(arrDate[2], arrDate[1], arrDate[0]);
+
+        var errorFlag = 0;
+        if (stdate < crdate) {
+            document.getElementById("startDateError").innerHTML = "Start date cannot be before creation time: " + d;
+            document.getElementById("startDateError").style.display = "block";
+            errorFlag = 1;
+
+        } else {
+            document.getElementById("startDateError").innerHTML = "";
+            document.getElementById("startDateError").style.display = "none";
+        }
+        if (stdate == enddate && enddate != "") {
+            document.getElementById("startDateError1").innerHTML = "Start date and end date cannot be on the same day.";
+            document.getElementById("startDateError1").style.display = "block";
+            errorFlag = 1;
+
+        } else {
+            document.getElementById("startDateError1").innerHTML = "";
+            document.getElementById("startDateError1").style.display = "none";
+        }
+
+        if (stdate > enddate && enddate != "") {
+            document.getElementById("startDateError1").innerHTML = "Start date cannot be after end date.";
+            document.getElementById("startDateError1").style.display = "block";
+            errorFlag = 1;
+
+        } else {
+            document.getElementById("startDateError1").innerHTML = "";
+            document.getElementById("startDateError1").style.display = "none";
+        }
+
+
+        if (enddate < tdate && stdate != "") {
+            document.getElementById("endDateError").innerHTML = "End date cannot be before today.";
+            document.getElementById("endDateError").style.display = "block";
+            errorFlag = 1;
+        } else {
+            document.getElementById("endDateError").innerHTML = "";
+            document.getElementById("endDateError").style.display = "none";
+        }
+
+        if (errorFlag == 1) {
+            event.preventDefault();
+            return false;
+        } else {
+            return true;
+        }
+    }
+            //var regex1 = RegExp('^[a-zA-Z]{1}[0-9]{7}[a-zA-Z]$');
+            //var nric = document.getElementById("NRIC").value;
+            //if (regex1.test(nric) == false) {
+            //    alert('Form submission failed !');
+            //    document.getElementById("nricError").innerHTML = "Please enter a valid NRIC !";
+            //    document.getElementById("nricError").style.display = "block";
+            //    return false;
+            //}
+            //return true;
+
+
+    $('#submit').click(function () {
+        //checkDate();
+
+     var curStep = $(this).closest(".tab-pane");
+        var curInputs = curStep.find("input[type='text'],input[type='url']");
+        var isValid = true;
+        for (var i = 0; i < curInputs.length; i++) {
+            if ($(curInputs[i]).attr("id") == "NRIC") {
+                var nric = $(curInputs[i]).val();
+                var type = $(curInputs[i]).attr("xtype");
+
+                if (!nric.trim() == "") {
+                    if (!nricValidation(nric, type)) {
+                        isValid = false;
+                        $(curInputs[i]).closest(".form-group").addClass("has-error");
+                    }
+                }
+            }
+            if ($(curInputs[i]).attr("dateJoin") == "dateJoin") {
+                if (!checkDate()) {
+                    isValid = false;
+                    $(curInputs[i]).closest(".form-group").addClass("has-error");
+                }
+            }
+            
+        }
+        if (isValid == false) {
+            alert('Form submission failed !');
+            return false;
+        }
+    });
+
+
+</script>

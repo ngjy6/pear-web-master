@@ -1,0 +1,57 @@
+﻿@using NTU_FYP_REBUILD_17.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "LoginPage";
+    Layout = "~/Views/Shared/_LoginPage.cshtml";
+}
+
+<!--
+<head>
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+    </script>
+</head>-->
+
+<section id="loginForm">
+    @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "login-form", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        <h3 class="form-title font-green">Sign In</h3>
+        <hr />
+        <p style="color:red">@ViewData["Error"]</p>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(m => m.userName, new { @class = "col-md-2 control-label" })
+            <div>
+                @Html.TextBoxFor(m => m.userName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.userName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+            <div>
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div style="text-align:right">
+                <a onclick="window.location.replace('@Url.Action("ResetLink", "Account")')">Forgot your password?</a><br /><br />
+            </div>
+            <div>
+                <input type="submit" value="Log in" class="btn green uppercase" style="width: 100%;" />
+            </div>
+        </div>
+    }
+</section>
+
+<script>
+    $(document).ready(function() {
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = function() {
+            window.history.pushState(null, "", window.location.href);
+        };
+    });
+</script>

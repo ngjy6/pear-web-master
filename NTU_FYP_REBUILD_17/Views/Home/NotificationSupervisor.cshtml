@@ -1,0 +1,356 @@
+﻿@using NTU_FYP_REBUILD_17.Models
+@using Microsoft.AspNet.Identity
+@using Newtonsoft.Json
+@model NTU_FYP_REBUILD_17.ViewModels.notificationSupervisor
+<!DOCTYPE html>
+<style>
+    * {
+        margin: 0px;
+        padding: 0px;
+        font-family: Helvetica, Arial, sans-serif;
+        text-size-adjust: none;
+        text-size-adjust: auto;
+    }
+
+    /* Full-width input fields */
+
+    /* Center the image and position the close button */
+    .imgcontainer#imgcontainerNoti {
+        text-align: center;
+        margin: 24px 0 12px 0;
+        position: relative;
+        text-size-adjust: none;
+    }
+
+    .avatar#avatarNoti {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+    }
+
+    /* The Modal (background) */
+    .modal#modal-wrapper2 {
+        display: none;
+        position: fixed;
+        z-index: 5000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    /* Modal Content Box */
+    .modal-content#modelcontentNoti {
+        text-align: center;
+        background-color: #fefefe;
+        margin: 4% auto 15% auto;
+        border: 1px solid #888;
+        table-layout: fixed;
+        width: 60%;
+        padding-bottom: 30px;
+    }
+
+    /* The Close Button (x) */
+    /*.close {
+        position: absolute;
+        right: 25px;
+        top: 0;
+        color: #000;
+        font-size: 35px;
+        font-weight: bold;
+    }*/
+
+    /*.close:hover, .close:focus {
+            color: red;
+            cursor: pointer;
+        }*/
+
+    /* Add Zoom Animation */
+    .animate {
+        animation: zoom 0.6s
+    }
+
+    @@keyframes zoom {
+        from {
+            transform: scale(0)
+        }
+
+        to {
+            transform: scale(1)
+        }
+    }
+
+    a.fa-globe {
+        position: relative;
+        font-size: 2.5em;
+        color: grey;
+        cursor: pointer;
+    }
+
+    span.fa-comment {
+        position: absolute;
+        font-size: 0.6em;
+        top: -4px;
+        color: red;
+        right: -4px;
+    }
+
+    span.num {
+        position: absolute;
+        font-size: 0.5em;
+        top: 1px;
+        color: #fff;
+        right: 2px;
+    }
+
+    table#myTableNoti {
+        text-align: center;
+        table-layout: fixed;
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 80%;
+    }
+
+    td#myColNoti {
+        text-align: center;
+        border: 1px;
+        color: black;
+        height: 100px;
+        font-size: 120%;
+        word-wrap: break-word;
+    }
+
+    tr:hover#myRowNoti {
+        text-align: center;
+        cursor: pointer;
+        background-color: yellow;
+    }
+</style>
+
+
+
+<html>
+
+<body>
+    <a class="fa fa-globe" onclick="document.getElementById('modal-wrapper2').style.display='block'">
+        <span class="fa fa-comment" id="redshape"></span>
+
+        @if (Model.logList.Where(x => x.logNotifications.readStatus != 1).Count() != 0)
+        {
+            <span class="num" id="num">
+                <sup>@Model.logList.Where(x => x.logNotifications.readStatus != 1).Count()</sup>
+            </span>
+        }
+        else
+        {
+
+        }
+
+    </a>
+
+    <div id="modal-wrapper2" class="modal">
+        <form class="modal-content animate" id="modelcontentNoti">
+            <div class="modal-header">
+                <button type="button" onclick="closeModal()" class="close">&times;</button>
+            </div>
+            <div class="imgcontainer" id="imgcontainerNoti">
+                <span onclick="document.getElementById('modal-wrapper2').style.display='none'"></span>
+                <img src="~/Image/Notification.png" alt="Avatar" class="avatar" id="avatarNoti">
+                <h1 style="text-align:center">Notification Message</h1>
+            </div>
+
+            <div align="center">
+                <div style="margin-bottom: 10px;">
+
+                    @{
+                        var selectList = new SelectList(
+                            new List<SelectListItem>
+                            {
+                                                                    new SelectListItem {Text = "All", Value = "All"},
+                                                                    new SelectListItem {Text = "Today", Value = "1"},
+                                                                    new SelectListItem {Text = "1 Day Ago", Value = "2"},
+                                                                    new SelectListItem {Text = "3 Days Ago", Value = "3"},
+                                                                    new SelectListItem {Text = "1 Week Ago", Value = "7"},
+                                                                    new SelectListItem {Text = "2 Weeks Ago", Value = "14"},
+                                                                    new SelectListItem {Text = "1 Month Ago", Value = "31"},
+                            }, "Value", "Text");
+                    }
+
+                    <b>Filter By Users:</b> @Html.DropDownList("All", new SelectList(Model.users, "fullName", "fullName", "All"), new { @id = "selectField" })&nbsp;	&nbsp;
+                    <b>Filter By Days:</b> @Html.DropDownList("All", selectList, new { @id = "selectDateField" })
+                </div>
+                <table id="myTableNoti" align="center">
+                    @foreach (var item in Model.logList.OrderByDescending(x => x.logNotifications.createDateTime))
+                    {
+                        var dayDiff = DateTime.Today - item.logNotifications.createDateTime;
+
+                        if (item.logNotifications.readStatus == 0)
+                        {
+
+                            <tr id="myRowNoti" class="Notification" style="background-color:#DCDCDC" position="@item.logNotifications.userInitName" dateDiff=@dayDiff
+                                onclick='@string.Format("location.href = '/Home/NotificationPage?messageID={0}&uid={1}'", item.logNotifications.logNotificationID, item.logNotifications.userIDReceived)'>
+
+                                <td id="myColNoti">@item.logNotifications.notificationMessage</td>
+                                <td id="myColNoti" class="date">Date: @item.logNotifications.createDateTime</td>
+                            </tr>
+                        }
+                        else
+                        {
+
+                            <tr id="myRowNoti" class="Notification" position="@item.logNotifications.userInitName" dateDiff=@dayDiff
+                                onclick='@string.Format("location.href = '/Home/NotificationPage?messageID={0}&uid={1}'", item.logNotifications.logNotificationID, item.logNotifications.userIDReceived)'>
+
+                                <td id="myColNoti">@item.logNotifications.notificationMessage</td>
+                                <td id="myColNoti" class="date">Date: @item.logNotifications.createDateTime</td>
+
+                            </tr>
+
+
+                        }
+                    }
+
+
+                </table>
+            </div>
+            <div>
+                <a href="@Url.Action("NotificationPage", "Home", new { messageID="0", uid=Convert.ToInt32(User.Identity.GetUserID2())})">View all messages</a>
+            </div>
+        </form>
+    </div>
+
+    <a href='#' id="dnperm"></a><br /><br />
+
+    @*<ul id="livedisplay"></ul>
+        <ul id="YourBodyId"></ul>*@
+    <br>
+
+    <script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+
+
+    <script>
+        var dnperm = document.getElementById('dnperm');
+        var userID = @Html.Raw(Json.Encode(User.Identity.GetUserId()));
+
+        var rows;
+        rows = $("table#myTableNoti tr");
+
+        $(document).ready(function () {
+
+            $("#selectField" ).on("change", function () {
+
+
+                var $filteredRows = rows;
+
+                var selected = $('#selectDateField').val();
+                if (selected != "All") {
+
+                    $filteredRows = $('table#myTableNoti tr').filter(function () {
+                        return parseInt($(this).attr('dateDiff'), 10) <= parseInt(selected, 10);
+                    });
+                }
+
+                // filter by the first input:
+                selected = $('#selectField').val();
+                console.log(" Slog: " + selected);
+                if (selected != "All") {
+                    $filteredRows = $filteredRows.filter("[position='" + selected + "']");
+                }
+
+
+                // hide all rows, and then make the filtered rows visible:
+                rows.hide();
+                $filteredRows.show();
+
+
+            });
+
+            $("#selectDateField").on("change", function () {
+
+                var $filteredRows = rows;
+
+                var selected = $('#selectDateField').val();
+                if (selected != "All") {
+
+                    //console.log("Selected: " + selected);
+
+                    $filteredRows = $('table#myTableNoti tr').filter(function () {
+                        return parseInt($(this).attr('dateDiff'), 10) <= parseInt(selected, 10);
+                    });
+                }
+
+                // filter by the first input:
+                selected = $('#selectField').val();
+                console.log(" Slog: " + selected);
+                if (selected != "All") {
+                    $filteredRows = $filteredRows.filter("[position='" + selected + "']");
+                }
+
+
+                // hide all rows, and then make the filtered rows visible:
+                rows.hide();
+                $filteredRows.show();
+
+
+
+            });
+
+        });
+
+        function ConvertDateFromDiv(divTimeStr) {
+            //eg:-divTimeStr=18/03/2013 12:53:00
+            var tmstr = divTimeStr.toString().split(' '); //'21-01-2013 PM 3:20:24'
+            var dt = tmstr[0].split('/');
+            var str = dt[2] + "/" + dt[0] + "/" + dt[1] + " " + tmstr[1]; //+ " " + tmstr[1]//'2013/01/20 3:20:24 pm'
+            //console.log("Date:" + dt[2] + " / " + dt[1] + " / " + dt[0] + " " + tmstr[1]);
+            var time = new Date(str);
+            if (time == "Invalid Date") {
+                time = new Date(divTimeStr);
+            }
+            return time;
+        }
+
+
+        dnperm.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (!window.Notification) {
+                alert('Not supported');
+            } else {
+                Notification.requestPermission().then(function (p) {
+                    if (p == 'denied') {
+                        alert('Please enable the Notification permission in your browser.');
+                    } else if (p == 'granted') {
+                        alert('Notification permission has already been approved.');
+                    }
+                });
+            }
+        });
+
+
+
+        //});
+    </script>
+
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<script>
+    // If user clicks anywhere outside of the modal, Modal will close
+    var modal = document.getElementById('modal-wrapper2');
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    function closeModal() {
+        var modal = document.getElementById('modal-wrapper2');
+        modal.style.display = "none";
+    }
+
+
+</script>
+

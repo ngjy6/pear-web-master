@@ -1,0 +1,87 @@
+﻿<style>
+    .dropdown:hover>.dropdown-menu{
+        display: block;
+    }
+
+    .dropdown .nav-link {color:#fff; text-decoration: none;}
+    .dropdown .dropdown-menu a{color: white; text-decoration: none;}
+    .dropdown .btn {background: green; color:#fff;}
+    .dropdown .btn:hover {background: cyan; color:#000;}
+    .dropdown .btn:active {background: cyan; color:#000;}
+    .dropdown .btn:focus {background: cyan; color:#000;}
+    .dropdown-menu .dropdown-item {display: inline-block; width: 100%; padding: 10px 5px;}
+    .container .dropdown .dropdown-menu a:hover
+    {
+      color: #fff;
+      background-color: black;
+      border-color: white;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="hor-menu" id="navbarSupportedContent">
+        <ul class="nav navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Account
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/Account/CheckUserType">Create Account</a>
+                    <a class="dropdown-item" href="/Account">Manage Account</a>
+                    <a class="dropdown-item" href="/Account/RoleCreate">Add Role</a>
+                    <a class="dropdown-item" href="/Account/RoleIndex">Manage Role</a>
+                    <!--<div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>-->
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Centre
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown2">
+                    <a class="dropdown-item" href="/Account/ManageCentre">Manage Centre</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Log
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
+                    <a class="dropdown-item" href="/Account/ViewAccountLog">Account Log</a>
+                    <a class="dropdown-item" href="/Account/ViewActivityLog">Activity Log</a>
+                    <a class="dropdown-item" href="/Account/ViewApproveRejectLog">Approve Reject Log</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown4" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    List
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown4">
+                    <a class="dropdown-item" href="/Account/ViewDropList">Manage List</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown5" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Schedule
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown5">
+                    <a class="dropdown-item" href="/Schedule">Generate Schedule</a>
+                    <a class="dropdown-item" href="/ExportPatientSchedule/ExportPatientSchedulePage">Export Schedule</a>
+                    <a class="dropdown-item" href="/AutomatedScheduleTester/automatedscheduletesting">Schedule Testing</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown6" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Archive Tool
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown6">
+                    <a class="dropdown-item" href="/ArchiveSQL">Perform Snapshot</a>
+                    <!--<a class="dropdown-item" href="/ArchiveSQL/search">Search</a>-->
+                </div>
+            </li>
+            @*<li aria-haspopup="true" class="menu-dropdown mega-menu-dropdown  ">
+                @Html.ActionLink("Archive Log", "ArchivePage", "Archive")
+            </li>*@
+        </ul>
+    </div>
+</nav>

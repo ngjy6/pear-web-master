@@ -1,0 +1,383 @@
+﻿@model NTU_FYP_REBUILD_17.ViewModels.PatientPhotoAlbumModel
+@using NTU_FYP_REBUILD_17.Models
+@{
+    ViewBag.Title = "ManagePhotoAlbum";
+    Layout = "~/Views/Shared/_LayoutSupervisor.cshtml";
+
+}
+<style>
+    .caption-container {
+        text-align: center;
+        background-color: black;
+        padding: 2px 16px;
+        color: white;
+    }
+</style>
+
+<div class="portlet box blue-madison">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-folder-open-o"></i>
+            @*@Html.Raw("<span class='caption-subject font-blue-madison bold uppercase'>" + @Model.patient.firstName + " " + @Model.patient.lastName + "'s Prescription Records</span>")*@
+            @Model.patient.firstName  @Model.patient.lastName's Photo Album
+        </div>
+        <div class="tools"> </div>
+    </div>
+    <div class="portlet-body">
+        <table>
+            <tr>
+                <td>
+                    <div style="text-align:right">
+                        <a class="btn green btn-outline sbold uppercase" data-target="#MyModal3" data-toggle="modal"><i class="fa fa-plus"></i> Add Photo </a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @if (TempData["success"] != null)
+                    {
+                        <div class="alert alert-success text-center" role="alert">@TempData["success"]</div>
+                    }
+
+                    @if (TempData["error"] != null)
+                    {
+                        <div class="alert alert-danger  text-center" role="alert">@Html.Raw(TempData["error"])</div>
+                    }
+
+                    <div id="buttons"></div>
+
+                    <div id="gallery">
+
+                        @foreach (var item in Model.albumPatientList)
+                        {
+                            if (item.holiday != null)
+                            {
+                                <img src="@item.albumPatient.albumPath" data-tags="@item.albumCategory.albumCatName" onclick="openModal('@item.holiday.holidayExp', '@item.albumPatient.albumPath', '@item.albumPatient.albumID')" />
+                            }
+                            else
+                            {
+                                <img src="@item.albumPatient.albumPath" data-tags="@item.albumCategory.albumCatName" onclick="openModal('@item.albumCategory.albumCatName', '@item.albumPatient.albumPath', '@item.albumPatient.albumID')" />
+
+                            }
+
+                        }
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div style="text-align:right">
+                        <a class="btn green btn-outline sbold uppercase" data-target="#MyModal3" data-toggle="modal"><i class="fa fa-plus"></i> Add Photo </a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <div class="dropdown pull-right">
+                <div class="hfc" style="position:absolute; right:5px; top:5px;">
+                    <button class="dropdown-toggle" type="button" data-toggle="dropdown" style="background-color:transparent">
+                        <span class="fa fa-ellipsis-h"></span>
+                    </button>
+                    <ul class="dropdown-menu" style="background-color:darkslategray">
+                        <li>
+                            <a href="" id="image" class="dropdown-header" onclick="return confirm('Are you sure you want to delete?')" style="color:white;">
+                            Delete Image
+                                </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+            @*<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>*@
+            @*</div>*@
+
+            <img src="" id="img" style="width:100%">
+        </div>
+        <!-- Caption text -->
+        <div class="caption-container">
+            <p id="caption"></p>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="MyModal3" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("UploadPhoto", "Supervisor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.HiddenFor(p => p.patient.patientID, new { @Value = @Model.patient.patientID, @id = "ab" })
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Add Photo</h4>
+                </div>
+
+                <div class="form-group" align="center">
+                    <div class="form-group">
+                        <div class="col-md-4 control-label">
+                            <i class="required"></i>
+                            Album Name
+                        </div>
+                        <div class="col-md-6 albumType">
+                            @Html.DropDownListFor(m => m.inputAlbumPatient.albumCatID, new SelectList(Model.listOfAlbumCategories, "albumCatID", "albumCatName"), new { @class = "form-control", @id = "albumType" })
+                            <br />
+                        </div>
+                    </div>
+                </div>
+                <br /><br />
+                <div class="form-group" align="center">
+                    <div class="form-group" id="album" style='display:none;'>
+                        <div class="col-md-4 control-label">
+                            <i class="required"></i>
+                            Please specify:
+                        </div>
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(m => m.otherAlbumName, new { @class = "form-control", id = "otherAlbumName" })
+                            <span style="display: none; color:red;" id="albumNameError"></span>
+
+                            <br />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" align="center">
+                    <div class="col-md-4 control-label"></div>
+                    <div class="col-md-6">
+                        <input type="file" name="file" id="file" class="form-control" />
+                    </div>
+                    <br /><br />
+
+                </div>
+                <div class="form-group" align="center">
+                    <div class="form-group" id="holidayExp" style='display:none;'>
+
+                        <div class="form-group" align="center">
+                            <div class="col-md-4 control-label">
+                                Experiences
+                            </div>
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(m => m.inputHoliday.holidayExp, new { @class = "form-control", id = "experienceCheck" })
+                                <br />
+                            </div>
+                        </div>
+
+                        <div class="form-group" align="center">
+                            <div class="col-md-4 control-label">
+                                <i class="required"></i>
+                                Country
+                            </div>
+                            <div class="col-md-6">
+                                @Html.DropDownListFor(m => m.inputHoliday.countryID, new SelectList(Model.listOfCountries, "list_countryID", "value"), new { @class = "form-control", @id = "countryCheck" })
+                                <br />
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="otherCountry" style='display:none;'>
+                            <div class="col-md-4 control-label">
+                                <i class="required"></i>
+                                Please specify:
+                            </div>
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(m => m.otherCountry, new { @class = "form-control", id = "otherCountry" })
+                                <span style="display: none; color:red;" id="countryError"></span>
+
+                                <br />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-4 control-label">
+                                <i class="required"></i>
+                                Start Date
+                            </div>
+                            <div class="col-md-6">
+
+                                @Html.TextBoxFor(m => m.inputHoliday.startDate, "dd/mm/yyyy", new { @class = "form-control date-picker", @data_date_format = "dd/mm/yyyy", id = "datetimepicker1" })
+                                <span style="display: none; color:red;" id="startDateError"></span>
+
+                                <br />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-4 control-label">
+                                <i class="required"></i>
+                                End Date
+                            </div>
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(m => m.inputHoliday.endDate, "dd/mm/yyyy", new { @class = "form-control date-picker", @data_date_format = "dd/mm/yyyy", id = "datetimepicker2" })
+                                <span style="display: none; color:red;" id="endDateError"></span>
+
+                                <br />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br /><br /> <br /><br />
+
+                <div class="modal-footer" style="text-align:center">
+                    <input id="submit" type="submit" class="space btn btn-primary" value="Submit" />
+                    <input type="button" class="btn btn-default grey" data-dismiss="modal" value="Cancel" />
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .hfc {
+        position: relative;
+    }
+
+        .hfc img {
+            width: 100%;
+        }
+
+</style>
+
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<link href="~/Content/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+
+<script src="~/Content/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="~/Content/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css" type="text/css" />
+
+
+<script src="~/Content/global/scripts/filter-tags.js" type="text/javascript"></script>
+<link href="~/Content/global/css//filter-tags.css" rel="stylesheet" type="text/css" />
+
+
+<script>
+    $(document).ready(function () {
+
+        $('#datetimepicker1').datepicker({
+            defaultDate: null,
+        });
+
+        $('#datetimepicker2').datepicker({
+            defaultDate: null,
+        });
+
+
+        $("#submit").click(function () {
+            var val = $("#albumType").val();
+
+            var errorFlag = 0;
+
+            if (val == 6) {
+                var startDate = $("#datetimepicker1").val();
+                var endDate = $("#datetimepicker2").val();
+                var otherCountry = "";
+
+                var countryCheck = $("#countryCheck").val();
+
+                if (countryCheck == -1) {
+                    otherCountry = $("#otherCountry").val();
+
+                    if (otherCountry == "") {
+                        document.getElementById("countryError").innerHTML = "Please specify a country!";
+                        document.getElementById("countryError").style.display = "block";
+                        errorFlag = 1;
+                    } {
+                        document.getElementById("countryError").innerHTML = "";
+                        document.getElementById("countryError").style.display = "none";
+                    }
+
+                }
+
+                if (startDate == "") {
+                    document.getElementById("startDateError").innerHTML = "Please specify a start date!";
+                    document.getElementById("startDateError").style.display = "block";
+                    errorFlag = 1;
+                } else {
+                    document.getElementById("startDateError").innerHTML = "";
+                    document.getElementById("startDateError").style.display = "none";
+                }
+
+                if (endDate == "") {
+                    document.getElementById("endDateError").innerHTML = "Please specify an end date!";
+                    document.getElementById("endDateError").style.display = "block";
+                    //return false;
+                    errorFlag = 1;
+                } else {
+                    document.getElementById("endDateError").innerHTML = "";
+                    document.getElementById("endDateError").style.display = "none";
+                }
+
+                if (errorFlag == 1) {
+                    return false;
+                } else {
+                    return true;
+                }
+
+            } else if (val == -1) {
+                var albumName = $("#otherAlbumName").val();
+                if (albumName == "") {
+                    document.getElementById("albumNameError").innerHTML = "Please specify an album name!";
+                    document.getElementById("albumNameError").style.display = "block";
+                    return false;
+
+                } else {
+                    document.getElementById("albumNameError").innerHTML = "";
+                    document.getElementById("albumNameError").style.display = "none";
+                    return true;
+
+                }
+
+
+            }
+        });
+
+        $("#albumType").change(function () {
+            var element = document.getElementById('album');
+            var holiday = document.getElementById('holidayExp');
+
+            val = $(this).val();
+            if (val == -1) {
+                element.style.display = 'block';
+                holiday.style.display = 'none';
+            }
+            else if (val == 6) {
+                holiday.style.display = 'block';
+                element.style.display = 'none';
+            }
+            else {
+                element.style.display = 'none';
+                holiday.style.display = 'none';
+            }
+        });
+
+        $("#countryCheck").change(function () {
+            var element = document.getElementById('otherCountry');
+            val = $(this).val();
+            if (val == -1)
+                element.style.display = 'block';
+            else
+                element.style.display = 'none';
+        });
+
+    });
+
+    function openModal(caption, albumPath, albumID) {
+        $("#myModal").modal('show');
+
+        $("#image").attr("href", "/Supervisor/DeletePhoto?albumID="+albumID)
+        document.getElementById('img').src = albumPath;
+
+        if (caption != "") {
+            document.getElementById("caption").innerHTML = caption;
+        } else {
+            document.getElementById("caption").innerHTML = "";
+        }
+    }
+</script>

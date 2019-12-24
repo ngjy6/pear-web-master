@@ -1,0 +1,50 @@
+﻿@*Align to Right*@
+@*<div class="margiv-top-10 pull-right">
+        <div class="col-md-6">
+            <input class="btn blue " type="button" onclick="window.location.replace('@Url.Action("Index", "Supervisor")')" value="Cancel" />
+        </div>
+        <div class="col-md-6">
+            <input id="submit" type="submit" class="btn blue " value=" Add " />
+        </div>
+    </div>
+    <br /><br />*@
+
+@*<div class="margiv-top-10 text-center">
+        <table>
+            <tr class="row">
+                <td class="col-lg-10"></td>
+                <td class="col-lg-1"> <input class="btn blue" type="button" onclick="window.location.replace('@Url.Action("Index", "Supervisor")')" value="Cancel" /> </td>
+                <td class="col-lg-1"><input id="submit" type="submit" class="btn blue" value=" Save" /></td>
+            </tr>
+        </table>
+    </div>*@
+
+
+@*Align to Center*@
+@{ string actionx;
+    if (Request.Url.AbsoluteUri.Contains("Activity"))
+    {
+        actionx = "ManageActivities";
+    }
+    else
+    {
+        actionx = "ManagePatient";
+    }
+
+}
+
+@*<div class="margiv-top-10 text-center">
+        <input id="submit" type="submit" class="space btn btn-primary" value=" Add" />
+        <input class="space btn grey" type="button" onclick="window.location.replace('@Url.Action(@actionx, "Supervisor")')" value="Cancel" />
+
+    </div>*@
+
+
+<ul class="list-inline text-center">
+    <li>
+        <input class="btn grey" type="button" onclick="window.location.replace('@Url.Action(@actionx, "Supervisor")')" value="Cancel" />
+    </li>
+    <li>
+        <input id="submit" type="submit" class="btn btn-primary" value="Add" />
+    </li>
+</ul>

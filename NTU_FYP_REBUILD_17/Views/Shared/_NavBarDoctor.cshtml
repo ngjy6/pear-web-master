@@ -1,0 +1,41 @@
+﻿<style>
+    .dropdown:hover>.dropdown-menu{
+        display: block;
+    }
+
+    .dropdown .nav-link {color:#fff; text-decoration: none;}
+    .dropdown .dropdown-menu a{color: white; text-decoration: none;}
+    .dropdown .btn {background: green; color:#fff;}
+    .dropdown .btn:hover {background: cyan; color:#000;}
+    .dropdown .btn:active {background: cyan; color:#000;}
+    .dropdown .btn:focus {background: cyan; color:#000;}
+    .dropdown-menu .dropdown-item {display: inline-block; width: 100%; padding: 10px 5px;}
+    .container .dropdown .dropdown-menu a:hover
+    {
+      color: #fff;
+      background-color: black;
+      border-color: white;
+    }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="hor-menu" id="navbarSupportedContent">
+        <ul class="nav navbar-nav">
+            <li aria-haspopup="true" class="menu-dropdown mega-menu-dropdown  ">
+                @Html.ActionLink("Manage Patient", "Index", "Doctor")
+            </li>
+            <li aria-haspopup="true" class="menu-dropdown mega-menu-dropdown  ">
+                @Html.ActionLink("Dementia", "ManageDementiaGame", "Doctor")
+            </li>
+            <li aria-haspopup="true" class="menu-dropdown mega-menu-dropdown  ">
+                @Html.ActionLink("Search", "Find", "Doctor")
+            </li>
+            @*<li aria-haspopup="true" class="menu-dropdown mega-menu-dropdown  ">
+                @Html.ActionLink("Manage Patient", "Index", "ManagePatient")
+            </li>
+            <li aria-haspopup="true" class="menu-dropdown mega-menu-dropdown  ">
+                @Html.ActionLink("Help", "Help", "Doctor")
+            </li>*@
+        </ul>
+    </div>
+</nav>

@@ -1,0 +1,107 @@
+﻿<style>
+    .dropdown:hover > .dropdown-menu {
+        display: block;
+    }
+
+    .dropdown .nav-link {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .dropdown .dropdown-menu a {
+        color: white;
+        text-decoration: none;
+    }
+
+    .dropdown .btn {
+        background: green;
+        color: #fff;
+    }
+
+        .dropdown .btn:hover {
+            background: cyan;
+            color: #000;
+        }
+
+        .dropdown .btn:active {
+            background: cyan;
+            color: #000;
+        }
+
+        .dropdown .btn:focus {
+            background: cyan;
+            color: #000;
+        }
+
+    .dropdown-menu .dropdown-item {
+        display: inline-block;
+        width: 100%;
+        padding: 10px 5px;
+    }
+
+    .container .dropdown .dropdown-menu a:hover {
+        color: #fff;
+        background-color: black;
+        border-color: white;
+    }
+</style>
+
+<div class="hor-menu  ">
+    <ul class="nav navbar-nav">
+        <li aria-haspopup="true" class="menu-dropdown classic-menu-dropdown ">
+            @Html.ActionLink("Highlights", "Index", "Supervisor")
+        </li>
+        @*<li aria-haspopup="true" class="menu-dropdown classic-menu-dropdown ">
+            @Html.ActionLink("Manage Patients", "Index", "Supervisor")
+        </li>*@
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Patient
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
+                <a class="dropdown-item" href="/Supervisor/ManagePatient">Patient Management</a>
+                <a class="dropdown-item" href="/Supervisor/ManagePatientPreference">Activity Preferences</a>
+                <a class="dropdown-item" href="/Supervisor/ViewMedicationSchedule">Medication Schedule</a>
+
+            </div>
+        </li>
+        @*<li aria-haspopup="true" class="menu-dropdown mega-menu-dropdown  ">
+            @Html.ActionLink("Patient Medical Schedule", "ViewMedicalSchedule", "Supervisor")
+        </li>*@
+        <li aria-haspopup="true" class="menu-dropdown mega-menu-dropdown  ">
+            @Html.ActionLink("Manage Activities", "ManageActivities", "Supervisor")
+        </li>
+        <li aria-haspopup="true" class="menu-dropdown mega-menu-dropdown  ">
+            @Html.ActionLink("Manage Attendance", "ManageAttendanceLog", "Supervisor")
+        </li>
+        <li aria-haspopup="true" class="menu-dropdown mega-menu-dropdown  ">
+            @Html.ActionLink("AdHoc Changes", "Adhoc", "Supervisor")
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Manage Activity Log
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown3">
+                <a class="dropdown-item" href="/Account/ViewActivityLog">Activity Log</a>
+                <a class="dropdown-item" href="/Account/ViewApproveRejectLog">Approve Reject Log</a>
+            </div>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown5" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Manage Schedule
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown5">
+                <a class="dropdown-item" href="/Schedule">Generate Schedule</a>
+                <a class="dropdown-item" href="/ExportPatientSchedule/ExportPatientSchedulePage">Export Schedule</a>
+            </div>
+        </li>
+        @*<li aria-haspopup="true" class="menu-dropdown mega-menu-dropdown  ">
+            @Html.ActionLink("Export Schedule", "ExportPatientSchedulePage", "ExportPatientSchedule")
+
+        </li>
+        <li aria-haspopup="true" class="menu-dropdown classic-menu-dropdown ">
+            <a href="/Schedule">Generate Patient Schedule</a>
+        </li>*@
+    </ul>
+</div>

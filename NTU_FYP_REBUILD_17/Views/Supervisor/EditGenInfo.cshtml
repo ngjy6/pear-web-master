@@ -1,0 +1,418 @@
+﻿@model NTU_FYP_REBUILD_17.ViewModels.ManageSupervisorsViewModel
+
+
+@{
+    ViewBag.Title = "EditGeneralInfo";
+    Layout = "~/Views/Shared/_LayoutSupervisor.cshtml";
+}
+
+<link href="~/Content/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/global/plugins/clockface/css/clockface.css" rel="stylesheet" type="text/css" />
+
+<div class="portlet light ">
+    <div class="portlet-title tabbable-line">
+        <div class="caption caption-md">
+            <i class="icon-globe theme-font hide"></i>
+            @Html.Raw("<span class='caption-subject font-blue-madison bold'>Edit " + Model.patient.firstName + " " + Model.patient.lastName + "'s General Information</span>")
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="tab-content">
+            <div class="tab-pane active">
+                @if (TempData["error"] != null)
+                {
+                    <div class="alert alert-danger  text-center" role="alert">@Html.Raw(TempData["error"])</div>
+                }
+                else if (TempData["success"] != null)
+                {
+                    <div class="alert alert-success  text-center" role="alert">@Html.Raw(TempData["success"])</div>
+                }
+
+                @using (Html.BeginForm("EditGenInfoMethod", "Supervisor", FormMethod.Post, new { @class = "form-horizontal", role = "form", @id = "form1" }))
+                {
+                    @Html.HiddenFor(p => p.patient.patientID, new { @Value = @Model.patient.patientID, @id = "ab" });
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><b>Social History</b></div>
+                        <div class="panel-body">
+
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Mobility</label>
+                                <div class="col-md-10">
+                                    @if (Model.otherMobility.isChecked == 1)
+                                    {
+                                        @Html.DropDownListFor(m => m.inputMobilityID, new SelectList(Model.mobilityList, "list_mobilityID", "value", Model.otherMobility.list_mobilityID), new { @class = "form-control", @id = "mobilityCheck" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.inputMobilityID, new SelectList(Model.mobilityList, "list_mobilityID", "value", -1), new { @class = "form-control", @id = "mobilityCheck" })
+
+                                    }
+                                </div>
+                            </div>
+
+                            @if (Model.otherMobility.isChecked == 1)
+                            {
+                                <div class="form-group" id="otherMobility" style='display:none;'>
+                                    <label class="col-md-2 control-label">Others (Mobility)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputMobility, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group" id="otherMobility">
+                                    <label class="col-md-2 control-label">Others (Mobility)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputMobility, new { @class = "form-control", @Value = Model.otherMobility.value })
+                                    </div>
+                                </div>
+
+                            }
+
+
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Live With</label>
+                                <div class="col-md-10">
+                                    @if (Model.otherliveWith.isChecked == 1)
+                                    {
+                                        @Html.DropDownListFor(m => m.inputLiveWithID, new SelectList(Model.liveWithList, "list_liveWithID", "value", Model.socialHistory.liveWithID), new { @class = "form-control", @id = "liveWithCheck" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.inputLiveWithID, new SelectList(Model.liveWithList, "list_liveWithID", "value", -1), new { @class = "form-control", @id = "liveWithCheck" })
+
+                                    }
+                                </div>
+                            </div>
+
+                            @if (Model.otherliveWith.isChecked == 1)
+                            {
+                                <div class="form-group" id="otherLiveWith" style='display:none;'>
+                                    <label class="col-md-2 control-label">Others (Live With)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputLiveWith, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group" id="otherLiveWith">
+                                    <label class="col-md-2 control-label">Others (Live With)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputLiveWith, new { @class = "form-control", @Value = Model.otherliveWith.value })
+                                    </div>
+                                </div>
+
+                            }
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Religion</label>
+                                <div class="col-md-10">
+                                    @if (Model.otherReligion.isChecked == 1)
+                                    {
+                                        @Html.DropDownListFor(m => m.inputReligionID, new SelectList(Model.religionList, "list_religionID", "value", Model.socialHistory.religionID), new { @class = "form-control", required = "required", @id = "religionCheck" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.inputReligionID, new SelectList(Model.religionList, "list_religionID", "value", -1), new { @class = "form-control", required = "required", @id = "religionCheck" })
+                                    }
+                                </div>
+                            </div>
+
+                            @if (Model.otherReligion.isChecked == 1)
+                            {
+
+                                <div class="form-group" id="otherReligion" style='display:none;'>
+                                    <label class="col-md-2 control-label">Others (Religion)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputReligion, new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="form-group" id="otherReligion">
+                                    <label class="col-md-2 control-label">Others (Religion)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputReligion, new { @class = "form-control", @Value = Model.otherReligion.value })
+                                    </div>
+                                </div>
+
+                            }
+
+
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Education</label>
+                                <div class="col-md-10">
+                                    @if (Model.otherEducation.isChecked == 1)
+                                    {
+                                        @Html.DropDownListFor(m => m.inputEducationID, new SelectList(Model.educationList, "list_educationID", "value", Model.socialHistory.educationID), new { @class = "form-control", required = "required", @id = "educationCheck" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.inputEducationID, new SelectList(Model.educationList, "list_educationID", "value", -1), new { @class = "form-control", required = "required", @id = "educationCheck" })
+
+                                    }
+
+                                </div>
+                            </div>
+
+                            @if (Model.otherEducation.isChecked == 1)
+                            {
+                                <div class="form-group" id="otherEducation" style='display:none;'>
+                                    <label class="col-md-2 control-label">Others (Education)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputEducation, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group" id="otherEducation">
+                                    <label class="col-md-2 control-label">Others (Education)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputEducation, new { @class = "form-control", @Value = Model.otherEducation.value })
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Occupation</label>
+                                <div class="col-md-10">
+                                    @if (Model.otherOccupation.isChecked == 1)
+                                    {
+                                        @Html.DropDownListFor(m => m.inputOccupationID, new SelectList(Model.occupationList, "list_occupationID", "value", Model.socialHistory.occupationID), new { @class = "form-control", required = "required", @id = "occupationCheck" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.inputOccupationID, new SelectList(Model.occupationList, "list_occupationID", "value", -1), new { @class = "form-control", required = "required", @id = "occupationCheck" })
+
+                                    }
+                                </div>
+                            </div>
+
+                            @if (Model.otherOccupation.isChecked == 1)
+                            {
+                                <div class="form-group" id="otherOccupation" style='display:none;'>
+                                    <label class="col-md-2 control-label">Others (Occupation)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputOccupation, new { @class = "form-control" })
+                                    </div>
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div class="form-group" id="otherOccupation">
+                                    <label class="col-md-2 control-label">Others (Occupation)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputOccupation, new { @class = "form-control", @Value = Model.otherOccupation.value })
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Pet</label>
+                                <div class="col-md-10">
+                                    @if (Model.otherPet.isChecked == 1)
+                                    {
+                                        @Html.DropDownListFor(m => m.inputPetID, new SelectList(Model.petList, "list_petID", "value", Model.socialHistory.petID), new { @class = "form-control", required = "required", @id = "petCheck" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.inputPetID, new SelectList(Model.petList, "list_petID", "value", -1), new { @class = "form-control", required = "required", @id = "petCheck" })
+
+
+                                    }
+                                </div>
+                            </div>
+
+                            @if (Model.otherPet.isChecked == 1)
+                            {
+                                <div class="form-group" id="otherPet" style='display:none;'>
+                                    <label class="col-md-2 control-label">Others (Pet)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputPet, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group" id="otherPet">
+                                    <label class="col-md-2 control-label">Others (Pet)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputPet, new { @class = "form-control", @Value = Model.otherPet.value })
+                                    </div>
+                                </div>
+                            }
+
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Diet</label>
+                                <div class="col-md-10">
+                                    @if (Model.otherDiet.isChecked == 1)
+                                    {
+                                        @Html.DropDownListFor(m => m.inputDietID, new SelectList(Model.dietList, "list_dietID", "value", Model.socialHistory.dietID), new { @class = "form-control", required = "required", @id = "dietCheck" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(m => m.inputDietID, new SelectList(Model.dietList, "list_dietID", "value", -1), new { @class = "form-control", required = "required", @id = "dietCheck" })
+
+                                    }
+                                </div>
+                            </div>
+
+                            @if (Model.otherDiet.isChecked == 1)
+                            {
+                                <div class="form-group" id="otherDiet" style='display:none;'>
+                                    <label class="col-md-2 control-label">Others (Diet)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputDiet, new { @class = "form-control" })
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group" id="otherDiet">
+                                    <label class="col-md-2 control-label">Others (Diet)</label>
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.inputDiet, new { @class = "form-control", @Value = Model.otherDiet.value })
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Retired</label>
+                                <div class="col-md-10">
+                                    @Html.RadioButtonFor(m => m.socialHistory.retired, 1, new { @id = "option1", @class = "rspace" })@Html.Label("Yes")
+                                    @Html.RadioButtonFor(m => m.socialHistory.retired, 0, new { @id = "option2", @class = "rspace" })@Html.Label("No")
+                                    @Html.RadioButtonFor(m => m.socialHistory.retired, 2, new { @id = "option3", @class = "rspace" })@Html.Label("N/A")
+
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Exercise</label>
+                                <div class="col-md-10">
+                                    @Html.RadioButtonFor(m => m.socialHistory.exercise, 1, new { @id = "option1", @class = "rspace" })@Html.Label("Yes")
+                                    @Html.RadioButtonFor(m => m.socialHistory.exercise, 0, new { @id = "option2", @class = "rspace" })@Html.Label("No")
+                                    @Html.RadioButtonFor(m => m.socialHistory.exercise, 2, new { @id = "option3", @class = "rspace" })@Html.Label("N/A")
+
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Caffeine Use</label>
+                                <div class="col-md-10">
+                                    @Html.RadioButtonFor(m => m.socialHistory.caffeineUse, 1, new { @id = "option1", @class = "rspace" })@Html.Label("Yes")
+                                    @Html.RadioButtonFor(m => m.socialHistory.caffeineUse, 0, new { @id = "option2", @class = "rspace" })@Html.Label("No")
+                                    @Html.RadioButtonFor(m => m.socialHistory.caffeineUse, 2, new { @id = "option3", @class = "rspace" })@Html.Label("N/A")
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Tobacco Use</label>
+                                <div class="col-md-10">
+                                    @Html.RadioButtonFor(m => m.socialHistory.tobaccoUse, 1, new { @id = "option1", @class = "rspace" })@Html.Label("Yes")
+                                    @Html.RadioButtonFor(m => m.socialHistory.tobaccoUse, 0, new { @id = "option2", @class = "rspace" })@Html.Label("No")
+                                    @Html.RadioButtonFor(m => m.socialHistory.tobaccoUse, 2, new { @id = "option3", @class = "rspace" })@Html.Label("N/A")
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Secondhand Smoker</label>
+                                <div class="col-md-10">
+                                    @Html.RadioButtonFor(m => m.socialHistory.secondhandSmoker, 1, new { @id = "option1", @class = "rspace" })@Html.Label("Yes")
+                                    @Html.RadioButtonFor(m => m.socialHistory.secondhandSmoker, 0, new { @id = "option2", @class = "rspace" })@Html.Label("No")
+                                    @Html.RadioButtonFor(m => m.socialHistory.secondhandSmoker, 2, new { @id = "option3", @class = "rspace" })@Html.Label("N/A")
+
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Alcohol Use</label>
+                                <div class="col-md-10">
+                                    @Html.RadioButtonFor(m => m.socialHistory.alcoholUse, 1, new { @id = "option1", @class = "rspace" })@Html.Label("Yes")
+                                    @Html.RadioButtonFor(m => m.socialHistory.alcoholUse, 0, new { @id = "option2", @class = "rspace" })@Html.Label("No")
+                                    @Html.RadioButtonFor(m => m.socialHistory.alcoholUse, 2, new { @id = "option3", @class = "rspace" })@Html.Label("N/A")
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Drug Use</label>
+                                <div class="col-md-10">
+                                    @Html.RadioButtonFor(m => m.socialHistory.drugUse, 1, new { @id = "option1", @class = "rspace" })@Html.Label("Yes")
+                                    @Html.RadioButtonFor(m => m.socialHistory.drugUse, 0, new { @id = "option2", @class = "rspace" })@Html.Label("No")
+                                    @Html.RadioButtonFor(m => m.socialHistory.drugUse, 2, new { @id = "option3", @class = "rspace" })@Html.Label("N/A")
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">Sexually Active</label>
+                                <div class="col-md-10">
+                                    @Html.RadioButtonFor(m => m.socialHistory.sexuallyActive, 1, new { @id = "option1", @class = "rspace" })@Html.Label("Yes")
+                                    @Html.RadioButtonFor(m => m.socialHistory.sexuallyActive, 0, new { @id = "option2", @class = "rspace" })@Html.Label("No")
+                                    @Html.RadioButtonFor(m => m.socialHistory.sexuallyActive, 2, new { @id = "option3", @class = "rspace" })@Html.Label("N/A")
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    @Html.Partial("_LayoutFormEditButtons");
+
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/Content/global/plugins/jquery.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/js.cookie.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.blockui.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+
+<script src="~/Content/global/plugins/bootstrap-fileinput/bootstrap-fileinput.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/jquery.sparkline.min.js" type="text/javascript"></script>
+<script src="~/Content/global/scripts/app.min.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/profile.min.js" type="text/javascript"></script>
+
+
+<script src="~/Content/global/plugins/moment.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+<script src="~/Content/global/plugins/clockface/js/clockface.js" type="text/javascript"></script>
+<script src="~/Content/pages/scripts/components-date-time-pickers.min.js" type="text/javascript"></script>
+
+@*Input Checks*@
+<script src="~/Content/global/scripts/inputChecks.js" type="text/javascript"></script>
+
+<script>
+    $(document).ready(function () {
+        socialHistoryCheck();
+
+        var url = '@Url.Action("_LayoutFormAddButtons", "Submit")';
+        $('#submit').click(function () {
+
+
+        });
+    });
+
+</script>
