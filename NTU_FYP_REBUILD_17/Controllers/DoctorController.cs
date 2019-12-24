@@ -814,7 +814,7 @@ namespace NTU_FYP_REBUILD_17.Controllers
             if (gamesTypeRecommendation == null)
             {
                 patientMethod.addGameCategoryRecommended(userID, patientAllocation.patientAllocationID, gameCategoryID, model.gameCategoryStartDate, model.gameCategoryEndDate, model.recommendationReason, 2);
-                TempData["Message"] = "Game category recommendation requested! Waiting for supervisor approval.";
+                TempData["Message"] = "Game category recommendation requested! Waiting for Supervisor approval.";
             }
             else
                 TempData["Message"] = "Game category of " + gamesTypeRecommendation.Category.categoryName + " has already been approved/requested for patient. Please select another game category!";

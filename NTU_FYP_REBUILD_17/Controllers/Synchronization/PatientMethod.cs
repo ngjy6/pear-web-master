@@ -5845,8 +5845,8 @@ namespace NTU_FYP_REBUILD_17.Controllers.Synchronization
                 createDateTime = DateTime.Now,
             };
 
-            int? intendedUserTypeID = _context.UserTypes.SingleOrDefault(x => (x.userTypeName == "Game Therapist" && x.isDeleted != 1)).userTypeID;
-            System.Diagnostics.Debug.Write("intendedUserTypeID: " + intendedUserTypeID);
+            int? intendedUserTypeID = _context.UserTypes.SingleOrDefault(x => (x.userTypeName == "Supervisor" && x.isDeleted != 1)).userTypeID;
+            
             if (isApproved == 1)
             {
                 assignedGame.isApproved = 1;
@@ -5903,6 +5903,8 @@ namespace NTU_FYP_REBUILD_17.Controllers.Synchronization
             _context.SaveChanges();
 
             int intendedUserTypeID = _context.UserTypes.SingleOrDefault(x => (x.userTypeName == "Supervisor" && x.isDeleted != 1)).userTypeID;
+
+            //System.Diagnostics.Debug.Write("intendedUserTypeID: "+ intendedUserTypeID);
             int userNotified = 0;
 
             isApproved = 0;

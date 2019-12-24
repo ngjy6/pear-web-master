@@ -175,11 +175,15 @@
                                                                     new SelectListItem {Text = "1 Week Ago", Value = "7"},
                                                                     new SelectListItem {Text = "2 Weeks Ago", Value = "14"},
                                                                     new SelectListItem {Text = "1 Month Ago", Value = "31"},
-                            }, "Value", "Text");
+                }, "Value", "Text");
                     }
 
                     <b>Filter By Users:</b> @Html.DropDownList("All", new SelectList(Model.users, "fullName", "fullName", "All"), new { @id = "selectField" })&nbsp;	&nbsp;
                     <b>Filter By Days:</b> @Html.DropDownList("All", selectList, new { @id = "selectDateField" })
+                </div>
+
+                <div>
+                    <a href="@Url.Action("NotificationPage", "Home", new { messageID="0", uid=Convert.ToInt32(User.Identity.GetUserID2())})">View all messages</a>
                 </div>
                 <table id="myTableNoti" align="center">
                     @foreach (var item in Model.logList.OrderByDescending(x => x.logNotifications.createDateTime))
@@ -196,27 +200,25 @@
                                 <td id="myColNoti" class="date">Date: @item.logNotifications.createDateTime</td>
                             </tr>
                         }
-                        else
-                        {
+                        @*else
+                {
 
-                            <tr id="myRowNoti" class="Notification" position="@item.logNotifications.userInitName" dateDiff=@dayDiff
-                                onclick='@string.Format("location.href = '/Home/NotificationPage?messageID={0}&uid={1}'", item.logNotifications.logNotificationID, item.logNotifications.userIDReceived)'>
+                    <tr id="myRowNoti" class="Notification" position="@item.logNotifications.userInitName" dateDiff=@dayDiff
+                        onclick='@string.Format("location.href = '/Home/NotificationPage?messageID={0}&uid={1}'", item.logNotifications.logNotificationID, item.logNotifications.userIDReceived)'>
 
-                                <td id="myColNoti">@item.logNotifications.notificationMessage</td>
-                                <td id="myColNoti" class="date">Date: @item.logNotifications.createDateTime</td>
+                        <td id="myColNoti">@item.logNotifications.notificationMessage</td>
+                        <td id="myColNoti" class="date">Date: @item.logNotifications.createDateTime</td>
 
-                            </tr>
+                    </tr>
 
 
-                        }
+                }*@
                     }
 
 
                 </table>
             </div>
-            <div>
-                <a href="@Url.Action("NotificationPage", "Home", new { messageID="0", uid=Convert.ToInt32(User.Identity.GetUserID2())})">View all messages</a>
-            </div>
+           
         </form>
     </div>
 

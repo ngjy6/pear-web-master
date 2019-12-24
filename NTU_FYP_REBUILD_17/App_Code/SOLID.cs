@@ -655,9 +655,17 @@ namespace NTU_FYP_REBUILD_17.App_Code
 			updateNoti.createDateTime = log.createDateTime.ToString();
 
             string notificationMessage = senderType + " " + senderName + " has requested to make changes to " + log.tableAffected + " to be approved.";
-            if (patientAllocationID != null)
-                notificationMessage = senderType + " " + senderName + " has requested to make changes to " + log.tableAffected + " for " + patientName + " to be approved.";
+			if (patientAllocationID != null)
+			{
+				if (log.tableAffected == "gamesTypeRecommendation") {
 
+					//var gametype_item = _context.GameAssignedDementias.SingleOrDefault(x => (x.gadID == log.rowAffected && x.isDeleted != 1));
+					notificationMessage = senderType + " " + senderName + " has added game category 'Problem Solving' for " + patientName;
+
+				}
+				else
+					notificationMessage = senderType + " " + senderName + " has requested to make changes to " + log.tableAffected + " for " + patientName + " to be approved.";
+			}
             updateNoti.notification_message = notificationMessage;
 
             int itemNo = -1;

@@ -99,7 +99,7 @@
                         <thead>
                             <tr>
                                 <th class="min-tablet">No.</th>
-                                <th class="min-tablet">MessageID</th>
+                                @*<th class="min-tablet">MessageID</th>*@
                                 <th class="min-tablet">Sender</th>
                                 <th class="min-tablet">Message</th>
                                 <th class="min-tablet">Received</th>
@@ -124,7 +124,7 @@
                                     i++;
                                     <tr>
                                         <td>@i</td>
-                                        <td>@item.logNotificationID</td>
+                                        @*<td>@item.logNotificationID</td>*@
                                         <td>@item.userInitName</td>
                                         <td>@item.notificationMessage</td>
                                         <td>@item.createDateTime</td>
@@ -277,7 +277,7 @@
                         <thead>
                             <tr>
                                 <th class="min-tablet">No.</th>
-                                <th class="min-tablet">MessageID</th>
+                                @*<th class="min-tablet">MessageID</th>*@
                                 <th class="min-tablet">Sender</th>
                                 <th class="min-tablet">Message</th>
                                 <th class="min-tablet">Received</th>
@@ -300,7 +300,7 @@
                                     i++;
                                     <tr>
                                         <td>@i</td>
-                                        <td>@item.logNotificationID</td>
+                                        @*<td>@item.logNotificationID</td>*@
                                         <td>@item.userInitName</td>
                                         <td>@item.notificationMessage</td>
                                         <td>@item.createDateTime</td>
@@ -340,7 +340,7 @@
                         <thead>
                             <tr>
                                 <th class="min-tablet">No.</th>
-                                <th class="min-tablet">MessageID</th>
+                                @*<th class="min-tablet">MessageID</th>*@
                                 <th class="min-tablet">Sender</th>
                                 <th class="min-tablet">Message</th>
                                 <th class="min-tablet">Received</th>
@@ -366,7 +366,7 @@
                                     i++;
                                     <tr>
                                         <td>@i</td>
-                                        <td>@item.logNotificationID</td>
+                                        @*<td>@item.logNotificationID</td>*@
                                         <td>@item.userInitName</td>
                                         <td>@item.notificationMessage</td>
                                         <td>@item.createDateTime</td>
@@ -573,29 +573,33 @@
         const msg = "@ViewBag.confirmation";
         const messageID = "@ViewBag.messageID";
 
-        var table3 = $('#sample_3').DataTable();
-        new $.fn.dataTable.FixedHeader(table3, {alwaysCloneTop: true});
+        //var table3 = $('#sample_3').DataTable();
+        //new $.fn.dataTable.FixedHeader(table3, {alwaysCloneTop: true});
 
-        var table4 = $('#sample_4').DataTable();
-        new $.fn.dataTable.FixedHeader(table4, {alwaysCloneTop: true});
+        
 
-        var table5 = $('#sample_5').DataTable();
-        new $.fn.dataTable.FixedHeader(table5, {alwaysCloneTop: true});
+        //var table5 = $('#sample_5').DataTable();
+        //new $.fn.dataTable.FixedHeader(table5, {alwaysCloneTop: true});
 
-        var table6 = $('#sample_6').DataTable();
-        new $.fn.dataTable.FixedHeader(table6, {alwaysCloneTop: true});
+        //var table6 = $('#sample_6').DataTable();
+        //new $.fn.dataTable.FixedHeader(table6, {alwaysCloneTop: true});
 
-          $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
-         $($.fn.dataTable.tables()).DataTable().fixedHeader.adjust();
-   });
+         // $('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
+         //$($.fn.dataTable.tables()).DataTable().fixedHeader.adjust();
+   //});
 
 
         if (msg === "Pending") {
             $('.nav-pills a[href="#PendingMessage"]').tab('show');
             console.log("Pending!!!");
             console.log(messageID);
+
+            var table4 = $('#sample_4').DataTable();
+            new $.fn.dataTable.FixedHeader(table4, { alwaysCloneTop: true });
+            
            
             table4.page.jumpToData(messageID, 1);
+            
 
             $("#sample_4 tr").each(function () {
                 const col_val = $(this).find("td:eq(1)").text();
@@ -613,12 +617,15 @@
                     return false;
                 }
             });
+            table4.column(1).visible(false);
+            table4.column(2).visible(false);
+            table4.column(8).visible( false );
         }
         else {
             $('.nav-pills a[href="#AllMessage"]').tab('show');
             console.log("ALL MESSAGE!!!");
             
-            table3.page.jumpToData(messageID, 1);
+            @*table3.page.jumpToData(messageID, 1);
 
             $("#sample_3 tr").each(function () {
                 const col_val = $(this).find("td:eq(1)").text();
@@ -636,7 +643,7 @@
                     return false;
                 }
 
-            });
+            });*@
         }
              
 
